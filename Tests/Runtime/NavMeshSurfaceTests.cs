@@ -224,6 +224,29 @@ public class NavMeshSurfaceTests
         Assert.IsTrue(HasNavMeshAtOrigin());
     }
     
+    [Test]
+    public void BuildTakesIntoAccountAdjacentWalkableSurfacesOutsideBounds()
+    {
+        surface.collectObjects = CollectObjects.Volume;
+        surface.center = new Vector3(0, 0, 0);
+        surface.size = new Vector3(10, 10, 10);
+        
+        var adjacentPlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        adjacentPlane.transform.position = new Vector3(10f,0,0);
+
+        surface.BuildNavMesh();
+        
+        try
+        {
+            Assert.IsTrue(HasNavMeshAtPosition(new Vector3(surface.size.x / 2f, 0, 0)), 
+                      "A NavMesh should exists at the desired position.");
+        }
+        finally
+        {    
+            Object.DestroyImmediate(adjacentPlane);
+        }
+    }
+    
     static bool HasNavMeshAtPosition(Vector3 position, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
     {
         var filter = new NavMeshQueryFilter { areaMask = areaMask, agentTypeID = agentTypeID };
@@ -234,5 +257,6 @@ public class NavMeshSurfaceTests
     {
         return HasNavMeshAtPosition(Vector3.zero, areaMask, agentTypeID);
     }
+
 }
 #endif

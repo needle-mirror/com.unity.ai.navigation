@@ -151,6 +151,16 @@ namespace Unity.AI.Navigation
             get { return s_NavMeshSurfaces; }
         }
 
+        Bounds GetInflatedBounds()
+        {
+            var settings = NavMesh.GetSettingsByID(m_AgentTypeID);
+            var agentRadius = settings.agentTypeID != -1 ? settings.agentRadius : 0f;
+            
+            var bounds = new Bounds(center, size);
+            bounds.Expand(new Vector3(agentRadius, 0, agentRadius));
+            return bounds;
+        }
+        
         void OnEnable()
         {
             Register(this);
@@ -232,14 +242,14 @@ namespace Unity.AI.Navigation
 
             // Use unscaled bounds - this differs in behaviour from e.g. collider components.
             // But is similar to reflection probe - and since navmesh data has no scaling support - it is the right choice here.
-            var sourcesBounds = new Bounds(m_Center, Abs(m_Size));
+            var surfaceBounds = new Bounds(m_Center, Abs(m_Size));
             if (m_CollectObjects == CollectObjects.All || m_CollectObjects == CollectObjects.Children)
             {
-                sourcesBounds = CalculateWorldBounds(sources);
+                surfaceBounds = CalculateWorldBounds(sources);
             }
 
             var data = NavMeshBuilder.BuildNavMeshData(GetBuildSettings(),
-                    sources, sourcesBounds, transform.position, transform.rotation);
+                    sources, surfaceBounds, transform.position, transform.rotation);
 
             if (data != null)
             {
@@ -261,11 +271,11 @@ namespace Unity.AI.Navigation
 
             // Use unscaled bounds - this differs in behaviour from e.g. collider components.
             // But is similar to reflection probe - and since navmesh data has no scaling support - it is the right choice here.
-            var sourcesBounds = new Bounds(m_Center, Abs(m_Size));
+            var surfaceBounds = new Bounds(m_Center, Abs(m_Size));
             if (m_CollectObjects == CollectObjects.All || m_CollectObjects == CollectObjects.Children)
-                sourcesBounds = CalculateWorldBounds(sources);
+                surfaceBounds = CalculateWorldBounds(sources);
 
-            return NavMeshBuilder.UpdateNavMeshDataAsync(data, GetBuildSettings(), sources, sourcesBounds);
+            return NavMeshBuilder.UpdateNavMeshDataAsync(data, GetBuildSettings(), sources, surfaceBounds);
         }
 
         static void Register(NavMeshSurface surface)
@@ -389,7 +399,7 @@ namespace Unity.AI.Navigation
                 else if (m_CollectObjects == CollectObjects.Volume)
                 {
                     Matrix4x4 localToWorld = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-                    var worldBounds = GetWorldBounds(localToWorld, new Bounds(m_Center, m_Size));
+                    var worldBounds = GetWorldBounds(localToWorld, GetInflatedBounds());
 
                     UnityEditor.AI.NavMeshBuilder.CollectSourcesInStage(
                         worldBounds, m_LayerMask, m_UseGeometry, m_DefaultArea, markups, gameObject.scene, sources);
@@ -409,7 +419,7 @@ namespace Unity.AI.Navigation
                 else if (m_CollectObjects == CollectObjects.Volume)
                 {
                     Matrix4x4 localToWorld = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-                    var worldBounds = GetWorldBounds(localToWorld, new Bounds(m_Center, m_Size));
+                    var worldBounds = GetWorldBounds(localToWorld, GetInflatedBounds());
                     NavMeshBuilder.CollectSources(worldBounds, m_LayerMask, m_UseGeometry, m_DefaultArea, markups, sources);
                 }
             }
