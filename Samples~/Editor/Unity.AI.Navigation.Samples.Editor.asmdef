@@ -2,7 +2,7 @@
     "name": "Unity.AI.Navigation.Samples.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:226fbec3245bb47489fbd0a6759ec80c"
+        "GUID:62b574997e92efd41a8a1109157a0cb5"
     ],
     "includePlatforms": [
         "Editor"
