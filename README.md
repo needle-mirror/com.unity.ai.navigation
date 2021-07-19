@@ -9,7 +9,7 @@ Here we introduce four components for the navigation system:
 
 These components comprise the high level controls for building and using NavMeshes at runtime as well as edit time.
 
-Detailed information can be found in the [Documentation](Documentation~) section or in the [NavMesh building components](https://docs.unity3d.com/Manual/NavMesh-BuildingComponents.html) section of the Unity Manual.
+Detailed information can be found in the [Documentation](Documentation~).
 
 # FAQ
 

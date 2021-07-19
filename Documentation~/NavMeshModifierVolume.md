@@ -1,16 +1,20 @@
 # NavMeshModifierVolume
 
-![NavMeshModifierVolume example](Images/NavMeshModifierVolume-Example.png)
+NavMesh Modifier Volume marks a defined area as a certain type (for example, __Lava__ or __Door__). Whereas [NavMesh Modifier](NavMeshModifier.md) marks certain GameObjects with an area type. NavMesh Modifier Volume allows you to change an area type locally based on a specific volume.
 
-NavMesh Modifier Volume allows you to mark the area that falls inside the volume with specific area type. Where NavMesh Modifier marks certain objects with an area type, the Modifier Volume allows change the area type even more locally based on a volume.
+To use the NavMesh Modifier Volume component, navigate to __GameObject__ > __AI__ > __NavMesh Modifier Volume__.
 
-The modifier is useful for annotating certain areas over walkable surfaces which might not be represented as separate geometry, e.g. danger areas.  It can be even be used to make certain areas non-walkable.
+NavMesh Modifier Volume is useful for marking certain areas of walkable surfaces that might not be represented as separate geometry, for example danger areas. You can also use It to make certain areas non-walkable.
 
-The NavMesh Modifier Volume affects the NavMesh generation process, this means the NavMesh has to be updated to reflect changes to NavMesh Modifier Volumes.
+The NavMesh Modifier Volume also affects the NavMesh generation process, meaning the NavMesh has to be updated to reflect any changes to NavMesh Modifier Volumes.
+
+![NavMeshModifierVolume example](Images/NavMeshModifierVolume-Example.png "A NavMesh Modifier Volume component open in the Inspector")
 
 ## Parameters
-* Size – dimensions of the modifier volume. 
-* Center – center of the modifier volume relative to the GameObject center.
-* Area Type – describes the area type which the volume applies.
-* Affected Agents – a selection of agents the Modifier affects. For example, you may choose to create danger zone for specific agent type only.
+| __Property__| __Function__ |
+|:---|:---| 
+| __Size__| Dimensions of the NavMesh Modifier Volume, defined by XYZ measurements.  |
+| __Center__| The center of the NavMesh Modifier Volume relative to the GameObject center, defined by XYZ measurements. |
+| __Area Type__| Describes the area type to which the NavMesh Modifier Volume applies.<br/> - __Walkable__ (this is the default option)<br/> - __Not Walkable__<br/> - __Jump__ |
+| __Affected Agents__| A selection of agent types that the NavMesh Modifier Volume affects. For example, you may choose to make the selected NavMesh Modifier Volume a danger zone for specific Agent types only. |
 

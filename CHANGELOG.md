@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-exp.4] - 2021-07-19
+### Changed
+* Documentation updated with changes from Unity manual
+* Test scripts moved into namespaces Unity.AI.Navigation.Tests and Unity.AI.Navigation.Editor.Tests
+
 ## [1.0.0-exp.3] - 2021-06-16
 ### Fixed
 * An assembly definition in the package sample was referencing an invalid AsmDef

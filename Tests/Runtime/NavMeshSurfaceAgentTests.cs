@@ -2,103 +2,105 @@
 
 using System.Collections;
 using NUnit.Framework;
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.TestTools;
 
-public class NavMeshSurfaceAgentTests
+namespace Unity.AI.Navigation.Tests
 {
-    NavMeshSurface m_Surface;
-    NavMeshAgent m_Agent;
-
-    [SetUp]
-    public void Setup()
+    class NavMeshSurfaceAgentTests
     {
-        m_Surface = GameObject.CreatePrimitive(PrimitiveType.Plane).AddComponent<NavMeshSurface>();
-    }
+        NavMeshSurface m_Surface;
+        NavMeshAgent m_Agent;
 
-    [TearDown]
-    public void TearDown()
-    {
-        Object.DestroyImmediate(m_Agent.gameObject);
-        Object.DestroyImmediate(m_Surface.gameObject);
-        m_Agent = null;
-        m_Surface = null;
-    }
+        [SetUp]
+        public void Setup()
+        {
+            m_Surface = GameObject.CreatePrimitive(PrimitiveType.Plane).AddComponent<NavMeshSurface>();
+        }
 
-    [Test]
-    public void AgentIdentifiesSurfaceOwner()
-    {
-        m_Surface.BuildNavMesh();
+        [TearDown]
+        public void TearDown()
+        {
+            Object.DestroyImmediate(m_Agent.gameObject);
+            Object.DestroyImmediate(m_Surface.gameObject);
+            m_Agent = null;
+            m_Surface = null;
+        }
 
-        m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
-        Assert.AreEqual(m_Surface, m_Agent.navMeshOwner);
-        Assert.IsTrue(m_Agent.isOnNavMesh);
-    }
+        [Test]
+        public void AgentIdentifiesSurfaceOwner()
+        {
+            m_Surface.BuildNavMesh();
 
-    [Test]
-    [Ignore("1012991 : Missing functionality for notifying the NavMeshAgent about the removal of the NavMesh.")]
-    public void AgentDetachesAndAttachesToSurface()
-    {
-        m_Surface.BuildNavMesh();
+            m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
+            Assert.AreEqual(m_Surface, m_Agent.navMeshOwner);
+            Assert.IsTrue(m_Agent.isOnNavMesh);
+        }
 
-        m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
-        Assert.AreEqual(m_Surface, m_Agent.navMeshOwner);
-        Assert.IsTrue(m_Agent.isOnNavMesh);
+        [Test]
+        [Ignore("1012991 : Missing functionality for notifying the NavMeshAgent about the removal of the NavMesh.")]
+        public void AgentDetachesAndAttachesToSurface()
+        {
+            m_Surface.BuildNavMesh();
 
-        m_Surface.enabled = false;
-        Assert.IsNull(m_Agent.navMeshOwner);
-        Assert.IsFalse(m_Agent.isOnNavMesh);
+            m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
+            Assert.AreEqual(m_Surface, m_Agent.navMeshOwner);
+            Assert.IsTrue(m_Agent.isOnNavMesh);
 
-        m_Surface.enabled = true;
-        Assert.AreEqual(m_Surface, m_Agent.navMeshOwner);
-        Assert.IsTrue(m_Agent.isOnNavMesh);
-    }
+            m_Surface.enabled = false;
+            Assert.IsNull(m_Agent.navMeshOwner);
+            Assert.IsFalse(m_Agent.isOnNavMesh);
+
+            m_Surface.enabled = true;
+            Assert.AreEqual(m_Surface, m_Agent.navMeshOwner);
+            Assert.IsTrue(m_Agent.isOnNavMesh);
+        }
 
 
-    /*
-    [Test]
-    public void AgentIsOnNavMeshWhenMatchingAgentTypeID()
-    {
-        m_Surface.agentTypeID = 1234;
-        m_Surface.BuildNavMesh();
+        /*
+        [Test]
+        public void AgentIsOnNavMeshWhenMatchingAgentTypeID()
+        {
+            m_Surface.agentTypeID = 1234;
+            m_Surface.BuildNavMesh();
+    
+            m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
+            Assert.IsFalse(m_Agent.isOnNavMesh);
+    
+            m_Agent.agentTypeID = 1234;
+            Assert.IsTrue(m_Agent.isOnNavMesh);
+        }
+        */
 
-        m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
-        Assert.IsFalse(m_Agent.isOnNavMesh);
+        [UnityTest]
+        public IEnumerator AgentAlignsToSurfaceNextFrame()
+        {
+            m_Surface.transform.rotation = new Quaternion(-0.679622f, 0.351242f, -0.373845f, 0.524388f);
+            m_Surface.BuildNavMesh();
 
-        m_Agent.agentTypeID = 1234;
-        Assert.IsTrue(m_Agent.isOnNavMesh);
-    }
-    */
+            m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
 
-    [UnityTest]
-    public IEnumerator AgentAlignsToSurfaceNextFrame()
-    {
-        m_Surface.transform.rotation = new Quaternion(-0.679622f, 0.351242f, -0.373845f, 0.524388f);
-        m_Surface.BuildNavMesh();
+            yield return null;
 
-        m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
+            var residual = m_Surface.transform.up - m_Agent.transform.up;
+            Assert.IsTrue(residual.magnitude < 0.01f);
+        }
 
-        yield return null;
+        [UnityTest]
+        public IEnumerator AgentDoesNotAlignToSurfaceNextFrame()
+        {
+            m_Surface.transform.rotation = new Quaternion(-0.679622f, 0.351242f, -0.373845f, 0.524388f);
+            m_Surface.BuildNavMesh();
 
-        var residual = m_Surface.transform.up - m_Agent.transform.up;
-        Assert.IsTrue(residual.magnitude < 0.01f);
-    }
+            m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
+            m_Agent.updateUpAxis = false;
 
-    [UnityTest]
-    public IEnumerator AgentDoesNotAlignToSurfaceNextFrame()
-    {
-        m_Surface.transform.rotation = new Quaternion(-0.679622f, 0.351242f, -0.373845f, 0.524388f);
-        m_Surface.BuildNavMesh();
+            yield return null;
 
-        m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
-        m_Agent.updateUpAxis = false;
-
-        yield return null;
-
-        var residual = Vector3.up - m_Agent.transform.up;
-        Assert.IsTrue(residual.magnitude < 0.01f);
+            var residual = Vector3.up - m_Agent.transform.up;
+            Assert.IsTrue(residual.magnitude < 0.01f);
+        }
     }
 }
 #endif

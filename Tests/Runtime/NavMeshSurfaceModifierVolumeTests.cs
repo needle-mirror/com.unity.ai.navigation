@@ -1,69 +1,71 @@
 #if UNITY_EDITOR || UNITY_STANDALONE
 using NUnit.Framework;
-using Unity.AI.Navigation;
 using UnityEngine;
 
-[TestFixture]
-public class NavMeshSurfaceModifierVolumeTests
+namespace Unity.AI.Navigation.Tests
 {
-    NavMeshSurface surface;
-    NavMeshModifierVolume modifier;
-
-    [SetUp]
-    public void CreatePlaneAndModifierVolume()
+    [TestFixture]
+    class NavMeshSurfaceModifierVolumeTests
     {
-        var go = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        surface = go.AddComponent<NavMeshSurface>();
+        NavMeshSurface surface;
+        NavMeshModifierVolume modifier;
 
-        modifier = new GameObject().AddComponent<NavMeshModifierVolume>();
-    }
+        [SetUp]
+        public void CreatePlaneAndModifierVolume()
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            surface = go.AddComponent<NavMeshSurface>();
 
-    [TearDown]
-    public void DestroyPlaneAndModifierVolume()
-    {
-        GameObject.DestroyImmediate(surface.gameObject);
-        GameObject.DestroyImmediate(modifier.gameObject);
-    }
+            modifier = new GameObject().AddComponent<NavMeshModifierVolume>();
+        }
 
-    [Test]
-    public void AreaAffectsNavMeshOverlapping()
-    {
-        modifier.center = Vector3.zero;
-        modifier.size = Vector3.one;
-        modifier.area = 4;
+        [TearDown]
+        public void DestroyPlaneAndModifierVolume()
+        {
+            GameObject.DestroyImmediate(surface.gameObject);
+            GameObject.DestroyImmediate(modifier.gameObject);
+        }
 
-        surface.BuildNavMesh();
+        [Test]
+        public void AreaAffectsNavMeshOverlapping()
+        {
+            modifier.center = Vector3.zero;
+            modifier.size = Vector3.one;
+            modifier.area = 4;
 
-        var expectedAreaMask = 1 << 4;
-        Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
-    }
+            surface.BuildNavMesh();
 
-    [Test]
-    public void AreaDoesNotAffectsNavMeshWhenNotOverlapping()
-    {
-        modifier.center = 1.1f * Vector3.right;
-        modifier.size = Vector3.one;
-        modifier.area = 4;
+            var expectedAreaMask = 1 << 4;
+            Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
+        }
 
-        surface.BuildNavMesh();
+        [Test]
+        public void AreaDoesNotAffectsNavMeshWhenNotOverlapping()
+        {
+            modifier.center = 1.1f * Vector3.right;
+            modifier.size = Vector3.one;
+            modifier.area = 4;
 
-        var expectedAreaMask = 1;
-        Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
-    }
+            surface.BuildNavMesh();
 
-    [Test]
-    public void BuildUsesOnlyIncludedModifierVolume()
-    {
-        modifier.center = Vector3.zero;
-        modifier.size = Vector3.one;
-        modifier.area = 4;
-        modifier.gameObject.layer = 7;
+            var expectedAreaMask = 1;
+            Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
+        }
 
-        surface.layerMask = ~(1 << 7);
-        surface.BuildNavMesh();
+        [Test]
+        public void BuildUsesOnlyIncludedModifierVolume()
+        {
+            modifier.center = Vector3.zero;
+            modifier.size = Vector3.one;
+            modifier.area = 4;
+            modifier.gameObject.layer = 7;
 
-        var expectedAreaMask = 1;
-        Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
+            surface.layerMask = ~(1 << 7);
+            surface.BuildNavMesh();
+
+            var expectedAreaMask = 1;
+            Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
+        }
     }
 }
 #endif
