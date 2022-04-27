@@ -8,6 +8,8 @@ namespace Unity.AI.Navigation.Editor
     /// <summary> Class containing a set of utility functions meant for presenting information from the NavMeshComponents into the GUI. </summary>
     public static class NavMeshComponentsGUIUtility
     {
+        internal const string k_PackageEditorResourcesFolder = "Packages/com.unity.ai.navigation/EditorResources/";
+        
         /// <summary> Displays a GUI element for selecting the area type used by a <see cref="NavMeshSurface"/>, <see cref="NavMeshLink"/>, <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/>. </summary>
         /// <param name="labelName"></param>
         /// <param name="areaProperty"></param>

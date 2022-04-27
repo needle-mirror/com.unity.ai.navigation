@@ -4,10 +4,17 @@ using UnityEngine.AI;
 
 namespace Unity.AI.Navigation
 {
+#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+    /// <summary> Component that modifies the properties of the GameObjects used for building a NavMesh. </summary>
+    /// <remarks>The properties apply to the current GameObject and can be optionally applied recursively to all its children
+    /// in the hierarchy. This modifier overrides the properties set to this GameObject by
+    /// any other NavMeshModifier in the parent hierarchy.</remarks>
+#else
     /// <summary> Component that modifies the properties of the GameObjects used for building a NavMesh. </summary>
     /// <remarks>The properties apply to the current GameObject and recursively to all its children
     /// in the hierarchy. This modifier overrides the properties set to this GameObject by
     /// any other NavMeshModifier in the parent hierarchy.</remarks>
+#endif
     [ExecuteInEditMode]
     [AddComponentMenu("Navigation/NavMeshModifier", 32)]
     [HelpURL(HelpUrls.Manual + "NavMeshModifier.html")]
@@ -19,8 +26,21 @@ namespace Unity.AI.Navigation
         [SerializeField]
         int m_Area;
 
+#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+        [SerializeField]
+        bool m_OverrideGenerateLinks;
+
+        [SerializeField]
+        bool m_GenerateLinks;
+#endif
+        
         [SerializeField]
         bool m_IgnoreFromBuild;
+        
+#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+        [SerializeField]
+        bool m_ApplyToChildren = true;
+#endif
 
         // List of agent types the modifier is applied for.
         // Special values: empty == None, m_AffectedAgents[0] =-1 == All.
@@ -36,9 +56,22 @@ namespace Unity.AI.Navigation
         /// <remarks> The range of useful values is from 0 to 31. Higher values always take precedence over lower values in the case when the surfaces of more GameObjects intersect each other to produce a NavMesh in the same region. A value of 1 has the highest priority over all the other types and it means "not walkable". Consequently, the surface of a GameObject with an <c>area</c> of 1 produces a hole in the NavMesh. This property has the same meaning as <see cref="NavMeshBuildSource.area"/>.</remarks>
         /// <seealso href="https://docs.unity3d.com/Manual/nav-AreasAndCosts.html"/>
         public int area { get { return m_Area; } set { m_Area = value; } }
-
+        
+#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+        /// <summary> Gets or sets whether the default links generation condition for the GameObject and its children should be overridden. </summary>
+        public bool overrideGenerateLinks { get { return m_OverrideGenerateLinks; } set { m_OverrideGenerateLinks = value; } }
+        
+        /// <summary> Gets or sets whether this object is included in the link generation process. </summary>
+        public bool generateLinks { get { return m_GenerateLinks; } set { m_GenerateLinks = value; } }
+#endif
+        
         /// <summary> Gets or sets whether the NavMesh building process ignores this GameObject and its children. </summary>
         public bool ignoreFromBuild { get { return m_IgnoreFromBuild; } set { m_IgnoreFromBuild = value; } }
+        
+#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+        /// <summary> Gets or sets whether this GameObject's children also use the modifier settings. </summary>
+        public bool applyToChildren { get { return m_ApplyToChildren; } set { m_ApplyToChildren = value; } }
+#endif
 
         static readonly List<NavMeshModifier> s_NavMeshModifiers = new List<NavMeshModifier>();
 

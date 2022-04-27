@@ -20,6 +20,7 @@ namespace Unity.AI.Navigation.Editor
             public NavMeshSurface surface;
             public NavMeshData bakeData;
             public AsyncOperation bakeOperation;
+            public int progressReportId;
         }
 
         List<AsyncBakeOperation> m_BakeOperations = new List<AsyncBakeOperation>();
@@ -133,7 +134,14 @@ namespace Unity.AI.Navigation.Editor
                 oper.bakeData = InitializeBakeData(surf);
                 oper.bakeOperation = surf.UpdateNavMesh(oper.bakeData);
                 oper.surface = surf;
+                oper.progressReportId = Progress.Start(L10n.Tr("Baking a NavMesh"), string.Format(L10n.Tr("Surface held by {0} for agent type {1}"), surf.gameObject.name, NavMesh.GetSettingsNameFromID(surf.agentTypeID)));
 
+                Progress.RegisterCancelCallback(oper.progressReportId, () =>
+                {
+                    NavMeshBuilder.Cancel(oper.bakeData);
+                    return true;
+                });
+                    
                 m_BakeOperations.Add(oper);
             }
         }
@@ -167,7 +175,11 @@ namespace Unity.AI.Navigation.Editor
                         surface.AddData();
                     CreateNavMeshAsset(surface);
                     EditorSceneManager.MarkSceneDirty(surface.gameObject.scene);
+                    
+                    Progress.Finish(oper.progressReportId);
                 }
+                
+                Progress.Report(oper.progressReportId, oper.bakeOperation.progress);
             }
             m_BakeOperations.RemoveAll(o => o.bakeOperation == null || o.bakeOperation.isDone);
             if (m_BakeOperations.Count == 0)

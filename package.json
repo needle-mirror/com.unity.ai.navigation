@@ -1,8 +1,8 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "1.0.0-exp.4",
-  "unity": "2019.4",
+  "version": "1.1.0-pre.1",
+  "unity": "2022.2",
   "description": "High-level NavMesh components for building and using NavMeshes at runtime and at edit time.",
   "dependencies": {
     "com.unity.modules.ai": "1.0.0"
@@ -14,12 +14,15 @@
       "path": "Samples~"
     }
   ],
+  "_upm": {
+    "changelog": "### Added\r\n* NavMeshSurface supports links generation.\r\n* NavMeshSurface supports HeightMesh baking.\r\n* New package Navigation window adapting the obsolete Unity Navigation window functionalities to the package workflow.\r\n\r\n### Changed\r\n* NavMeshSurface is using the _Background Tasks_ window to report the baking progress\r\n* Minimum supported version is increased to Unity 2022.2"
+  },
   "upmCi": {
-    "footprint": "6212939d0fb9194fb2a5405afef874ea4e3f6dd5"
+    "footprint": "a0c542ab7c924f88c3b069d7d71778ea4268f9ea"
   },
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "e38a28933e4513afa2b6084c2948852bd9daad56"
+    "revision": "84a190aae72d65c721ed1f3698ea3c2fb58cd6bd"
   }
 }

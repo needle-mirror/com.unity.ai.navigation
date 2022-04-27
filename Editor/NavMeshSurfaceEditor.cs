@@ -1,6 +1,6 @@
 #define NAVMESHCOMPONENTS_SHOW_NAVMESHDATA_REF
 
-using System.Linq;
+using System;
 using UnityEditor;
 using UnityEditor.AI;
 #if !UNITY_2021_2_OR_NEWER
@@ -11,6 +11,7 @@ using UnityEditor.IMGUI.Controls;
 using UnityEditorInternal;
 using UnityEngine.AI;
 using UnityEngine;
+using System.Linq;
 
 namespace Unity.AI.Navigation.Editor
 {
@@ -23,6 +24,9 @@ namespace Unity.AI.Navigation.Editor
         SerializedProperty m_Center;
         SerializedProperty m_CollectObjects;
         SerializedProperty m_DefaultArea;
+#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+        SerializedProperty m_GenerateLinks;
+#endif
         SerializedProperty m_LayerMask;
         SerializedProperty m_OverrideTileSize;
         SerializedProperty m_OverrideVoxelSize;
@@ -31,22 +35,20 @@ namespace Unity.AI.Navigation.Editor
         SerializedProperty m_UseGeometry;
         SerializedProperty m_VoxelSize;
         SerializedProperty m_MinRegionArea;
+        SerializedProperty m_LedgeDropHeight;
+        SerializedProperty m_MaxJumpAcrossDistance;
 
 #if NAVMESHCOMPONENTS_SHOW_NAVMESHDATA_REF
         SerializedProperty m_NavMeshData;
 #endif
+        
         class Styles
         {
             public readonly GUIContent m_LayerMask = new GUIContent("Include Layers");
             public readonly GUIContent m_MinRegionArea = new GUIContent("Minimum Region Area");
-
-            public readonly GUIContent m_ShowInputGeom = new GUIContent("Show Input Geom");
-            public readonly GUIContent m_ShowVoxels = new GUIContent("Show Voxels");
-            public readonly GUIContent m_ShowRegions = new GUIContent("Show Regions");
-            public readonly GUIContent m_ShowRawContours = new GUIContent("Show Raw Contours");
-            public readonly GUIContent m_ShowContours = new GUIContent("Show Contours");
-            public readonly GUIContent m_ShowPolyMesh = new GUIContent("Show Poly Mesh");
-            public readonly GUIContent m_ShowPolyMeshDetail = new GUIContent("Show Poly Mesh Detail");
+            public readonly GUIContent m_GenerateLinks = new GUIContent(
+                "Generate Links",
+                "If enabled, collected objects will generate links depending on the agent settings values for drop height and jump distance.\nThis behaviour can be overriden using NavMeshModifier components.");
         }
 
         static Styles s_Styles;
@@ -71,6 +73,9 @@ namespace Unity.AI.Navigation.Editor
             m_Center = serializedObject.FindProperty("m_Center");
             m_CollectObjects = serializedObject.FindProperty("m_CollectObjects");
             m_DefaultArea = serializedObject.FindProperty("m_DefaultArea");
+#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+            m_GenerateLinks = serializedObject.FindProperty("m_GenerateLinks");
+#endif
             m_LayerMask = serializedObject.FindProperty("m_LayerMask");
             m_OverrideTileSize = serializedObject.FindProperty("m_OverrideTileSize");
             m_OverrideVoxelSize = serializedObject.FindProperty("m_OverrideVoxelSize");
@@ -83,13 +88,18 @@ namespace Unity.AI.Navigation.Editor
 #if NAVMESHCOMPONENTS_SHOW_NAVMESHDATA_REF
             m_NavMeshData = serializedObject.FindProperty("m_NavMeshData");
 #endif
+
+#if !UNITY_2022_2_OR_NEWER
             NavMeshVisualizationSettings.showNavigation++;
+#endif
         }
 
+#if !UNITY_2022_2_OR_NEWER
         void OnDisable()
         {
             NavMeshVisualizationSettings.showNavigation--;
         }
+#endif
 
         Bounds GetBounds()
         {
@@ -115,28 +125,41 @@ namespace Unity.AI.Navigation.Editor
             }
             NavMeshComponentsGUIUtility.AgentTypePopup("Agent Type", m_AgentTypeID);
 
-            EditorGUILayout.Space();
+            NavMeshComponentsGUIUtility.AreaPopup("Default Area", m_DefaultArea);
+#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+            EditorGUILayout.PropertyField(m_GenerateLinks, s_Styles.m_GenerateLinks);
+#endif
+            
+            EditorGUILayout.PropertyField(m_UseGeometry);
 
-            EditorGUILayout.PropertyField(m_CollectObjects);
-            if ((CollectObjects)m_CollectObjects.enumValueIndex == CollectObjects.Volume)
+            m_CollectObjects.isExpanded = EditorGUILayout.Foldout(m_CollectObjects.isExpanded, "Object Collection");
+
+            if (m_CollectObjects.isExpanded)
             {
                 EditorGUI.indentLevel++;
+                
+                EditorGUILayout.PropertyField(m_CollectObjects);
+                if ((CollectObjects)m_CollectObjects.enumValueIndex == CollectObjects.Volume)
+                {
+                    EditorGUI.indentLevel++;
 
-                EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.Collider, "Edit Volume",
-                    EditorGUIUtility.IconContent("EditCollider"), GetBounds, this);
-                EditorGUILayout.PropertyField(m_Size);
-                EditorGUILayout.PropertyField(m_Center);
+                    EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.Collider, "Edit Volume",
+                        EditorGUIUtility.IconContent("EditCollider"), GetBounds, this);
+                    EditorGUILayout.PropertyField(m_Size);
+                    EditorGUILayout.PropertyField(m_Center);
 
+                    EditorGUI.indentLevel--;
+                }
+                else
+                {
+                    if (editingCollider)
+                        EditMode.QuitEditMode();
+                }
+
+                EditorGUILayout.PropertyField(m_LayerMask, s_Styles.m_LayerMask);
+                
                 EditorGUI.indentLevel--;
             }
-            else
-            {
-                if (editingCollider)
-                    EditMode.QuitEditMode();
-            }
-
-            EditorGUILayout.PropertyField(m_LayerMask, s_Styles.m_LayerMask);
-            EditorGUILayout.PropertyField(m_UseGeometry);
 
             EditorGUILayout.Space();
 
@@ -144,8 +167,6 @@ namespace Unity.AI.Navigation.Editor
             if (m_OverrideVoxelSize.isExpanded)
             {
                 EditorGUI.indentLevel++;
-
-                NavMeshComponentsGUIUtility.AreaPopup("Default Area", m_DefaultArea);
 
                 // Override voxel size.
                 EditorGUILayout.PropertyField(m_OverrideVoxelSize);
@@ -195,10 +216,16 @@ namespace Unity.AI.Navigation.Editor
                 EditorGUILayout.PropertyField(m_MinRegionArea, s_Styles.m_MinRegionArea);
 
                 // Height mesh
+#if ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT
+                var heightMeshGUIContent = new GUIContent(m_BuildHeightMesh.displayName, "Generate an accurate height mesh for precise agent placement (slower).");
+                EditorGUILayout.PropertyField(m_BuildHeightMesh, heightMeshGUIContent);
+#else
                 using (new EditorGUI.DisabledScope(true))
                 {
-                    EditorGUILayout.PropertyField(m_BuildHeightMesh);
+                    var heightMeshGUIContent = new GUIContent(m_BuildHeightMesh.displayName, "HeightMesh functionality is only available with Unity 2022.2 or newer.");
+                    EditorGUILayout.PropertyField(m_BuildHeightMesh, heightMeshGUIContent);
                 }
+#endif
 
                 EditorGUILayout.Space();
                 EditorGUI.indentLevel--;
@@ -260,10 +287,14 @@ namespace Unity.AI.Navigation.Editor
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(EditorGUIUtility.labelWidth);
-                if (GUILayout.Button("Clear"))
+
+                using (new EditorGUI.DisabledScope(targets.All(s => (s as NavMeshSurface)?.navMeshData == null)))
                 {
-                    NavMeshAssetManager.instance.ClearSurfaces(targets);
-                    SceneView.RepaintAll();
+                    if (GUILayout.Button("Clear"))
+                    {
+                        NavMeshAssetManager.instance.ClearSurfaces(targets);
+                        SceneView.RepaintAll();
+                    }    
                 }
 
                 if (GUILayout.Button("Bake"))
@@ -272,59 +303,60 @@ namespace Unity.AI.Navigation.Editor
                 }
 
                 GUILayout.EndHorizontal();
-            }
-
-            // Show progress for the selected targets
-            var bakeOperations = NavMeshAssetManager.instance.GetBakeOperations();
-            for (int i = bakeOperations.Count - 1; i >= 0; --i)
-            {
-                if (!targets.Contains(bakeOperations[i].surface))
-                    continue;
-
-                var oper = bakeOperations[i].bakeOperation;
-                if (oper == null)
-                    continue;
-
-                var p = oper.progress;
-                if (oper.isDone)
+                
+                // Inform when selected target is being baked
+                var bakeOperations = NavMeshAssetManager.instance.GetBakeOperations();
+                bool bakeInProgress = bakeOperations.Any(b =>
                 {
-                    SceneView.RepaintAll();
-                    continue;
-                }
+                    if (!targets.Contains(b.surface))
+                        return false;
 
-                GUILayout.BeginHorizontal();
-
-                if (GUILayout.Button("Cancel", EditorStyles.miniButton))
+                    return b.bakeOperation != null;
+                });
+                
+                if (bakeInProgress)
                 {
-                    var bakeData = bakeOperations[i].bakeData;
-                    UnityEngine.AI.NavMeshBuilder.Cancel(bakeData);
-                    bakeOperations.RemoveAt(i);
+                    GUILayout.BeginVertical(EditorStyles.helpBox);
+                    
+                    if (GUILayout.Button("NavMesh baking is in progress.", EditorStyles.linkLabel))
+                        Progress.ShowDetails(false);
+                    
+                    GUILayout.EndHorizontal();
                 }
-
-                EditorGUI.ProgressBar(EditorGUILayout.GetControlRect(), p, "Baking: " + (int)(100 * p) + "%");
-                if (p <= 1)
-                    Repaint();
-
-                GUILayout.EndHorizontal();
             }
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active | GizmoType.Pickable)]
+        static void RenderGizmoSelected(NavMeshSurface navSurface, GizmoType gizmoType)
+        {
+            navSurface.navMeshDataInstance.FlagAsInSelectionHierarchy();
+            DrawBoundingBoxGizmoAndIcon(navSurface, true);
+        }
+
+        [DrawGizmo(GizmoType.NotInSelectionHierarchy | GizmoType.Pickable)]
+        static void RenderGizmoNotSelected(NavMeshSurface navSurface, GizmoType gizmoType)
+        {
+            DrawBoundingBoxGizmoAndIcon(navSurface, false);
+        }
+#else
         [DrawGizmo(GizmoType.Selected | GizmoType.Active | GizmoType.Pickable)]
         static void RenderBoxGizmoSelected(NavMeshSurface navSurface, GizmoType gizmoType)
         {
-            RenderBoxGizmo(navSurface, gizmoType, true);
+            DrawBoundingBoxGizmoAndIcon(navSurface, true);
         }
 
         [DrawGizmo(GizmoType.NotInSelectionHierarchy | GizmoType.Pickable)]
         static void RenderBoxGizmoNotSelected(NavMeshSurface navSurface, GizmoType gizmoType)
         {
             if (NavMeshVisualizationSettings.showNavigation > 0)
-                RenderBoxGizmo(navSurface, gizmoType, false);
+                DrawBoundingBoxGizmoAndIcon(navSurface, false);
             else
                 Gizmos.DrawIcon(navSurface.transform.position, "NavMeshSurface Icon", true);
         }
+#endif
 
-        static void RenderBoxGizmo(NavMeshSurface navSurface, GizmoType gizmoType, bool selected)
+        static void DrawBoundingBoxGizmoAndIcon(NavMeshSurface navSurface, bool selected)
         {
             var color = selected ? s_HandleColorSelected : s_HandleColor;
             if (!navSurface.enabled)

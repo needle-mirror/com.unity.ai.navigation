@@ -38,13 +38,17 @@ namespace Unity.AI.Navigation.Editor
             s_SelectedID = 0;
             s_SelectedPoint = -1;
 
+#if !UNITY_2022_2_OR_NEWER
             NavMeshVisualizationSettings.showNavigation++;
+#endif
         }
 
+#if !UNITY_2022_2_OR_NEWER
         void OnDisable()
         {
             NavMeshVisualizationSettings.showNavigation--;
         }
+#endif
 
         static Matrix4x4 UnscaledLocalToWorldMatrix(Transform t)
         {
@@ -137,7 +141,11 @@ namespace Unity.AI.Navigation.Editor
             Gizmos.DrawLine(navLink.startPoint + right * rad, navLink.endPoint + right * rad);
         }
 
+#if !ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
         [DrawGizmo(GizmoType.Selected | GizmoType.Active | GizmoType.Pickable)]
+#else
+        [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active | GizmoType.Pickable)]
+#endif
         static void RenderBoxGizmo(NavMeshLink navLink, GizmoType gizmoType)
         {
             if (!EditorApplication.isPlaying && navLink.isActiveAndEnabled)
@@ -164,7 +172,9 @@ namespace Unity.AI.Navigation.Editor
         [DrawGizmo(GizmoType.NotInSelectionHierarchy | GizmoType.Pickable)]
         static void RenderBoxGizmoNotSelected(NavMeshLink navLink, GizmoType gizmoType)
         {
+#if !ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
             if (NavMeshVisualizationSettings.showNavigation > 0)
+#endif
             {
                 var color = s_HandleColor;
                 if (!navLink.enabled)
