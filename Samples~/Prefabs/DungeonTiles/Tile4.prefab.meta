@@ -1,10 +1,7 @@
 fileFormatVersion: 2
-guid: 90dfa7f7fe66347389d869f92b1b6a9f
+guid: 5193382618d54f84b87649b2fbadbb0b
 PrefabImporter:
   externalObjects: {}
-  addedSourceAssetObjects:
-  - {fileID: 238571762410112910, guid: 90dfa7f7fe66347389d869f92b1b6a9f, type: 2}
-  isPrefabVariant: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

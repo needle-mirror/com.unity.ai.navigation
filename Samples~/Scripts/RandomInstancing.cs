@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.AI;
 
 namespace Unity.AI.Navigation.Samples
 {
@@ -18,7 +20,12 @@ namespace Unity.AI.Navigation.Samples
     
         public int m_BaseHash = 347652783;
         public float m_Size = 100.0f;
-    
+
+        [SerializeField]
+        Transform parent;
+        [SerializeField]
+        NavMeshAgent trackedAgent;
+        
         List<Transform> m_Instances = new List<Transform>();
         int m_Used;
         int m_LocX, m_LocZ;
@@ -27,7 +34,7 @@ namespace Unity.AI.Navigation.Samples
         {
             for (int i = 0; i < m_PoolSize; ++i)
             {
-                var go = Instantiate(m_Prefab, Vector3.zero, Quaternion.identity) as GameObject;
+                var go = Instantiate(m_Prefab, Vector3.zero, Quaternion.identity, parent) as GameObject;
                 go.SetActive(false);
                 m_Instances.Add(go.transform);
             }
@@ -52,9 +59,12 @@ namespace Unity.AI.Navigation.Samples
     
         void Update()
         {
-            UpdateInstances();
+            if (trackedAgent.remainingDistance > 0.1f)
+            {
+                UpdateInstances();
+            }
         }
-    
+
         void UpdateInstances()
         {
             var x = (int)Mathf.Floor(transform.position.x / m_Size);

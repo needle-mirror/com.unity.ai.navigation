@@ -1,4 +1,4 @@
-﻿#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+﻿#if ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
 
 using UnityEditor;
 using UnityEditor.AI;
@@ -9,8 +9,8 @@ using UnityEngine.UIElements;
 
 namespace Unity.AI.Navigation.Editor
 {
-    [Overlay(typeof(SceneView), "NavigationOverlay", "Navigation", defaultDisplay = true)]
-    [Icon(NavMeshComponentsGUIUtility.k_PackageEditorResourcesFolder + "NavigationOverlayIcon.png")]
+    [Overlay(typeof(SceneView), "AINavigationOverlay", "AI Navigation", defaultDisplay = true)]
+    [Icon(NavMeshComponentsGUIUtility.k_PackageEditorResourcesFolder + "Overlay/NavigationOverlay.png")]
     internal class NavigationOverlay : Overlay
     {
         static class Style

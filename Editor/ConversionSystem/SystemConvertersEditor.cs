@@ -336,7 +336,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                     element.Q<Image>("converterItemStatusIcon").image = icon;
                     element.Q<Image>("converterItemStatusIcon").tooltip = info;
                 };
-                listView.onSelectionChange += obj => { m_CoreConvertersList[id].OnClicked(listView.selectedIndex); };
+                listView.selectionChanged += obj => { m_CoreConvertersList[id].OnClicked(listView.selectedIndex); };
                 listView.unbindItem = (element, index) =>
                 {
                     var bindable = (BindableElement)element;

@@ -1,13 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.AI;
 
 namespace Unity.AI.Navigation.Samples
 {
     /// <summary>
     /// Manipulation tool for displacing the vertices in a list of meshes 
     /// </summary>
+    [DefaultExecutionOrder(-101)]
     public class MeshTool : MonoBehaviour
     {
+        NavMeshSurface m_Surface;
+        
         public enum ExtrudeMethod
         {
             Vertical,
@@ -20,11 +24,19 @@ namespace Unity.AI.Navigation.Samples
         public ExtrudeMethod m_Method = ExtrudeMethod.Vertical;
     
         RaycastHit m_HitInfo = new RaycastHit();
-    
-        void Start()
+        AsyncOperation m_LastNavMeshUpdate;
+
+        void OnEnable()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            m_Surface = GetComponent<NavMeshSurface>();
+            if (m_Surface != null)
+            {
+                m_Surface.BuildNavMesh();
+                m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
+            }
         }
     
         void Update()
@@ -34,11 +46,36 @@ namespace Unity.AI.Navigation.Samples
             {
                 Debug.DrawRay(m_HitInfo.point, m_HitInfo.normal, Color.red);
                 Vector3 displacement = (m_Method == ExtrudeMethod.Vertical) ? Vector3.up : m_HitInfo.normal;
-    
+
                 if (Input.GetMouseButton(0) || (Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.LeftShift)))
+                {
                     ModifyMesh(m_Power * displacement, m_HitInfo.point);
-                if (Input.GetMouseButton(1) || (Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift)))
+                    if (m_Surface != null)
+                    {
+                        if (m_LastNavMeshUpdate.isDone)
+                            m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
+                    }
+                        
+                }
+                else if (Input.GetMouseButton(1) || (Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift)))
+                {
                     ModifyMesh(-m_Power * displacement, m_HitInfo.point);
+                    if(m_Surface != null)
+                    {
+                        if (m_LastNavMeshUpdate.isDone)
+                            m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
+                    }
+                } 
+                else if(Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Space))
+                {
+                    if (m_Surface != null)
+                    {
+                        if (!m_LastNavMeshUpdate.isDone)
+                            NavMeshBuilder.Cancel(m_Surface.navMeshData);
+                        
+                        m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
+                    }
+                }
             }
         }
     

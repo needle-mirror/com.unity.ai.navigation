@@ -1,3 +1,6 @@
+![ReleaseBadge](https://badges.cds.internal.unity3d.com/packages/com.unity.ai.navigation/release-badge.svg)
+![CandidatesBadge](https://badges.cds.internal.unity3d.com/packages/com.unity.ai.navigation/candidates-badge.svg)
+
 # Components for Runtime NavMesh Building
 
 Here we introduce four components for the navigation system:

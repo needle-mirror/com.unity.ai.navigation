@@ -29,12 +29,12 @@ namespace Unity.AI.Navigation.Editor
             m_OverrideGenerateLinks = serializedObject.FindProperty("m_OverrideGenerateLinks");
             m_GenerateLinks = serializedObject.FindProperty("m_GenerateLinks");
 #endif
-#if !ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
             NavMeshVisualizationSettings.showNavigation++;
 #endif
         }
 
-#if !ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
         void OnDisable()
         {
             NavMeshVisualizationSettings.showNavigation--;

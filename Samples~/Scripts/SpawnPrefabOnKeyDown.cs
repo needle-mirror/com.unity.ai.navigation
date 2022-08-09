@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Unity.AI.Navigation.Samples
@@ -7,13 +8,31 @@ namespace Unity.AI.Navigation.Samples
     /// </summary>
     public class SpawnPrefabOnKeyDown : MonoBehaviour
     {
-        public GameObject m_Prefab;
-        public KeyCode m_KeyCode;
-    
+        [SerializeField]
+        GameObject prefab;
+        
+        [SerializeField]
+        KeyCode keyCode;
+        
+        [SerializeField]
+        Transform spawnedPrefabsHolder;
+
+        Transform m_Transform;
+
+        void Start()
+        {
+            m_Transform = transform;
+
+            if (spawnedPrefabsHolder == null)
+            {
+                spawnedPrefabsHolder = m_Transform;
+            }
+        }
+
         void Update()
         {
-            if (Input.GetKeyDown(m_KeyCode) && m_Prefab != null)
-                Instantiate(m_Prefab, transform.position, transform.rotation);
+            if (Input.GetKeyDown(keyCode) && prefab != null)
+                Instantiate(prefab, m_Transform.position, m_Transform.rotation, spawnedPrefabsHolder);
         }
     }
 }

@@ -14,13 +14,11 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [
-        "ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES"
-    ],
+    "defineConstraints": [],
     "versionDefines": [
         {
             "name": "Unity",
-            "expression": "2022.2.0a15",
+            "expression": "2022.2.0a16",
             "define": "ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES"
         }
     ],

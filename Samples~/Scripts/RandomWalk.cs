@@ -19,7 +19,7 @@ namespace Unity.AI.Navigation.Samples
     
         void Update()
         {
-            if (m_Agent.pathPending || m_Agent.remainingDistance > 0.1f)
+            if (m_Agent.pathPending || !m_Agent.isOnNavMesh || m_Agent.remainingDistance > 0.1f)
                 return;
     
             m_Agent.destination = m_Range * Random.insideUnitCircle;

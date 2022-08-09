@@ -48,7 +48,7 @@ namespace Unity.AI.Navigation.Samples
                 {
                     var pos = new Vector3(x * m_Spacing, 0, y * m_Spacing);
                     if (m_Tiles[map[x + y * m_Width]] != null)
-                        Instantiate(m_Tiles[map[x + y * m_Width]], pos, Quaternion.identity);
+                        Instantiate(m_Tiles[map[x + y * m_Width]], pos, Quaternion.identity, transform);
                 }
             }
         }

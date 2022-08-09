@@ -4,6 +4,25 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.0-pre.2] - 2022-08-09
+### Changed
+* The Dungeon scene included in the package samples now uses tile prefabs that contain a `NavMeshSurface` component instead of the `NavMeshPrefabInstance` script.
+* The Drop Plank scene included in the package samples now has a `NavMeshSurface` component and the `NavMeshSurfaceUpdater` script on the geometry, as well as the `DynamicNavMeshObject` script on the Plank prefab for dynamically updating the `NavMesh` when new Planks are instantiated.
+* The offset when instantiating Planks in the Drop Plank scene has been reduced.
+* The Sliding Window Infinite and the Sliding Window Terrain scenes included in the package samples now use the `NavMeshSurfaceVolumeUpdater` script instead of the `LocalNavMeshBuilder` and `NavMeshSourceTag` scripts for dynamically updating the `NavMesh`. 
+* The Modify Mesh scene included in the package samples now uses a `NavMeshSurface` component on the Mesh Tool for dynamically updating the `NavMesh` instead of the `LocalNavMeshBuilder` and `NavMeshSourceTag` scripts. The `MeshTool` script now uses the `Update()` method of `NavMeshSurface` for updating the `NavMesh` whenever the mesh is modified.
+
+### Fixed
+* The Drop Plank scene included in the package samples now destroys instantiated Planks that have fallen off the edge.
+
+### Fixed
+* Missing agent type references in the samples.
+
+### Removed
+* The `NavMeshPrefabInstance` and `NavMeshPrefabInstanceEditor` scripts from the package samples were removed.
+* The prefab editing scene `7b_dungeon_tile_prefabs` from the package samples was removed. The tiles can now be edited directly as prefabs.
+* The `LocalNavMeshBuilder` and `NavMeshSourceTag` scripts from the package samples were removed.
+
 ## [1.1.0-pre.1] - 2022-04-27
 ### Added
 * NavMeshSurface supports links generation.

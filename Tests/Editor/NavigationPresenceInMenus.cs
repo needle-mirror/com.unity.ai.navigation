@@ -29,7 +29,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             yield return "Component/Navigation/NavMeshModifier";
             yield return "Component/Navigation/NavMeshLink";
             yield return "Window/AI/Navigation";
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE
             yield return "Window/AI/Navigation (Obsolete)";
 #endif
         }
