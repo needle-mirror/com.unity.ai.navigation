@@ -28,7 +28,7 @@ namespace Unity.AI.Navigation
         /// <remarks> This includes the current GameObject and all the children of the children that are active.</remarks>
         [InspectorName("Current Object Hierarchy")]
         Children = 2,
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
         /// <summary> Use all the active objects that are marked with a NavMeshModifier. </summary>
         [InspectorName("NavMeshModifier Component Only")]
         MarkedWithModifier = 3,
@@ -63,7 +63,7 @@ namespace Unity.AI.Navigation
         [SerializeField]
         int m_DefaultArea;
 
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
         [SerializeField]
         bool m_GenerateLinks;
 #endif
@@ -244,7 +244,7 @@ namespace Unity.AI.Navigation
 
             buildSettings.minRegionArea = minRegionArea;
 
-#if ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT
+#if UNITY_2022_2_OR_NEWER
             buildSettings.buildHeightMesh = buildHeightMesh;
 #endif
 
@@ -390,7 +390,7 @@ namespace Unity.AI.Navigation
                 markup.overrideArea = m.overrideArea;
                 markup.area = m.area;
                 markup.ignoreFromBuild = m.ignoreFromBuild;
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
                 markup.applyToChildren = m.applyToChildren;
                 markup.overrideGenerateLinks = m.overrideGenerateLinks;
                 markup.generateLinks = m.generateLinks;
@@ -401,7 +401,7 @@ namespace Unity.AI.Navigation
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying)
             {
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
                 if (m_CollectObjects == CollectObjects.All)
                 {
                     UnityEditor.AI.NavMeshBuilder.CollectSourcesInStage(
@@ -444,12 +444,12 @@ namespace Unity.AI.Navigation
                     UnityEditor.AI.NavMeshBuilder.CollectSourcesInStage(
                         worldBounds, m_LayerMask, m_UseGeometry, m_DefaultArea, markups, gameObject.scene, sources);
                 }
-#endif //ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#endif //UNITY_2022_2_OR_NEWER
             }
             else
 #endif
             {
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
                 if (m_CollectObjects == CollectObjects.All)
                 {
                     NavMeshBuilder.CollectSources(null, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups, false, sources);
@@ -483,7 +483,7 @@ namespace Unity.AI.Navigation
                     var worldBounds = GetWorldBounds(localToWorld, GetInflatedBounds());
                     NavMeshBuilder.CollectSources(worldBounds, m_LayerMask, m_UseGeometry, m_DefaultArea, markups, sources);
                 }
-#endif //ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#endif //UNITY_2022_2_OR_NEWER
             }
 
             if (m_IgnoreNavMeshAgent)

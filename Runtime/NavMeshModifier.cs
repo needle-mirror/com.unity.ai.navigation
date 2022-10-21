@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 namespace Unity.AI.Navigation
 {
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
     /// <summary> Component that modifies the properties of the GameObjects used for building a NavMesh. </summary>
     /// <remarks>The properties apply to the current GameObject and can be optionally applied recursively to all its children
     /// in the hierarchy. This modifier overrides the properties set to this GameObject by
@@ -26,7 +26,7 @@ namespace Unity.AI.Navigation
         [SerializeField]
         int m_Area;
 
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
         [SerializeField]
         bool m_OverrideGenerateLinks;
 
@@ -37,7 +37,7 @@ namespace Unity.AI.Navigation
         [SerializeField]
         bool m_IgnoreFromBuild;
         
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
         [SerializeField]
         bool m_ApplyToChildren = true;
 #endif
@@ -57,7 +57,7 @@ namespace Unity.AI.Navigation
         /// <seealso href="https://docs.unity3d.com/Manual/nav-AreasAndCosts.html"/>
         public int area { get { return m_Area; } set { m_Area = value; } }
         
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
         /// <summary> Gets or sets whether the default links generation condition for the GameObject and its children should be overridden. </summary>
         public bool overrideGenerateLinks { get { return m_OverrideGenerateLinks; } set { m_OverrideGenerateLinks = value; } }
         
@@ -68,7 +68,7 @@ namespace Unity.AI.Navigation
         /// <summary> Gets or sets whether the NavMesh building process ignores this GameObject and its children. </summary>
         public bool ignoreFromBuild { get { return m_IgnoreFromBuild; } set { m_IgnoreFromBuild = value; } }
         
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
         /// <summary> Gets or sets whether this GameObject's children also use the modifier settings. </summary>
         public bool applyToChildren { get { return m_ApplyToChildren; } set { m_ApplyToChildren = value; } }
 #endif

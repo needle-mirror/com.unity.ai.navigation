@@ -15,12 +15,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [
-        {
-            "name": "Unity",
-            "expression": "2022.2.0a16",
-            "define": "ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES"
-        }
-    ],
+    "versionDefines": [],
     "noEngineReferences": false
 }

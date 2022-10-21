@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2022-10-21
+### Changed
+* Clarified the information text displayed by the NavMesh Updater
+
 ## [1.1.0-pre.2] - 2022-08-09
 ### Changed
 * The Dungeon scene included in the package samples now uses tile prefabs that contain a `NavMeshSurface` component instead of the `NavMeshPrefabInstance` script.
@@ -14,8 +18,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 * The Drop Plank scene included in the package samples now destroys instantiated Planks that have fallen off the edge.
-
-### Fixed
 * Missing agent type references in the samples.
 
 ### Removed

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "1.1.0-pre.2",
+  "version": "1.1.1",
   "unity": "2022.2",
   "description": "High-level NavMesh components for building and using NavMeshes at runtime and at edit time.",
   "dependencies": {
@@ -15,11 +15,11 @@
     }
   ],
   "upmCi": {
-    "footprint": "526244f79b5f00b086741c1f3c0d966202b44fac"
+    "footprint": "e3ad0ebea85060d96f669bbec07cad10db6bd865"
   },
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "13be26433bbb092a0bef77f72cb0690b87de6bf6"
+    "revision": "68f64fce84ec1c6721cae1231d5cf4003494eb08"
   }
 }

@@ -1,4 +1,4 @@
-#if ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE
+#if UNITY_2022_2_OR_NEWER
 
 using UnityEngine;
 using UnityEditor.AI;

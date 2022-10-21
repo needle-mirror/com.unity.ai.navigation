@@ -22,11 +22,6 @@
             "name": "com.unity.modules.physics",
             "expression": "1.0.0",
             "define": "NMC_CAN_ACCESS_PHYSICS"
-        },
-        {
-            "name": "Unity",
-            "expression": "2022.2.0a16",
-            "define": "ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES"
         }
     ],
     "noEngineReferences": false

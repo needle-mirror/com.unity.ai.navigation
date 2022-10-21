@@ -141,7 +141,7 @@ namespace Unity.AI.Navigation.Editor
             Gizmos.DrawLine(navLink.startPoint + right * rad, navLink.endPoint + right * rad);
         }
 
-#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+#if !UNITY_2022_2_OR_NEWER
         [DrawGizmo(GizmoType.Selected | GizmoType.Active | GizmoType.Pickable)]
 #else
         [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active | GizmoType.Pickable)]
@@ -172,7 +172,7 @@ namespace Unity.AI.Navigation.Editor
         [DrawGizmo(GizmoType.NotInSelectionHierarchy | GizmoType.Pickable)]
         static void RenderBoxGizmoNotSelected(NavMeshLink navLink, GizmoType gizmoType)
         {
-#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+#if !UNITY_2022_2_OR_NEWER
             if (NavMeshVisualizationSettings.showNavigation > 0)
 #endif
             {

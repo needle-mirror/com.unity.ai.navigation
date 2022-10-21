@@ -1,4 +1,4 @@
-﻿#if ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+﻿#if UNITY_2022_2_OR_NEWER
 
 using UnityEditor;
 using UnityEditor.AI;

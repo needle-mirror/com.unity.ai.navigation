@@ -32,12 +32,12 @@ namespace Unity.AI.Navigation.Editor
             m_Area = serializedObject.FindProperty("m_Area");
             m_Center = serializedObject.FindProperty("m_Center");
             m_Size = serializedObject.FindProperty("m_Size");
-#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+#if !UNITY_2022_2_OR_NEWER
             NavMeshVisualizationSettings.showNavigation++;
 #endif
         }
 
-#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+#if !UNITY_2022_2_OR_NEWER
         void OnDisable()
         {
             NavMeshVisualizationSettings.showNavigation--;
@@ -67,7 +67,7 @@ namespace Unity.AI.Navigation.Editor
             serializedObject.ApplyModifiedProperties();
         }
         
-#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+#if !UNITY_2022_2_OR_NEWER
         [DrawGizmo(GizmoType.Selected | GizmoType.Active)]
 #else
         [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active)]
@@ -97,7 +97,7 @@ namespace Unity.AI.Navigation.Editor
         [DrawGizmo(GizmoType.NotInSelectionHierarchy | GizmoType.Pickable)]
         static void RenderBoxGizmoNotSelected(NavMeshModifierVolume navModifier, GizmoType gizmoType)
         {
-#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+#if !UNITY_2022_2_OR_NEWER
             if (NavMeshVisualizationSettings.showNavigation > 0)
 #endif
             {

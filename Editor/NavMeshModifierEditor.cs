@@ -12,7 +12,7 @@ namespace Unity.AI.Navigation.Editor
         SerializedProperty m_IgnoreFromBuild;
         SerializedProperty m_OverrideArea;
         SerializedProperty m_Area;
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
         SerializedProperty m_ApplyToChildren;
         SerializedProperty m_OverrideGenerateLinks;
         SerializedProperty m_GenerateLinks;
@@ -24,17 +24,17 @@ namespace Unity.AI.Navigation.Editor
             m_IgnoreFromBuild = serializedObject.FindProperty("m_IgnoreFromBuild");
             m_OverrideArea = serializedObject.FindProperty("m_OverrideArea");
             m_Area = serializedObject.FindProperty("m_Area");
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
             m_ApplyToChildren = serializedObject.FindProperty("m_ApplyToChildren");
             m_OverrideGenerateLinks = serializedObject.FindProperty("m_OverrideGenerateLinks");
             m_GenerateLinks = serializedObject.FindProperty("m_GenerateLinks");
 #endif
-#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+#if !UNITY_2022_2_OR_NEWER
             NavMeshVisualizationSettings.showNavigation++;
 #endif
         }
 
-#if !ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION
+#if !UNITY_2022_2_OR_NEWER
         void OnDisable()
         {
             NavMeshVisualizationSettings.showNavigation--;
@@ -54,7 +54,7 @@ namespace Unity.AI.Navigation.Editor
 
             NavMeshComponentsGUIUtility.AgentMaskPopup("Affected Agents", m_AffectedAgents);
 
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
             EditorGUILayout.PropertyField(m_ApplyToChildren);
 #endif
 
@@ -68,7 +68,7 @@ namespace Unity.AI.Navigation.Editor
                     EditorGUI.indentLevel--;
                 }
 
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
                 EditorGUILayout.PropertyField(m_OverrideGenerateLinks);
                 if (m_OverrideGenerateLinks.boolValue)
                 {

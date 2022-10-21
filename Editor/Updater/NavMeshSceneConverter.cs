@@ -1,4 +1,4 @@
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +10,7 @@ namespace Unity.AI.Navigation.Updater
 	internal class NavMeshSceneConverter : SystemConverter
 	{
 		public override string name => "NavMesh Scene Converter";
-		public override string info => "Converts the legacy baked NavMesh with a NavMeshSurface on a GameObject named 'Navigation'.\nReplaces Navigation static values with NavMeshModifier components.";
+		public override string info => "Reassigns the legacy baked NavMesh to a NavMeshSurface on a game object named 'Navigation'.\nAdds a NavMeshModifier component to each game object marked as Navigation Static.";
 		public override Type container => typeof(BuiltInToNavMeshSurfaceConverterContainer);
 		
 		List<string> m_AssetsToConvert = new List<string>();

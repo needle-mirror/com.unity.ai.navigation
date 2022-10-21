@@ -24,7 +24,7 @@ namespace Unity.AI.Navigation.Editor
         SerializedProperty m_Center;
         SerializedProperty m_CollectObjects;
         SerializedProperty m_DefaultArea;
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
         SerializedProperty m_GenerateLinks;
 #endif
         SerializedProperty m_LayerMask;
@@ -73,7 +73,7 @@ namespace Unity.AI.Navigation.Editor
             m_Center = serializedObject.FindProperty("m_Center");
             m_CollectObjects = serializedObject.FindProperty("m_CollectObjects");
             m_DefaultArea = serializedObject.FindProperty("m_DefaultArea");
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
             m_GenerateLinks = serializedObject.FindProperty("m_GenerateLinks");
 #endif
             m_LayerMask = serializedObject.FindProperty("m_LayerMask");
@@ -126,7 +126,7 @@ namespace Unity.AI.Navigation.Editor
             NavMeshComponentsGUIUtility.AgentTypePopup("Agent Type", m_AgentTypeID);
 
             NavMeshComponentsGUIUtility.AreaPopup("Default Area", m_DefaultArea);
-#if ENABLE_NAVIGATION_PACKAGE_RELEASE_FEATURES
+#if UNITY_2022_2_OR_NEWER
             EditorGUILayout.PropertyField(m_GenerateLinks, s_Styles.m_GenerateLinks);
 #endif
             
@@ -216,7 +216,7 @@ namespace Unity.AI.Navigation.Editor
                 EditorGUILayout.PropertyField(m_MinRegionArea, s_Styles.m_MinRegionArea);
 
                 // Height mesh
-#if ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT
+#if UNITY_2022_2_OR_NEWER
                 var heightMeshGUIContent = new GUIContent(m_BuildHeightMesh.displayName, "Generate an accurate height mesh for precise agent placement (slower).");
                 EditorGUILayout.PropertyField(m_BuildHeightMesh, heightMeshGUIContent);
 #else

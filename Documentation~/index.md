@@ -1,22 +1,13 @@
-# NavMesh Building Components
+# Navigation and Pathfinding
 
-## Installation
+![](./Images/NavMeshCover.png)
 
-This package is currently experimental and not visible in the [Package Manager](https://docs.unity3d.com/Manual/upm-ui.html).
+The navigation system allows you to create characters that can intelligently move around the game world, using navigation meshes that are created automatically from your [**Scene**][1] geometry. Dynamic obstacles allow you to alter the navigation of the characters at runtime, while off-mesh links let you build specific actions like opening doors or jumping down from a ledge. This section describes Unity's navigation and pathfinding systems in detail.
 
-To install the package, follow [Adding a registry package by name](https://docs.unity3d.com/2021.2/Documentation/Manual/upm-ui-quick.html) instructions and add __com.unity.ai.navigation__.
+You can learn more on how to visualize your scene's navigation information in the [Navigation Debug Visualization](NavigationDebugVisualization.md) section of this documentation.
 
-## Details
+**Related tutorials:** [Navigation](http://unity3d.com/learn/tutorials/topics/navigation)
 
-NavMesh building components provides you with additional controls for automatically generating and using NavMeshes at run time and in the Unity Editor. For additional information about the process, visit the manual page about the legacy workflow for [baking a NavMesh](https://docs.unity3d.com/Manual/nav-BuildingNavMesh.html).
+Search the [Unity Knowledge Base](https://support.unity3d.com/hc/en-us) for tips, tricks and troubleshooting.
 
-
-Here we introduce four high level components for the navigation system:
-
-* [NavMeshSurface](NavMeshSurface.md) - Use for building and enabling a NavMesh surface for one type of Agent.
-* [NavMeshModifier](NavMeshModifier.md) - Use for affecting the NavMesh generation of NavMesh area types based on the transform hierarchy.
-* [NavMeshModifierVolume](NavMeshModifierVolume.md) - Use for affecting the NavMesh generation of NavMesh area types based on volume.
-* [NavMeshLink](NavMeshLink.md) - Use for connecting the same or different NavMesh surfaces for one type of Agent.
-
-For more details about NavMesh area types, see documentation on [NavMesh areas](https://docs.unity3d.com/Manual/nav-AreasAndCosts.html).
-
+[1]: https://docs.unity3d.com/Manual/CreatingScenes.html "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
