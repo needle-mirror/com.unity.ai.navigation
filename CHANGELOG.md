@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2023-04-13
+### Changed
+* Remove some unnecessary files from the package
+
+## [1.1.2] - 2023-04-03
+### Changed
+* The _AI Navigation_ overlay in the scene view remembers which sections have been collapsed
+* Updated a large part of the documentation to reflect the current functionality
+
 ## [1.1.1] - 2022-10-21
 ### Changed
 * Clarified the information text displayed by the NavMesh Updater

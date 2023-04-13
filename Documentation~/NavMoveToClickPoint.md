@@ -26,4 +26,4 @@ This script lets you choose the destination point on the [**NavMesh**][1] by cli
     }
 ```
 
-[1]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[1]: ./Glossary.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."

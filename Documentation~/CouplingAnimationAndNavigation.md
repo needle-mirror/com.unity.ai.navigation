@@ -22,7 +22,7 @@ For blending control we add two float parameters **velx** and **vely**, and assi
 
 Here we’ll be placing 7 run animations — each with a different velocity. In addition to the forwards (+ left/right) and backwards (+ left/right) we also use an [**animation clip**][2] for running on the spot. The latter is highlighted in the center of the 2D blend map below. The reason for having an animation running on the spot is two-fold, firstly it preserves the style of running when blended with the other animations. Secondly the animation prevents foot-sliding when blending.
 
-![](./Images/NavAnimBlend2d.jpg)
+![](./Images/NavAnimBlend2d.png)
 
 Then we add the idle animation clip in it’s own node (**Idle**). We now have two discrete animation states that we couple with 2 transitions.
 
@@ -250,5 +250,5 @@ We have set up a character that moves using the navigation system and animates a
 [2]: https://docs.unity3d.com/Manual/class-AnimationClip.html 'Animation data that can be used for animated characters or simple animations. It is a simple “unit” piece of motion, such as (one specific instance of) “Idle”, “Walk” or “Run”.'
 [3]: https://docs.unity3d.com/Manual/AnimatorWindow.html "The window where the Animator Controller is visualized and edited."
 [4]: https://docs.unity3d.com/Manual/AnimationParameters.html "Used to communicate between scripting and the Animator Controller. Some parameters can be set in scripting and used by the controller, while other parameters are based on Custom Curves in Animation Clips and can be sampled using the scripting API."
-[5]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[5]: ./Glossary.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 [6]: https://docs.unity3d.com/Manual/CreatingScenes.html "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."

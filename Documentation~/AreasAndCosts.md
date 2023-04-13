@@ -57,9 +57,9 @@ The area mask is useful when you want only certain types characters to be able t
 
 ### Additional resources
 
-- [Building a NavMesh](./BuildingNavMesh.md) – workflow for NavMesh baking.
+- [Create a NavMesh](./CreateNavMesh.md) - Workflow to create a NavMesh
 - [NavMeshAgent.areaMask](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent-areaMask.html) - Script API to set areaMask for an agent.
 - [NavMeshAgent.SetAreaCost()](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent.SetAreaCost.html) - Script API to set area cost for an agent.
 
-[1]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[2]: https://docs.unity3d.com/Manual/comp-MeshGroup.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
+[1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[2]: https://docs.unity3d.com/Manual/mesh-introduction.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."

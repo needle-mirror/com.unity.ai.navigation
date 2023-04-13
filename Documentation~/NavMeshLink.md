@@ -6,20 +6,20 @@ This link can be from point to point or it can span a gap, in which case the Age
 
 You must use a NavMesh Link to connect different NavMesh Surfaces.
 
-To use the NavMesh Link component, navigate to __GameObject__ > __AI__ > __NavMesh Link__.
+To use the NavMesh Link component, navigate to **GameObject > AI > NavMesh Link**.
 
 ![NavMeshLink example](Images/NavMeshLink-Example.png "A NavMesh Link component open in the Inspector window")
 
 ## Parameters
-| __Property__| __Function__ |
-|:---|:---| 
-| __Agent Type__| The Agent type that can use the link.|
-| __Start Point__| The start point of the link, relative to the GameObject. Defined by XYZ measurements. |
-| __End Point__| The end point of the link, relative to the GameObject. Defined by XYZ measurements. |
-| __Align Transform To Points__| Clicking this button moves the GameObject at the link’s center point and aligns the transform’s forward axis with the end point. |
-| __Cost Modifier__| When the cost modifier value is non-negative the cost of moving over the NavMeshLink is equivalent to the cost modifier value times the Euclidean distance between NavMeshLink end points.
-| __Bidirectional__| With this tickbox checked, NavMesh Agents traverse the NavMesh Link both ways (from the start point to the end point, and from the end point back to the start point).<br/>When this tickbox is unchecked, the NavMesh Link only functions one-way (from the start point to the end point only). |
-| __Area Type__| The area type of the NavMesh Link (this affects pathfinding costs). <br/> - __Walkable__ (this is the default option)<br/> - __Not Walkable__ <br/> - __Jump__ |
+| **Property**                  | **Description**          |
+|:------------------------------|:-------------------------| 
+| **Agent Type**                | Specify the Agent type that can use the link.|
+| **Start Point**               | Specify the start point of the link, relative to the GameObject. Defined by XYZ coordinates. |
+| **End Point**                 | Specify the end point of the link, relative to the GameObject. Defined by XYZ coordinates. |
+| **Align Transform To Points** | Clicking this button moves the GameObject at the link’s center point and aligns the transform’s forward axis with the end point. |
+| **Cost Modifier**             | When the cost modifier value is non-negative the cost of moving over the NavMeshLink is equivalent to the cost modifier value times the Euclidean distance between NavMeshLink end points.
+| **Bidirectional**             | With this checkbox selected, NavMesh Agents traverse the NavMesh Link both ways (from the start point to the end point, and from the end point back to the start point).<br/>When this checkbox is cleared, the NavMesh Link only functions one-way (from the start point to the end point only). |
+| **Area Type**                 | The area type of the NavMesh Link (this affects pathfinding costs). <br/> - **Walkable** (this is the default option)<br/> - **Not Walkable** <br/> - **Jump** |
 
 
 ## Connecting multiple NavMesh Surfaces together

@@ -1,30 +1,74 @@
-# NavMeshModifier
+# NavMesh Modifier component reference
 
-NavMesh Modifiers adjust how a specific GameObject behaves during NavMesh baking at runtime.
+Use the NavMesh Modifier component to adjust the behavior of a GameObject when the NavMesh is baked at runtime. The NavMesh Modifier component affects the NavMesh during the generation process only. This means the NavMesh is updated to reflect any changes to NavMesh Modifier components when you bake the NavMesh. Use the available properties to specify changes in behavior and any limits to those changes.
 
-To use the NavMesh Modifier component, navigate to __GameObject__ > __AI__ > __NavMesh Modifier__.
+To use the NavMesh Modifier component, add it to a GameObject as follows: 
+1. Select the GameObject whose effect on the NavMesh you want to modify.
+1. In the Inspector, select **Add Component**, then select **Navigation** &gt; **NavMesh Modifier**. <br/> The NavMesh Modifier component is displayed in the Inspector window.
 
-In the image below, the platform in the bottom right has a modifier attached to it that sets its __Area Type__ to __Lava__.
+The NavMesh Modifier can also affect the NavMesh generation process hierarchically. This means that the GameObject the component is attached to, as well as all its children, are affected. In addition, you can place another NavMesh Modifier further down the hierarchy to override the NavMesh Modifier that is further up the hierarchy.
 
-![NavMeshModifier example](Images/NavMeshModifier-Example.png "A NavMesh Modifier component open in the Inspector window")
+To apply the NavMesh Modifier hierarchically, select the **Apply To Children** property.
 
-The NavMesh Modifier optionally affects GameObjects hierarchically, meaning the GameObject that the component is attached to as well as all its children are affected. Additionally, if another NavMesh Modifier is found further down the transform hierarchy, the new NavMesh Modifier overrides the one further up the hierarchy.<br/>
-To enable this behaviour use the __Apply To Children__ option.
 
-The NavMesh Modifier affects the NavMesh generation process, meaning the NavMesh has to be updated to reflect any changes to NavMesh Modifiers.
+**Note**: The NavMesh Modifier component replaces the legacy Navigation Static setting which you could enable from the Objects tab of the Navigation window and the Static flags dropdown on the GameObject. The NavMesh Modifier component is available for baking at runtime, whereas the Navigation Static flags were available in the Editor only. 
 
---
+The following table describes the properties available in the NavMesh Modifier component.
 
-Note: This component is a replacement for the legacy setting which could be enabled from the Navigation window Objects tab as well as the static flags dropdown on the GameObject. This component is available for baking at runtime, whereas the static flags are available in the editor only.
+<table>
+  <thead>
+    <tr>
+      <th colspan="1"><strong>Property</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3"><strong>Mode</strong></td>
+      <td colspan="2">Specify whether to consider or ignore the affected GameObject(s).</td>
+    </tr>
+    <tr>
+      <td><strong>Add or Modify Object</strong></td>
+      <td>Consider the affected GameObject(s) when building the NavMesh.</td>
+    </tr>
+    <tr>
+      <td><strong>Remove Object</strong></td>
+      <td>Ignore the affected object(s) when building the NavMesh for the specified agent type.</td>
+    </tr>
+    <tr>
+      <td rowspan="3"><strong>Affected Agents</strong></td>
+      <td colspan="2">Specify which agents the NavMesh Modifier affects. For example, you can choose to have certain obstacles be ignored by specific agents. </td>
+    </tr>
+    <tr>
+      <td><strong>All</strong></td>
+      <td>Modify the behavior of all agents. </td>
+    </tr>
+    <tr>
+      <td><strong>None</strong></td>
+      <td>Exclude all agents from the modified behavior.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Apply to Children</strong></td>
+      <td colspan="2">Apply the configuration to the child hierarchy of the GameObject.<br/>To override this component's influence further down the hierarchy, add another NavMesh Modifier component.</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>Override Area</strong></td>
+      <td colspan="2">Change the area type for the affected GameObject(s).<br/> If you want to change the area type, select the checkbox then select the new area type in the Area Type dropdown. <br/> If you do not want to change the area type, clear the checkbox.</td>
+    </tr>
+    <tr>
+      <td><strong>Area Type</strong></td>
+      <td>Select the new area type you want to apply from the dropdown.</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><strong>Override Generate Links</strong></td>
+      <td colspan="2">Force the NavMesh bake process to either include or ignore the affected GameObject(s) when you generate links. </td>
+    </tr>
+    <tr>
+      <td><strong>Generate Links</strong></td>
+      <td>Specify whether or not to include the affected GameObject(s) when you generate links.<br/> To include the GameObject(s) when you generate links in the NavMesh bake process, select this checkbox. <br/> To ignore the GameObject(s) when you generate links in the NavMesh bake process, clear this checkbox.</td>
+    </tr>
+  </tbody>
+</table>
 
-## Parameters
-| Property                    | Function                                                                                                                                                                                                                                                         |
-|:----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| __Mode__                    | Depending on this value the affected object(s) will be removed or considered during the build process.<br/> - __Add or Modify Object__ : objects are considered during the build process<br/> - __Remove Object__ : objects are discarded from the build process |
-| __Affected Agents__         | A selection of Agents the Modifier affects. For example, you may choose to exclude certain obstacles from specific Agents.                                                                                                                                       |
-| __Apply To Children__       | Check this tickbox to apply the configuration to the GameObject children hierarchy.<br/>You can still override this component's influence down the hierarchy line by adding another NavMesh Modifier component.                                                  |
-| __Override Area Type__      | Check this tickbox to change the area type for the affected GameObject(s).                                                                                                                                                                                       |
-| __Area Type__               | Select the new area type to apply from the drop-down menu.                                                                                                                                                                                                       |
-| __Override Generate Links__ | Check this tickbox to force the way the affected GameObject(s) will be considered by the NavMesh baking links generation.                                                                                                                                        |
-| __Generate Links__          | Check this tickbox to consider the GameObject(s) during links generation, uncheck it to remove them from the link generation.                                                                                                                                    |
-
+## Additional resources
+* [Create a NavMesh](CreateNavMesh.md)

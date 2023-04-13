@@ -50,8 +50,8 @@ You can use [**NavMesh**][1] Agent, NavMesh Obstacle, and Off [**Mesh**][2] Link
 - If a game object has a Rigidbody and a NavMesh Obstacle attached, the obstacle’s velocity is obtained from the Rigidbody automatically
     - This allows NavMesh Agents to predict and avoid the moving obstacle
 
-[1]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[2]: https://docs.unity3d.com/Manual/comp-MeshGroup.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
+[1]: ./Glossary.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[2]: https://docs.unity3d.com/Manual/mesh-introduction.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
 [3]: https://docs.unity3d.com/Manual/CollidersOverview.html "An invisible shape that is used to handle physical collisions for an object. A collider doesn’t need to be exactly the same shape as the object’s mesh - a rough approximation is often more efficient and indistinguishable in gameplay."
 [4]: https://docs.unity3d.com/Manual/class-Rigidbody.html "A component that allows a GameObject to be affected by simulated gravity and other forces."
 [5]: https://docs.unity3d.com/Manual/RootMotion.html "Motion of character’s root node, whether it’s controlled by the animation itself or externally."

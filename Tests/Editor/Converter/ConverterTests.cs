@@ -1,4 +1,4 @@
-﻿#if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
 
 using NUnit.Framework;
 using UnityEditor;
@@ -18,7 +18,6 @@ namespace Unity.AI.Navigation.Editor.Tests
         const string k_TestFolderPath = k_RootFolder + "/" + k_TestFolder;
         const string k_TestScenePath = k_TestFolderPath + "/ConverterTestsScene.unity";
         const string k_BuildHeightMeshPropertyName = "m_BuildSettings.buildHeightMesh";
-        const string k_NavMeshDataPropertyPath = "m_NavMeshData";
 
         bool m_BuildHeightMeshPreviousValue;
 
@@ -28,7 +27,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             if (!AssetDatabase.IsValidFolder(k_TestFolderPath))
                 AssetDatabase.CreateFolder(k_RootFolder, k_TestFolder);
             Assume.That(AssetDatabase.IsValidFolder(k_TestFolderPath));
-            
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             var planeGameObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -46,10 +45,10 @@ namespace Unity.AI.Navigation.Editor.Tests
             buildHeightMeshProperty.boolValue = true;
             settingsObject.ApplyModifiedProperties();
             Assume.That(buildHeightMeshProperty.boolValue, Is.True, "buildHeightMesh property from the build settings object should be true");
-            
+
             NavMeshBuilder.BuildNavMesh();
             EditorSceneManager.SaveScene(scene, k_TestScenePath);
-            
+
             Assume.That(NavMeshUpdaterUtility.IsSceneReferencingLegacyNavMesh(k_TestScenePath));
 
             NavMeshUpdaterUtility.ConvertScene(k_TestScenePath);
@@ -65,7 +64,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         [Test]
         public void Converter_AfterConversion_NavMeshSurfaceIsPresent()
         {
-            var surface = Object.FindObjectOfType<NavMeshSurface>();
+            var surface = Object.FindAnyObjectByType<NavMeshSurface>();
             Assert.IsNotNull(surface, "Unable to find a NavMesh surface, it should have been created by the conversion");
         }
 
@@ -79,7 +78,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         [Test]
         public void Converter_AfterConversion_NoNavigationStaticGameObjects()
         {
-            var gameObjects = Object.FindObjectsOfType<GameObject>();
+            var gameObjects = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
             foreach (var gameObject in gameObjects)
             {
 #pragma warning disable 618
@@ -91,7 +90,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         [Test]
         public void Converter_AfterConversion_HeightMeshIsPresent()
         {
-            var surface = Object.FindObjectOfType<NavMeshSurface>();
+            var surface = Object.FindAnyObjectByType<NavMeshSurface>();
             Assume.That(surface, Is.Not.Null, "Unable to find a NavMesh surface, it should have been created by the conversion");
             Assert.IsTrue(surface.buildHeightMesh, "A scene NavMesh built with HeightMesh should be converted to a surface with the buildHeightMesh option enabled");
         }
@@ -100,12 +99,12 @@ namespace Unity.AI.Navigation.Editor.Tests
         public void OneTimeTearDown()
         {
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            
+
             if (AssetDatabase.IsValidFolder(k_TestFolderPath))
                 AssetDatabase.DeleteAsset(k_TestFolderPath);
-            
+
             // Restore build settings value
-            var settingsObject = new SerializedObject(UnityEditor.AI.NavMeshBuilder.navMeshSettingsObject);
+            var settingsObject = new SerializedObject(NavMeshBuilder.navMeshSettingsObject);
             Assume.That(settingsObject, Is.Not.Null, "Unable to get the build settings object");
             var buildHeightMeshProperty = settingsObject.FindProperty(k_BuildHeightMeshPropertyName);
             Assume.That(buildHeightMeshProperty, Is.Not.Null, "Unable to get the buildHeightMesh property from the build settings object");

@@ -204,6 +204,8 @@ namespace Unity.AI.Navigation.Editor
 
         static Foldout AddFoldout(VisualElement parent, GUIContent text, int padding)
         {
+            var prefName = $"AINavigationOverlay_Foldout_{text.text}";
+
             var foldout = new Foldout
             {
                 text = text.text,
@@ -211,8 +213,12 @@ namespace Unity.AI.Navigation.Editor
                 style =
                 {
                     paddingBottom = padding
-                }
+                },
+                value = EditorPrefs.GetBool(prefName, true)
             };
+
+            foldout.RegisterValueChangedCallback(evt =>
+                EditorPrefs.SetBool(prefName, evt.newValue));
 
             parent.Add(foldout);
 

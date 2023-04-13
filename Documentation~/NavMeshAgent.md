@@ -1,49 +1,51 @@
-# NavMesh Agent
+# NavMesh Agent component reference
 
-NavMeshAgent components help you to create characters which avoid each other while moving towards their goal. Agents reason about the game world using the [**NavMesh**][1] and they know how to avoid each other as well as other moving obstacles. Pathfinding and spatial reasoning are handled using the scripting API of the NavMesh Agent.
+The NavMesh Agent component allows you to create characters (agents) that avoid each other as they move through a scene. Agents use the [NavMesh][1] to navigate through the space of the game and avoid each other and other moving obstacles. You can use the scripting API of the NavMesh Agent to handle pathfinding and spatial reasoning.
 
-![](./Images/NavMeshAgent.png)
+To use the NavMesh Agent component, add it to a GameObject:
+1. Select the GameObject that represents your agent.
+1. In the Inspector, click **Add Component**.
+1. Select **Navigation** &gt; **NavMesh Agent**. 
+   <br/>The NavMesh Agent component is displayed in the Inspector window.
 
-## Properties
-| Property                    | Function                |
-|:----------------------------|:------------------------|
-| _Agent Size_ |
-| **Radius** | Radius of the agent, used to calculate [**collisions**][2] between obstacles and other agents.|
-| **Height** | The height clearance the agent needs to pass below an obstacle overhead.|
-| **Base offset** | Offset of the collision cylinder in relation to the transform pivot point. |
-| _Steering_ |
-| **Speed** | Maximum movement speed (in world units per second). | 
-| **Angular Speed** | Maximum speed of rotation (degrees per second). |
-| **Acceleration** | Maximum acceleration (in world units per second squared). | 
-| **Stopping distance** | The agent will stop when this close to the goal location. |
-| **Auto Braking** | When enabled, the agent will slow down when reaching the destination. You should disable this for behaviors such patrolling, where the agent should move smoothly between multiple points. |
-| _Obstacle Avoidance_ |
-| **Quality** | Obstacle avoidance quality. If you have high number of agents you can save CPU time by reducing the obstacle avoidance quality. Setting avoidance to none, will only resolve collision, but will not try to actively avoid other agents and obstacles. |
-| **Priority** | Agents of lower priority will be ignored by this agent when performing avoidance. The value should be in the range 0–99 where lower numbers indicate higher priority. |
-| _Path Finding_ |
-| **Auto Traverse OffMesh Link** | Set to true to automatically traverse off-mesh links. You should turn this off when you want to use animation or some specific way to traverse off-mesh links. |
-| **Auto Repath** | When enabled the agent will try to find path again when it reaches the end of a partial path. When there is no path to the destination, a partial path is generated to the closest reachable location to the destination. |
-| **Area Mask** | Area mask describes which [area types](./AreasAndCosts.md) the agent will consider when finding a path. When you prepare meshes for NavMesh baking, you can set each meshes area type. For example you can mark stairs with special area type, and forbid some character types from using the stairs. |
+You can use this component to create NavMesh agents. For more details, see [Create a NavMesh Agent](./CreateNavMeshAgent.md). For more information about NavMesh agents, see [About NavMesh agents](AboutAgents).
 
-## Details
+The following tables describe the properties available in the NavMesh agent component.
 
-The agent is defined by an upright cylinder whose size is specified by the _Radius_ and _Height_ properties. The cylinder moves with the object but always remains upright even if the object itself rotates. The shape of the cylinder is used to detect and respond to collisions between other agents and obstacles. When the [**GameObject**][3]’s anchor point is not at the base of the cylinder, you can use the _Base Offset_ property to take up the height difference.
+| Property        | Description             |
+|:----------------|:------------------------|
+| **Agent type**  | Select the type of agent you want to create. This allows the agent to move along any NavMesh created for the selected agent type. |
+| **Base offset** | Specify the offset of the collision cylinder in relation to the transform pivot point. |
 
-![](./Images/NavMeshAgentOffset.svg)
+## Steering 
+| Property              | Description             |
+|:----------------------|:------------------------|
+| **Speed**             | Set the maximum speed (in Unity units per second) at which the agent can move along a path. | 
+| **Angular Speed**     | Set the maximum rotation speed (in degrees per second) of the agent. |
+| **Acceleration**      | Set the maximum acceleration (in Unity units per second squared). | 
+| **Stopping Distance** | Specify how close the agent can get to its destination. The agent stops when it arrives this close to the destination location. |
+| **Auto Braking**      | Specify if the agent slows down as it approaches its destination. When enabled, the agent slows down as it approaches the destination. Disable this if you want the agent to move smoothly between multiple points (for example, if the agent is a guard on patrol). |
 
-The height and radius of the cylinder are actually specified in _two_ different places: the [NavMesh bake settings](./BuildingNavMesh.md) and the properties of the individual agents.
+## Obstacle Avoidance 
+| Property     | Description             |
+|:-------------|:------------------------|
+| **Radius**   | Specify the distance from the agent's center that is used to calculate [collisions][2] between the agent and other GameObjects. |
+| **Height**   | Specify the height clearance that the agent needs to pass below an obstacle that is overhead. For example, the minimum height of a doorway or tunnel.|
+| **Quality**  | Select the obstacle avoidance quality. If you have a high number of agents, you can reduce the obstacle avoidance quality to reduce performance costs. If you set obstacle avoidance quality to none, then collisions resolve, but other agents and obstacles are not actively avoided. |
+| **Priority** | Specify how agents behave as they avoid each other. Agents avoid other agents of higher priority and ignore other agents of lower priority. The value should be in the range 0–99 where lower numbers indicate higher priority. |
 
-- _NavMesh bake settings_ describe how all the NavMesh Agents are colliding or avoiding the static world geometry. In order to keep memory on budget and CPU load in check, only one size can be specified in the bake settings.
-- _NavMesh Agent properties_ values describe how the agent collides with moving obstacles and other agents.
+## Path Finding 
+| Property                       | Description             |
+|:-------------------------------|:------------------------|
+| **Auto Traverse OffMesh Link** | Specify whether or not the agent automatically traverses OffMesh links. When enabled, the agent automatically traverses OffMesh links. Disable **Auto Traverse OffMesh Link** if you want to use animation or a specific way to traverse OffMesh links. |
+| **Auto Repath**                | Specify what the agent does when it reaches the end of a partial path. When there is no path to the destination, Unity generates a partial path to the reachable location that is closest to the destination. If this property is enabled, when the agent reaches the end of a partial path it tries again to find a path to the destination. |
+| **Area Mask**                  | Specify which [area types](./AreasAndCosts.md) the agent considers as it tries to find a path. You can select multiple options. When you prepare meshes for NavMesh baking, you can set each mesh's area type. For example, you can mark stairs with a special area type, and restrict some agent types from using the stairs. |
 
-Most often you set the size of the agent the same in both places. But, for example, a heavy soldier may have larger radius, so that other agents will leave more space around him, but otherwise he’ll avoid the environment just the same.
-
-### Additional resources
-
-- [Creating a NavMesh Agent](./CreateNavMeshAgent.md) – workflow on how to create a NavMesh Agent.
-- [Inner Workings of the Navigation System](./NavInnerWorkings.md) - learn more about how obstacles are used as part of navigation.
-- [NavMesh Agent scripting reference](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent.html) - full description of the NavMeshAgent scripting API.
+## Additional resources
+- [Create a NavMesh Agent](./CreateNavMeshAgent.md) 
+- [About NavMesh agents](AboutAgents.md)
+- [Inner Workings of the Navigation System](./NavInnerWorkings.md) 
+- [NavMesh Agent scripting reference](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent.html) 
 
 [1]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[2]: https://docs.unity3d.com/Manual/CollidersOverview.html "A collision occurs when the physics engine detects that the colliders of two GameObjects make contact or overlap, when at least one has a Rigidbody component and is in motion."
-[3]: https://docs.unity3d.com/Manual/class-GameObject.html "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more. A GameObject’s functionality is defined by the Components attached to it."
+[2]: https://docs.unity3d.com/Manual/CollidersOverview.html "A collision occurs when the physics engine detects that the colliders of two game objects make contact or overlap, and at least one has a Rigidbody component and is in motion."
