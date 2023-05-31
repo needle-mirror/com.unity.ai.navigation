@@ -1,17 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+#pragma warning disable IDE1006 // Unity-specific lower case public property names
 
 namespace Unity.AI.Navigation
 {
-    /// <summary>
-    /// Component used to create a navigable link between two NavMesh locations.
-    /// </summary>
+    /// <summary> Component used to create a navigable link between two NavMesh locations. </summary>
     [ExecuteInEditMode]
     [DefaultExecutionOrder(-101)]
     [AddComponentMenu("Navigation/NavMeshLink", 33)]
     [HelpURL(HelpUrls.Manual + "NavMeshLink.html")]
-    public class NavMeshLink : MonoBehaviour
+    public partial class NavMeshLink : MonoBehaviour
     {
         [SerializeField]
         int m_AgentTypeID;
@@ -22,11 +21,21 @@ namespace Unity.AI.Navigation
         [SerializeField]
         Vector3 m_EndPoint = new Vector3(0.0f, 0.0f, 2.5f);
 
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+        [SerializeField]
+        Transform m_StartTransform;
+
+        [SerializeField]
+        Transform m_EndTransform;
+
+        [SerializeField]
+        bool m_Activated = true;
+#endif
         [SerializeField]
         float m_Width;
 
         [SerializeField]
-        int m_CostModifier = -1;
+        float m_CostModifier = -1;
 
         [SerializeField]
         bool m_Bidirectional = true;
@@ -38,38 +47,106 @@ namespace Unity.AI.Navigation
         int m_Area;
 
         /// <summary> Gets or sets the type of agent that can use the link. </summary>
-        public int agentTypeID { get { return m_AgentTypeID; } set { m_AgentTypeID = value; UpdateLink(); } }
+        public int agentTypeID { get => m_AgentTypeID; set { m_AgentTypeID = value; UpdateLink(); } }
 
-        /// <summary> Gets or sets the position at the middle of the link's start edge. </summary>
-        /// <remarks> The position is relative to the GameObject transform. </remarks>
-        public Vector3 startPoint { get { return m_StartPoint; } set { m_StartPoint = value; UpdateLink(); } }
+        /// <summary> Gets or sets the local position at the middle of the link's start edge, relative to the GameObject origin. </summary>
+        /// <remarks> The position is translated and rotated by <see cref="startTransform"/> when `startTransform` is `null` or equal to the GameObject transform. Otherwise, the link is only translated by `startTransform`. The scale of the specified transform is never used.</remarks>
+        public Vector3 startPoint { get => m_StartPoint; set { m_StartPoint = value; UpdateLink(); } }
 
-        /// <summary> Gets or sets the position at the middle of the link's end edge. </summary>
-        /// <remarks> The position is relative to the GameObject transform. </remarks>
-        public Vector3 endPoint { get { return m_EndPoint; } set { m_EndPoint = value; UpdateLink(); } }
+        /// <summary> Gets or sets the local position at the middle of the link's end edge, relative to the GameObject origin. </summary>
+        /// <remarks> The position is translated and rotated by <see cref="endTransform"/> when `endTransform` is `null` or equal to the GameObject transform. Otherwise, the link is only translated by `endTransform`. The scale of the specified transform is never used.</remarks>
+        public Vector3 endPoint { get => m_EndPoint; set { m_EndPoint = value; UpdateLink(); } }
+
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+        /// <summary> Gets or sets the <see cref="Transform"/> tracked by the middle of the link's start edge. </summary>
+        /// <remarks> When this property is `null` or equal to the GameObject transform, it applies the GameObject's translation and rotation as a transform to <see cref="startPoint"/> in order to establish the world position of the link's start edge. When this property takes any other value, it applies only its translation to `startPoint`.</remarks>
+        public Transform startTransform { get => m_StartTransform; set { m_StartTransform = value; m_StartPoint = Vector3.zero; UpdateLink(); } }
+
+        /// <summary> Gets or sets the Transform tracked by the middle of the link's end edge. </summary>
+        /// <remarks> When this property is `null` or equal to the GameObject transform, it applies the GameObject's translation and rotation as a transform to <see cref="endPoint"/> in order to establish the world position of the link's end edge. When this property takes any other value, it applies only its translation to the `endPoint`.</remarks>
+        public Transform endTransform { get => m_EndTransform; set { m_EndTransform = value; m_EndPoint = Vector3.zero; UpdateLink(); } }
+
+        internal bool startRelativeToThisGameObject => m_StartTransform == null || m_StartTransform == transform;
+        internal bool endRelativeToThisGameObject => m_EndTransform == null || m_EndTransform == transform;
+#endif
+
+        // Start position relative to the game object position
+        internal Vector3 localStartPosition
+        {
+            get
+            {
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+                if (!startRelativeToThisGameObject)
+                    return transform.InverseTransformPoint(m_StartTransform.position + m_StartPoint);
+
+                return m_StartPoint;
+#else
+                return m_StartPoint;
+#endif
+            }
+        }
+
+        // End position relative to the game object position
+        internal Vector3 localEndPosition
+        {
+            get
+            {
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+                if (!endRelativeToThisGameObject)
+                    return transform.InverseTransformPoint(m_EndTransform.position + m_EndPoint);
+
+                return m_EndPoint;
+#else
+                return m_EndPoint;
+#endif
+            }
+        }
 
         /// <summary> The width of the segments making up the ends of the link. </summary>
-        /// <remarks> The segments are created perpendicular to the line from start to end. </remarks>
-        public float width { get { return m_Width; } set { m_Width = value; UpdateLink(); } }
+        /// <remarks> The segments are created perpendicular to the line from start to end, in the XZ plane of the GameObject. </remarks>
+        public float width { get => m_Width; set { m_Width = value; UpdateLink(); } }
 
         /// <summary> Gets or sets a value that determines the cost of traversing the link.</summary>
         /// <remarks> A negative value implies that the traversal cost is obtained based on the area type.
-        /// A positive or zero value applies immediately, overridding the cost associated with the area type.</remarks>
-        public int costModifier { get { return m_CostModifier; } set { m_CostModifier = value; UpdateLink(); } }
+        /// A positive or zero value applies immediately, overriding the cost associated with the area type.</remarks>
+        public float costModifier { get => m_CostModifier; set { m_CostModifier = value; UpdateLink(); } }
 
         /// <summary> Gets or sets whether the link can be traversed in both directions. </summary>
-        public bool bidirectional { get { return m_Bidirectional; } set { m_Bidirectional = value; UpdateLink(); } }
+        /// <remarks> A link that connects to NavMeshes at both ends can always be traversed from the start position to the end position. When this property is set to `true` it allows the agents to traverse the link also in the direction from end to start. When the value is `false` the agents will never move over the link from the end position to the start position.</remarks>
+        public bool bidirectional { get => m_Bidirectional; set { m_Bidirectional = value; UpdateLink(); } }
 
         /// <summary> Gets or sets whether the world positions of the link's edges update whenever
         /// the GameObject transform changes at runtime. </summary>
-        public bool autoUpdate { get { return m_AutoUpdatePosition; } set { SetAutoUpdate(value); } }
+        public bool autoUpdate { get => m_AutoUpdatePosition; set => SetAutoUpdate(value); }
 
         /// <summary> The area type of the link. </summary>
-        public int area { get { return m_Area; } set { m_Area = value; UpdateLink(); } }
+        public int area { get => m_Area; set { m_Area = value; UpdateLink(); } }
+
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+        /// <summary> Gets or sets whether the link can be traversed by agents. </summary>
+        /// <remarks> When this property is set to `true` it allows the agents to traverse the link. When the value is `false` no paths pass through this link and no agent can traverse it as part of their autonomous movement. </remarks>
+        public bool activated
+        {
+            get => m_Activated;
+            set
+            {
+                m_Activated = value;
+                NavMesh.SetLinkActive(m_LinkInstance, m_Activated);
+            }
+        }
+
+        /// <summary> Checks whether any agent occupies the link at this moment in time. </summary>
+        /// <remarks> This property evaluates the internal state of the link every time it is used. </remarks>
+        public bool occupied => NavMesh.IsLinkOccupied(m_LinkInstance);
+#endif
 
         NavMeshLinkInstance m_LinkInstance = new NavMeshLinkInstance();
 
-        Vector3 m_LastPosition = Vector3.zero;
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+        Vector3 m_LastStartTransformPosition = Vector3.positiveInfinity;
+        Vector3 m_LastEndTransformPosition = Vector3.positiveInfinity;
+#endif
+        Vector3 m_LastPosition = Vector3.positiveInfinity;
         Quaternion m_LastRotation = Quaternion.identity;
 
         static readonly List<NavMeshLink> s_Tracked = new List<NavMeshLink>();
@@ -77,20 +154,20 @@ namespace Unity.AI.Navigation
         void OnEnable()
         {
             AddLink();
-            if (m_AutoUpdatePosition && m_LinkInstance.valid)
+            if (m_AutoUpdatePosition && NavMesh.IsLinkValid(m_LinkInstance))
                 AddTracking(this);
         }
 
         void OnDisable()
         {
             RemoveTracking(this);
-            m_LinkInstance.Remove();
+            NavMesh.RemoveLink(m_LinkInstance);
         }
 
         /// <summary> Replaces the link with a new one using the current settings. </summary>
         public void UpdateLink()
         {
-            m_LinkInstance.Remove();
+            NavMesh.RemoveLink(m_LinkInstance);
             AddLink();
         }
 
@@ -103,7 +180,6 @@ namespace Unity.AI.Navigation
                 return;
             }
 #endif
-
             if (s_Tracked.Count == 0)
                 NavMesh.onPreUpdate += UpdateTrackedInstances;
 
@@ -132,7 +208,7 @@ namespace Unity.AI.Navigation
         void AddLink()
         {
 #if UNITY_EDITOR
-            if (m_LinkInstance.valid)
+            if (NavMesh.IsLinkValid(m_LinkInstance))
             {
                 Debug.LogError("Link is already added: " + this);
                 return;
@@ -140,28 +216,68 @@ namespace Unity.AI.Navigation
 #endif
 
             var link = new NavMeshLinkData();
-            link.startPosition = m_StartPoint;
-            link.endPosition = m_EndPoint;
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+            if (m_StartTransform != null && m_StartTransform != transform)
+            {
+                link.startPosition = transform.InverseTransformPoint(m_StartTransform.position + m_StartPoint);
+            }
+            else
+            {
+                link.startPosition = m_StartPoint;
+            }
+
+            if (m_EndTransform != null && m_EndTransform != transform)
+            {
+                link.endPosition = transform.InverseTransformPoint(m_EndTransform.position + m_EndPoint);
+            }
+            else
+            {
+                link.endPosition = m_EndPoint;
+            }
+#else
+            link.localStartPosition = m_StartPoint;
+            link.localEndPosition = m_EndPoint;
+#endif
             link.width = m_Width;
             link.costModifier = m_CostModifier;
             link.bidirectional = m_Bidirectional;
             link.area = m_Area;
             link.agentTypeID = m_AgentTypeID;
             m_LinkInstance = NavMesh.AddLink(link, transform.position, transform.rotation);
-            if (m_LinkInstance.valid)
-                m_LinkInstance.owner = this;
+            if (NavMesh.IsLinkValid(m_LinkInstance))
+            {
+                NavMesh.SetLinkOwner(m_LinkInstance, this);
+
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+                NavMesh.SetLinkActive(m_LinkInstance, m_Activated);
+#endif
+            }
 
             m_LastPosition = transform.position;
             m_LastRotation = transform.rotation;
+
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+            m_LastStartTransformPosition = m_StartTransform != null ? m_StartTransform.position : Vector3.positiveInfinity;
+            m_LastEndTransformPosition = m_EndTransform != null ? m_EndTransform.position : Vector3.positiveInfinity;
+#endif
         }
 
-        bool HasTransformChanged()
+        internal bool HaveTransformsChanged()
         {
-            if (m_LastPosition != transform.position)
-                return true;
-            if (m_LastRotation != transform.rotation)
-                return true;
+            if (startRelativeToThisGameObject || endRelativeToThisGameObject)
+            {
+                if (m_LastPosition != transform.position)
+                    return true;
+                if (m_LastRotation != transform.rotation)
+                    return true;
+            }
+
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+            return (m_StartTransform != null && m_LastStartTransformPosition != m_StartTransform.position)
+                || (m_EndTransform != null && m_LastEndTransformPosition != m_EndTransform.position);
+#else
             return false;
+#endif
         }
 
         void OnDidApplyAnimationProperties()
@@ -173,7 +289,7 @@ namespace Unity.AI.Navigation
         {
             foreach (var instance in s_Tracked)
             {
-                if (instance.HasTransformChanged())
+                if (instance.HaveTransformsChanged())
                     instance.UpdateLink();
             }
         }
@@ -183,9 +299,16 @@ namespace Unity.AI.Navigation
         {
             m_Width = Mathf.Max(0.0f, m_Width);
 
-            if (!m_LinkInstance.valid)
+            if (!NavMesh.IsLinkValid(m_LinkInstance))
                 return;
 
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+            if (m_StartTransform == null)
+                m_StartTransform = transform;
+
+            if (m_EndTransform == null)
+                m_EndTransform = transform;
+#endif
             UpdateLink();
 
             if (!m_AutoUpdatePosition)

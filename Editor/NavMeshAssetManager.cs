@@ -17,10 +17,10 @@ namespace Unity.AI.Navigation.Editor
     {
         internal struct AsyncBakeOperation
         {
-            public NavMeshSurface surface;
-            public NavMeshData bakeData;
-            public AsyncOperation bakeOperation;
-            public int progressReportId;
+            internal NavMeshSurface surface;
+            internal NavMeshData bakeData;
+            internal AsyncOperation bakeOperation;
+            internal int progressReportId;
         }
 
         List<AsyncBakeOperation> m_BakeOperations = new List<AsyncBakeOperation>();
@@ -28,8 +28,8 @@ namespace Unity.AI.Navigation.Editor
 
         struct SavedPrefabNavMeshData
         {
-            public NavMeshSurface surface;
-            public NavMeshData navMeshData;
+            internal NavMeshSurface surface;
+            internal NavMeshData navMeshData;
         }
 
         List<SavedPrefabNavMeshData> m_PrefabNavMeshDataAssets = new List<SavedPrefabNavMeshData>();

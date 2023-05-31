@@ -5,12 +5,12 @@ namespace Unity.AI.Navigation
     /// </summary>
     static class HelpUrls
     {
-        const string Version = "1.1";
+        const string Version = "2.0";
 
         const string BaseUrl = "https://docs.unity3d.com/Packages/com.unity.ai.navigation@" + Version;
 
-        public const string Manual = BaseUrl + "/manual/";
+        internal const string Manual = BaseUrl + "/manual/";
 
-        public const string Api = BaseUrl + "/api/";
+        internal const string Api = BaseUrl + "/api/";
     }
 }

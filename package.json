@@ -1,9 +1,9 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "1.1.3",
-  "unity": "2022.2",
-  "unityRelease": "0a16",
+  "version": "2.0.0-pre.3",
+  "unity": "2023.2",
+  "unityRelease": "0a18",
   "description": "High-level NavMesh components for building and using NavMeshes at runtime and at edit time.",
   "dependencies": {
     "com.unity.modules.ai": "1.0.0"
@@ -16,15 +16,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Changed\n* Remove some unnecessary files from the package"
+    "changelog": "### Added\n* New `activated` property in NavMeshLink, useful to control whether agents are allowed to traverse the link\n* New `occupied` property in NavMeshLink, useful to determine whether an agent is using the link\n* New `startTransform`, `endTransform` properties in NavMeshLink, useful to define the ends of the link through Transform references as an alternative to points in 3D space\n* New `autoUpdatePositions`, `biDirectional`, `costOverride` properties and the `UpdatePositions()` method, introduced as \"deprecated\" in order to facilitate the upgrade from OffMeshLinks\n\n### Changed\n* The `costModifier` property is now of type `float`, as expected by the Navigation system.\n\n### Fixed\n* Published the missing API reference documentation for the properties made available with 2022.2"
   },
   "upmCi": {
-    "footprint": "b103ad1a03d3526d9ff50e0120f2a8e80c57a9e4"
+    "footprint": "e3b954d5483b616fe10967f088d4d69c271ce76f"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@1.1/manual/index.html",
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "21cc07be635247d730f8d1ef7c1987e222159a45"
+    "revision": "194bbf27b78d76ea91253e6012b8b01e6be5de94"
   }
 }

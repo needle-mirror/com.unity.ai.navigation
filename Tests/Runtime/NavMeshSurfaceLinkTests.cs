@@ -11,38 +11,64 @@ namespace Unity.AI.Navigation.Tests
     [TestFixture]
     class NavMeshSurfaceLinkTests
     {
-        public GameObject plane1, plane2;
-        public NavMeshLink link;
-        public NavMeshSurface surface;
+        GameObject plane1, plane2;
+        NavMeshLink link;
+        NavMeshSurface surface;
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+        NavMeshAgent agent;
+#endif
 
-        [SetUp]
-        public void CreatesPlanesAndLink()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             plane1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
             plane2 = GameObject.CreatePrimitive(PrimitiveType.Plane);
             plane1.transform.position = 11.0f * Vector3.right;
 
-            surface = new GameObject().AddComponent<NavMeshSurface>();
+            surface = new GameObject("Surface").AddComponent<NavMeshSurface>();
             surface.BuildNavMesh();
 
-            Assert.IsFalse(HasPathConnecting(plane1, plane2));
-            Assert.IsFalse(HasPathConnecting(plane2, plane1));
+            Assume.That(HasPathConnecting(plane1, plane2), Is.False);
+            Assume.That(HasPathConnecting(plane2, plane1), Is.False);
 
-            link = new GameObject().AddComponent<NavMeshLink>();
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+            agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
+            agent.acceleration *= 10f;
+            agent.speed *= 10f;
+#endif
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            link = new GameObject("Link").AddComponent<NavMeshLink>();
             link.startPoint = plane1.transform.position;
             link.endPoint = plane2.transform.position;
 
-            Assert.IsTrue(HasPathConnecting(plane1, plane2));
-            Assert.IsTrue(HasPathConnecting(plane2, plane1));
+            Assume.That(HasPathConnecting(plane1, plane2), Is.True);
+            Assume.That(HasPathConnecting(plane2, plane1), Is.True);
+
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+            agent.ResetPath();
+            agent.Warp(plane2.transform.position - Vector3.back);
+#endif
         }
 
         [TearDown]
-        public void DestroyPlanesAndLink()
+        public void TearDown()
         {
-            GameObject.DestroyImmediate(surface.gameObject);
-            GameObject.DestroyImmediate(link.gameObject);
-            GameObject.DestroyImmediate(plane1);
-            GameObject.DestroyImmediate(plane2);
+            Object.DestroyImmediate(link.gameObject);
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Object.DestroyImmediate(surface.gameObject);
+            Object.DestroyImmediate(plane1);
+            Object.DestroyImmediate(plane2);
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+            Object.DestroyImmediate(agent);
+#endif
         }
 
         [Test]
@@ -59,6 +85,27 @@ namespace Unity.AI.Navigation.Tests
             Assert.IsFalse(HasPathConnecting(plane2, plane1));
         }
 
+#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+        [UnityTest]
+        public IEnumerator NavMeshLinkIsOccupiedOnlyDuringAgentTraversal()
+        {
+            agent.SetDestination(plane1.transform.position + Vector3.back);
+
+            while (!agent.isOnOffMeshLink)
+            {
+                Assert.IsFalse(link.occupied, "Link is occupied, but the agent hasn't arrived to the link yet.");
+                yield return null;
+            }
+
+            while (agent.isOnOffMeshLink)
+            {
+                Assert.IsTrue(link.occupied, "Link is not occupied, but the agent is on the link.");
+                yield return null;
+            }
+
+            Assert.IsFalse(link.occupied, "Link is occupied, but agent has left the link.");
+        }
+#endif
         [Test]
         public void ChangingAreaTypeCanBlockPath()
         {
@@ -119,7 +166,7 @@ namespace Unity.AI.Navigation.Tests
             Assert.IsTrue(HasPathConnectingViaPoint(plane1, plane2, link2.endPoint));
         }
 
-        public static bool HasPathConnecting(GameObject a, GameObject b, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
+        static bool HasPathConnecting(GameObject a, GameObject b, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
         {
             var path = new NavMeshPath();
             var filter = new NavMeshQueryFilter();
@@ -129,7 +176,7 @@ namespace Unity.AI.Navigation.Tests
             return path.status == NavMeshPathStatus.PathComplete;
         }
 
-        public static bool HasPathConnectingViaPoint(GameObject a, GameObject b, Vector3 point, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
+        static bool HasPathConnectingViaPoint(GameObject a, GameObject b, Vector3 point, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
         {
             var path = new NavMeshPath();
             var filter = new NavMeshQueryFilter();

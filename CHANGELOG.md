@@ -4,6 +4,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-pre.3] - 2023-05-31
+### Added
+* New `activated` property in NavMeshLink, useful to control whether agents are allowed to traverse the link
+* New `occupied` property in NavMeshLink, useful to determine whether an agent is using the link
+* New `startTransform`, `endTransform` properties in NavMeshLink, useful to define the ends of the link through Transform references as an alternative to points in 3D space
+* New `autoUpdatePositions`, `biDirectional`, `costOverride` properties and the `UpdatePositions()` method, introduced as "deprecated" in order to facilitate the upgrade from OffMeshLinks
+
+### Changed
+* The `costModifier` property is now of type `float`, as expected by the Navigation system.
+
+### Fixed
+* Published the missing API reference documentation for the properties made available with 2022.2
+
 ## [1.1.3] - 2023-04-13
 ### Changed
 * Remove some unnecessary files from the package
