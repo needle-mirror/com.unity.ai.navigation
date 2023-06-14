@@ -41,15 +41,15 @@ namespace Unity.AI.Navigation.Editor
 
         static class Styles
         {
-            public static readonly GUIContent k_AgentTypesHeader = EditorGUIUtility.TrTextContent("Agent Types");
-            public static readonly GUIContent k_NameLabel = EditorGUIUtility.TrTextContent("Name");
-            public static readonly GUIContent k_CostLabel = EditorGUIUtility.TrTextContent("Cost");
-            public static readonly GUIContent[] k_ModeToggles =
+            internal static readonly GUIContent k_AgentTypesHeader = EditorGUIUtility.TrTextContent("Agent Types");
+            internal static readonly GUIContent k_NameLabel = EditorGUIUtility.TrTextContent("Name");
+            internal static readonly GUIContent k_CostLabel = EditorGUIUtility.TrTextContent("Cost");
+            internal static readonly GUIContent[] k_ModeToggles =
             {
                 EditorGUIUtility.TrTextContent("Agents", "Navmesh agent settings."),
                 EditorGUIUtility.TrTextContent("Areas", "Navmesh area settings."),
             };
-            public static readonly GUIStyle k_ContentMargins = new GUIStyle
+            internal static readonly GUIStyle k_ContentMargins = new GUIStyle
             {
                 padding = new RectOffset(4, 4, 4, 4)
             };

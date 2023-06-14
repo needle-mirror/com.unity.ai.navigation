@@ -11,9 +11,9 @@ namespace Unity.AI.Navigation.Tests
     [TestFixture]
     class NavMeshSurfaceLinkTests
     {
-        public GameObject plane1, plane2;
-        public NavMeshLink link;
-        public NavMeshSurface surface;
+        GameObject plane1, plane2;
+        NavMeshLink link;
+        NavMeshSurface surface;
 
         [SetUp]
         public void CreatesPlanesAndLink()
@@ -39,10 +39,10 @@ namespace Unity.AI.Navigation.Tests
         [TearDown]
         public void DestroyPlanesAndLink()
         {
-            GameObject.DestroyImmediate(surface.gameObject);
-            GameObject.DestroyImmediate(link.gameObject);
-            GameObject.DestroyImmediate(plane1);
-            GameObject.DestroyImmediate(plane2);
+            Object.DestroyImmediate(surface.gameObject);
+            Object.DestroyImmediate(link.gameObject);
+            Object.DestroyImmediate(plane1);
+            Object.DestroyImmediate(plane2);
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace Unity.AI.Navigation.Tests
             Assert.IsTrue(HasPathConnectingViaPoint(plane1, plane2, link2.endPoint));
         }
 
-        public static bool HasPathConnecting(GameObject a, GameObject b, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
+        static bool HasPathConnecting(GameObject a, GameObject b, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
         {
             var path = new NavMeshPath();
             var filter = new NavMeshQueryFilter();
@@ -129,7 +129,7 @@ namespace Unity.AI.Navigation.Tests
             return path.status == NavMeshPathStatus.PathComplete;
         }
 
-        public static bool HasPathConnectingViaPoint(GameObject a, GameObject b, Vector3 point, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
+        static bool HasPathConnectingViaPoint(GameObject a, GameObject b, Vector3 point, int areaMask = NavMesh.AllAreas, int agentTypeID = 0)
         {
             var path = new NavMeshPath();
             var filter = new NavMeshQueryFilter();

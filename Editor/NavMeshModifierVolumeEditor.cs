@@ -144,7 +144,7 @@ namespace Unity.AI.Navigation.Editor
         }
 
         [MenuItem("GameObject/AI/NavMesh Modifier Volume", false, 2001)]
-        static public void CreateNavMeshModifierVolume(MenuCommand menuCommand)
+        public static void CreateNavMeshModifierVolume(MenuCommand menuCommand)
         {
             var parent = menuCommand.context as GameObject;
             var go = NavMeshComponentsGUIUtility.CreateAndSelectGameObject("NavMesh Modifier Volume", parent);

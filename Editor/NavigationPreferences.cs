@@ -11,19 +11,19 @@ namespace Unity.AI.Navigation.Editor
     {
         class Styles
         {
-            public static readonly GUIContent NavMeshVisualizationSettingsLabel =
+            internal static readonly GUIContent NavMeshVisualizationSettingsLabel =
                 EditorGUIUtility.TrTextContent("NavMesh Visualization Settings");
 
-            public static readonly GUIContent SelectedSurfacesOpacityLabel =
+            internal static readonly GUIContent SelectedSurfacesOpacityLabel =
                 EditorGUIUtility.TrTextContent("Selected Surfaces Opacity", "Controls the mesh transparency for surfaces inside the selection hierarchy");
 
-            public static readonly GUIContent UnselectedSurfacesOpacityLabel =
+            internal static readonly GUIContent UnselectedSurfacesOpacityLabel =
                 EditorGUIUtility.TrTextContent("Unselected Surfaces Opacity", "Controls the mesh transparency for surfaces outside the selection hierarchy");
 
-            public static readonly GUIContent HeightMeshColorLabel =
+            internal static readonly GUIContent HeightMeshColorLabel =
                 EditorGUIUtility.TrTextContent("Height Mesh Color", "Color used to display height mesh information in the scene view");
 
-            public static readonly GUIContent ResetVisualizationSettingsButtonLabel =
+            internal static readonly GUIContent ResetVisualizationSettingsButtonLabel =
                 EditorGUIUtility.TrTextContent("Reset to Defaults", "Revert visualization settings to their original values. Customized values will be lost");
         }
 
@@ -67,7 +67,7 @@ namespace Unity.AI.Navigation.Editor
         }
 
         [SettingsProvider]
-        public static SettingsProvider CreateNavigationProjectSettingProvider()
+        internal static SettingsProvider CreateNavigationProjectSettingProvider()
         {
             var provider = new NavigationPreferencesProvider("Preferences/AI Navigation", SettingsScope.User, GetSearchKeywordsFromGUIContentProperties<Styles>());
             return provider;

@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2023-06-14
+### Fixed
+* Published the missing API reference documentation for the new properties that were made available in 1.1.0
+
 ## [1.1.3] - 2023-04-13
 ### Changed
 * Remove some unnecessary files from the package

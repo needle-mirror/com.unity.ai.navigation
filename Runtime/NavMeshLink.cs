@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+#pragma warning disable IDE1006 // Unity-specific lower case public property names
 
 namespace Unity.AI.Navigation
 {
-    /// <summary>
-    /// Component used to create a navigable link between two NavMesh locations.
-    /// </summary>
+    /// <summary> Component used to create a navigable link between two NavMesh locations. </summary>
     [ExecuteInEditMode]
     [DefaultExecutionOrder(-101)]
     [AddComponentMenu("Navigation/NavMeshLink", 33)]
@@ -49,15 +48,16 @@ namespace Unity.AI.Navigation
         public Vector3 endPoint { get { return m_EndPoint; } set { m_EndPoint = value; UpdateLink(); } }
 
         /// <summary> The width of the segments making up the ends of the link. </summary>
-        /// <remarks> The segments are created perpendicular to the line from start to end. </remarks>
+        /// <remarks> The segments are created perpendicular to the line from start to end,in the XZ plane of the GameObject. </remarks>
         public float width { get { return m_Width; } set { m_Width = value; UpdateLink(); } }
 
         /// <summary> Gets or sets a value that determines the cost of traversing the link.</summary>
         /// <remarks> A negative value implies that the traversal cost is obtained based on the area type.
-        /// A positive or zero value applies immediately, overridding the cost associated with the area type.</remarks>
+        /// A positive or zero value applies immediately, overriding the cost associated with the area type.</remarks>
         public int costModifier { get { return m_CostModifier; } set { m_CostModifier = value; UpdateLink(); } }
 
         /// <summary> Gets or sets whether the link can be traversed in both directions. </summary>
+        /// <remarks> A link that connects to NavMeshes at both ends can always be traversed from the start position to the end position. When this property is set to `true` it allows the agents to traverse the link also in the direction from end to start. When the value is `false` the agents will never move over the link from the end position to the start position.</remarks>
         public bool bidirectional { get { return m_Bidirectional; } set { m_Bidirectional = value; UpdateLink(); } }
 
         /// <summary> Gets or sets whether the world positions of the link's edges update whenever
@@ -103,7 +103,6 @@ namespace Unity.AI.Navigation
                 return;
             }
 #endif
-
             if (s_Tracked.Count == 0)
                 NavMesh.onPreUpdate += UpdateTrackedInstances;
 

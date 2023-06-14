@@ -44,9 +44,9 @@ namespace Unity.AI.Navigation.Editor
         
         class Styles
         {
-            public readonly GUIContent m_LayerMask = new GUIContent("Include Layers");
-            public readonly GUIContent m_MinRegionArea = new GUIContent("Minimum Region Area");
-            public readonly GUIContent m_GenerateLinks = new GUIContent(
+            internal readonly GUIContent m_LayerMask = new GUIContent("Include Layers");
+            internal readonly GUIContent m_MinRegionArea = new GUIContent("Minimum Region Area");
+            internal readonly GUIContent m_GenerateLinks = new GUIContent(
                 "Generate Links",
                 "If enabled, collected objects will generate links depending on the agent settings values for drop height and jump distance.\nThis behaviour can be overriden using NavMeshModifier components.");
         }

@@ -55,7 +55,7 @@ namespace Unity.AI.Navigation.Editor
             return Matrix4x4.TRS(t.position, t.rotation, Vector3.one);
         }
 
-        void AlignTransformToEndPoints(NavMeshLink navLink)
+        static void AlignTransformToEndPoints(NavMeshLink navLink)
         {
             var mat = UnscaledLocalToWorldMatrix(navLink.transform);
 
@@ -278,7 +278,7 @@ namespace Unity.AI.Navigation.Editor
         }
 
         [MenuItem("GameObject/AI/NavMesh Link", false, 2002)]
-        static public void CreateNavMeshLink(MenuCommand menuCommand)
+        public static void CreateNavMeshLink(MenuCommand menuCommand)
         {
             var parent = menuCommand.context as GameObject;
             GameObject go = NavMeshComponentsGUIUtility.CreateAndSelectGameObject("NavMesh Link", parent);
