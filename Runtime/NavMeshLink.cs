@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace Unity.AI.Navigation
 {
     /// <summary> Component used to create a navigable link between two NavMesh locations. </summary>
-    [ExecuteInEditMode]
+    [ExecuteAlways]
     [DefaultExecutionOrder(-101)]
     [AddComponentMenu("Navigation/NavMeshLink", 33)]
     [HelpURL(HelpUrls.Manual + "NavMeshLink.html")]

@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.5] - 2023-09-28
+### Fixed
+* Long warning popping up when user starts playmode while editing a prefab that contains NavMesh components ([NAVB-47](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-47))
+
 ## [1.1.4] - 2023-06-14
 ### Fixed
 * Published the missing API reference documentation for the new properties that were made available in 1.1.0
