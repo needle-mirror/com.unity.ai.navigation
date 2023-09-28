@@ -44,26 +44,22 @@ namespace Unity.AI.Navigation.Editor
             {
                 targetPath = Path.Combine(Path.GetDirectoryName(activeScenePath), Path.GetFileNameWithoutExtension(activeScenePath));
             }
-            else
+            else if (surface.IsPartOfPrefab())
             {
                 var prefabStage = PrefabStageUtility.GetPrefabStage(surface.gameObject);
-                var isPartOfPrefab = prefabStage != null && prefabStage.IsPartOfPrefabContents(surface.gameObject);
-
-                if (isPartOfPrefab)
-                {
 #if UNITY_2020_1_OR_NEWER
-                    var assetPath = prefabStage.assetPath;
+                var assetPath = prefabStage.assetPath;
 #else
-                    var assetPath = prefabStage.prefabAssetPath;
+                var assetPath = prefabStage.prefabAssetPath;
 #endif
-                    if (!string.IsNullOrEmpty(assetPath))
-                    {
-                        var prefabDirectoryName = Path.GetDirectoryName(assetPath);
-                        if (!string.IsNullOrEmpty(prefabDirectoryName))
-                            targetPath = prefabDirectoryName;
-                    }
+                if (!string.IsNullOrEmpty(assetPath))
+                {
+                    var prefabDirectoryName = Path.GetDirectoryName(assetPath);
+                    if (!string.IsNullOrEmpty(prefabDirectoryName))
+                        targetPath = prefabDirectoryName;
                 }
             }
+
             if (!Directory.Exists(targetPath))
                 Directory.CreateDirectory(targetPath);
             return targetPath;
@@ -89,9 +85,7 @@ namespace Unity.AI.Navigation.Editor
             }
 
             // Do not delete the NavMeshData asset referenced from a prefab until the prefab is saved
-            var prefabStage = PrefabStageUtility.GetPrefabStage(navSurface.gameObject);
-            var isPartOfPrefab = prefabStage != null && prefabStage.IsPartOfPrefabContents(navSurface.gameObject);
-            if (isPartOfPrefab && IsCurrentPrefabNavMeshDataStored(navSurface))
+            if (navSurface.IsPartOfPrefab() && IsCurrentPrefabNavMeshDataStored(navSurface))
                 return null;
 
             return navSurface.navMeshData;
@@ -174,8 +168,10 @@ namespace Unity.AI.Navigation.Editor
                     if (surface.isActiveAndEnabled)
                         surface.AddData();
                     CreateNavMeshAsset(surface);
-                    EditorSceneManager.MarkSceneDirty(surface.gameObject.scene);
-                    
+
+                    if (!EditorApplication.isPlaying || surface.IsPartOfPrefab())
+                        EditorSceneManager.MarkSceneDirty(surface.gameObject.scene);
+
                     Progress.Finish(oper.progressReportId);
                 }
                 
@@ -228,9 +224,7 @@ namespace Unity.AI.Navigation.Editor
 
         void StoreNavMeshDataIfInPrefab(NavMeshSurface surfaceToStore)
         {
-            var prefabStage = PrefabStageUtility.GetPrefabStage(surfaceToStore.gameObject);
-            var isPartOfPrefab = prefabStage != null && prefabStage.IsPartOfPrefabContents(surfaceToStore.gameObject);
-            if (!isPartOfPrefab)
+            if (!surfaceToStore.IsPartOfPrefab())
                 return;
 
             // check if data has already been stored for this surface
@@ -289,8 +283,20 @@ namespace Unity.AI.Navigation.Editor
                     var storedNavMeshData = storedAssetInfo.navMeshData;
                     if (storedNavMeshData != null && storedNavMeshData != surface.navMeshData)
                     {
-                        var assetPath = AssetDatabase.GetAssetPath(storedNavMeshData);
-                        AssetDatabase.DeleteAsset(assetPath);
+                        if (!EditorApplication.isPlaying)
+                        {
+                            var assetPath = AssetDatabase.GetAssetPath(storedNavMeshData);
+                            AssetDatabase.DeleteAsset(assetPath);
+                        }
+                        else
+                        {
+                            Debug.LogWarning(
+                                $"The asset of the previous NavMesh data ({storedNavMeshData.name}), owned by " +
+                                $"the prefab that was saved just now ({storedAssetInfo.surface.gameObject.transform.root.gameObject.name}), " +
+                                "cannot be deleted automatically because it might still be used by " +
+                                "NavMeshSurface components in the running scenes. You can safely delete " +
+                                $"the \"{storedNavMeshData.name}.asset\" file after playmode ends.", storedNavMeshData);
+                        }
                     }
 
                     m_PrefabNavMeshDataAssets.RemoveAt(i);

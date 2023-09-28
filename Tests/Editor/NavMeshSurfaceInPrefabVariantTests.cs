@@ -1,11 +1,8 @@
-﻿//#define KEEP_ARTIFACTS_FOR_INSPECTION
+//#define KEEP_ARTIFACTS_FOR_INSPECTION
 
-using System;
 using System.Collections;
 using System.IO;
 using NUnit.Framework;
-using Unity.AI.Navigation;
-using Unity.AI.Navigation.Editor;
 using UnityEditor;
 #if !UNITY_2021_2_OR_NEWER
 using UnityEditor.Experimental.SceneManagement;
@@ -25,12 +22,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         const string k_AutoSaveKey = "AutoSave";
         const string k_ParentFolder = "Assets";
         const string k_TempFolderName = "TempPrefabVariants";
-        string m_TempFolder = k_ParentFolder + "/" + k_TempFolderName;
-        string m_PrefabPath;
-        string m_PrefabVariantPath;
-        string m_PreviousScenePath;
-        string m_TempScenePath;
-        int m_TestCounter;
+        static readonly string k_TempFolder = Path.Combine(k_ParentFolder, k_TempFolderName);
 
         const int k_GrayArea = 7;
         const int k_BrownArea = 10;
@@ -40,53 +32,88 @@ namespace Unity.AI.Navigation.Editor.Tests
 
         const int k_PrefabDefaultArea = k_YellowArea;
 
+        static bool s_EnterPlayModeOptionsEnabled;
+        static EnterPlayModeOptions s_EnterPlayModeOptions;
+
+        [SerializeField]
+        string m_PrefabPath;
+        [SerializeField]
+        string m_PrefabVariantPath;
+        [SerializeField]
+        string m_PreviousScenePath;
+        [SerializeField]
+        string m_TempScenePath;
+        [SerializeField]
+        int m_TestCounter;
+
+#if KEEP_ARTIFACTS_FOR_INSPECTION
+        const bool k_KeepSceneObjects = true;
+#else
+        const bool k_KeepSceneObjects = false;
+#endif
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
-            AssetDatabase.DeleteAsset(m_TempFolder);
+            if (EditorApplication.isPlaying)
+                return;
+
+            AssetDatabase.DeleteAsset(k_TempFolder);
 
             var folderGUID = AssetDatabase.CreateFolder(k_ParentFolder, k_TempFolderName);
-            m_TempFolder = AssetDatabase.GUIDToAssetPath(folderGUID);
+            Assume.That(folderGUID, Is.Not.Empty);
 
             SessionState.SetBool(k_AutoSaveKey, PrefabStageAutoSavingUtil.GetPrefabStageAutoSave());
             PrefabStageAutoSavingUtil.SetPrefabStageAutoSave(false);
             StageUtility.GoToMainStage();
 
             m_PreviousScenePath = SceneManager.GetActiveScene().path;
-            m_TempScenePath = Path.Combine(m_TempFolder, "NavMeshSurfacePrefabVariantTestsScene.unity");
+            m_TempScenePath = Path.Combine(k_TempFolder, "NavMeshSurfacePrefabVariantTestsScene.unity");
             var tempScene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
             EditorSceneManager.SaveScene(tempScene, m_TempScenePath);
             EditorSceneManager.OpenScene(m_TempScenePath);
+
+            s_EnterPlayModeOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
+            s_EnterPlayModeOptions = EditorSettings.enterPlayModeOptions;
+
+            EditorSettings.enterPlayModeOptionsEnabled = true;
+            EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload | EnterPlayModeOptions.DisableSceneReload;
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
+            if (EditorApplication.isPlaying)
+                return;
+
             PrefabStageAutoSavingUtil.SetPrefabStageAutoSave(SessionState.GetBool(k_AutoSaveKey, PrefabStageAutoSavingUtil.GetPrefabStageAutoSave()));
             StageUtility.GoToMainStage();
 
             EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
 
             if (string.IsNullOrEmpty(m_PreviousScenePath))
-            {
                 EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
-            }
+
+            EditorSettings.enterPlayModeOptionsEnabled = s_EnterPlayModeOptionsEnabled;
+            EditorSettings.enterPlayModeOptions = s_EnterPlayModeOptions;
 
 #if !KEEP_ARTIFACTS_FOR_INSPECTION
-            AssetDatabase.DeleteAsset(m_TempFolder);
+            AssetDatabase.DeleteAsset(k_TempFolder);
 #endif
         }
 
         [UnitySetUp]
-        public IEnumerator Setup()
+        public IEnumerator SetupVariantOfPrefabWithNavMesh()
         {
+            if (EditorApplication.isPlaying)
+                yield break;
+
             var plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
             plane.name = "NavMeshSurfacePrefab" + (++m_TestCounter);
             var surface = plane.AddComponent<NavMeshSurface>();
             surface.collectObjects = CollectObjects.Children;
 
-            m_PrefabPath = Path.Combine(m_TempFolder, plane.name + ".prefab");
-            m_PrefabVariantPath = Path.Combine(m_TempFolder, plane.name + "Variant.prefab");
+            m_PrefabPath = Path.Combine(k_TempFolder, plane.name + ".prefab");
+            m_PrefabVariantPath = Path.Combine(k_TempFolder, plane.name + "Variant.prefab");
 
             var planePrefab = PrefabUtility.SaveAsPrefabAsset(plane, m_PrefabPath);
             Object.DestroyImmediate(plane);
@@ -94,16 +121,17 @@ namespace Unity.AI.Navigation.Editor.Tests
             AssetDatabase.OpenAsset(planePrefab);
             var theOriginalPrefabStage = PrefabStageUtility.GetCurrentPrefabStage();
             var theOriginalPrefabSurface = theOriginalPrefabStage.prefabContentsRoot.GetComponent<NavMeshSurface>();
-            yield return BakeNavMeshAsync(() => theOriginalPrefabSurface, k_PrefabDefaultArea);
+            yield return TestUtility.BakeNavMeshAsync(theOriginalPrefabSurface, k_PrefabDefaultArea);
             PrefabSavingUtil.SavePrefab(theOriginalPrefabStage);
             StageUtility.GoToMainStage();
 
             var instanceForVariant = PrefabUtility.InstantiatePrefab(planePrefab) as GameObject;
             PrefabUtility.SaveAsPrefabAsset(instanceForVariant, m_PrefabVariantPath);
 
-#if !KEEP_ARTIFACTS_FOR_INSPECTION
-            Object.DestroyImmediate(instanceForVariant);
-#endif
+            instanceForVariant!.name += "_Saved";
+
+            TestUtility.EliminateFromScene(ref instanceForVariant, k_KeepSceneObjects);
+
             NavMesh.RemoveAllNavMeshData();
 
             yield return null;
@@ -112,16 +140,25 @@ namespace Unity.AI.Navigation.Editor.Tests
         [UnityTearDown]
         public IEnumerator TearDown()
         {
+            if (EditorApplication.isPlaying)
+                yield return new ExitPlayMode();
+
             StageUtility.GoToMainStage();
 
             yield return null;
         }
 
         [UnityTest]
-        public IEnumerator NavMeshSurfacePrefabVariant_WhenFreshAndRebaked_ParentAssetUnchanged()
+        public IEnumerator NavMeshSurfacePrefabVariant_WhenFreshAndRebaked_ParentAssetUnchanged(
+            [Values(RunMode.EditMode, RunMode.PlayMode)]
+            RunMode runMode)
         {
             var theOriginalPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(m_PrefabPath);
             AssetDatabase.OpenAsset(theOriginalPrefab);
+
+            if (runMode == RunMode.PlayMode)
+                yield return new EnterPlayMode();
+
             var theOriginalPrefabStage = PrefabStageUtility.GetCurrentPrefabStage();
             var theOriginalPrefabSurface = theOriginalPrefabStage.prefabContentsRoot.GetComponent<NavMeshSurface>();
             var theOriginalPrefabNavMeshData = theOriginalPrefabSurface.navMeshData;
@@ -142,7 +179,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             Assert.IsTrue(initialVariantNavMeshData != null, "Prefab must have some NavMeshData.");
             Assert.IsTrue(File.Exists(initialVariantAssetPath), "NavMeshData file must exist. ({0})", initialVariantAssetPath);
 
-            yield return BakeNavMeshAsync(() => prefabVariantSurface, k_GrayArea);
+            yield return TestUtility.BakeNavMeshAsync(prefabVariantSurface, k_GrayArea);
 
             Assert.IsTrue(initialVariantNavMeshData != null, "The initial NavMeshData (from original prefab) must still exist immediately after prefab variant re-bake.");
             Assert.IsTrue(File.Exists(initialVariantAssetPath), "The initial NavMeshData file (from original prefab) must exist after prefab variant re-bake. ({0})", initialVariantAssetPath);
@@ -150,7 +187,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             Assert.IsTrue(prefabVariantSurface.navMeshData != null, "NavMeshSurface must have NavMeshData after baking.");
             var unsavedRebakedNavMeshData = prefabVariantSurface.navMeshData;
 
-            yield return BakeNavMeshAsync(() => prefabVariantSurface, k_BrownArea);
+            yield return TestUtility.BakeNavMeshAsync(prefabVariantSurface, k_BrownArea);
 
             Assert.IsTrue(unsavedRebakedNavMeshData == null, "An unsaved NavMeshData should not exist after a re-bake.");
             Assert.IsTrue(prefabVariantSurface.navMeshData != null, "NavMeshSurface must have NavMeshData after baking.");
@@ -167,16 +204,25 @@ namespace Unity.AI.Navigation.Editor.Tests
             StageUtility.GoToMainStage();
 
             yield return null;
+
+            if (EditorApplication.isPlaying)
+                yield return new ExitPlayMode();
         }
 
         [UnityTest]
-        public IEnumerator NavMeshSurfacePrefabVariant_WhenCustomizedAndRebaked_OldAssetDiscardedAndParentAssetUnchanged()
+        public IEnumerator NavMeshSurfacePrefabVariant_WhenCustomizedAndRebaked_OldAssetDiscardedAndParentAssetUnchanged(
+            [Values(RunMode.EditMode, RunMode.PlayMode)]
+            RunMode runMode)
         {
             var prefabVariant = AssetDatabase.LoadAssetAtPath<GameObject>(m_PrefabVariantPath);
             var theOriginalPrefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(prefabVariant);
             var theOriginalPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(theOriginalPrefabPath);
 
             AssetDatabase.OpenAsset(theOriginalPrefab);
+
+            if (runMode == RunMode.PlayMode)
+                yield return new EnterPlayMode();
+
             var theOriginalPrefabStage = PrefabStageUtility.GetCurrentPrefabStage();
             var theOriginalPrefabSurface = theOriginalPrefabStage.prefabContentsRoot.GetComponent<NavMeshSurface>();
             var theOriginalPrefabNavMeshData = theOriginalPrefabSurface.navMeshData;
@@ -189,7 +235,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             var prefabVariantStage = PrefabStageUtility.GetCurrentPrefabStage();
             var prefabVariantSurface = prefabVariantStage.prefabContentsRoot.GetComponent<NavMeshSurface>();
 
-            yield return BakeNavMeshAsync(() => prefabVariantSurface, k_GrayArea);
+            yield return TestUtility.BakeNavMeshAsync(prefabVariantSurface, k_GrayArea);
             PrefabSavingUtil.SavePrefab(prefabVariantStage);
 
             var modifiedVariantNavMeshData = prefabVariantSurface.navMeshData;
@@ -199,7 +245,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             Assert.IsTrue(File.Exists(modifiedVariantAssetPath), "NavMeshData file for modifier variant must exist. ({0})", modifiedVariantAssetPath);
             Assert.AreNotEqual(theOriginalPrefabNavMeshData, modifiedVariantNavMeshData, "Modified variant must have a NavMeshData different than that of the original prefab.");
 
-            yield return BakeNavMeshAsync(() => prefabVariantSurface, k_OrangeArea);
+            yield return TestUtility.BakeNavMeshAsync(prefabVariantSurface, k_OrangeArea);
 
             Assert.IsTrue(modifiedVariantNavMeshData != null, "The initial NavMeshData of a modified variant must still exist immediately after prefab variant re-bake.");
             Assert.IsTrue(File.Exists(modifiedVariantAssetPath), "The initial NavMeshData file of a modified variant must exist after prefab variant re-bake. ({0})", modifiedVariantAssetPath);
@@ -207,7 +253,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             Assert.IsTrue(prefabVariantSurface.navMeshData != null, "NavMeshSurface must have NavMeshData after baking.");
             var unsavedRebakedNavMeshData = prefabVariantSurface.navMeshData;
 
-            yield return BakeNavMeshAsync(() => prefabVariantSurface, k_RedArea);
+            yield return TestUtility.BakeNavMeshAsync(prefabVariantSurface, k_RedArea);
             Assert.IsTrue(unsavedRebakedNavMeshData == null, "An unsaved NavMeshData should not exist after a re-bake.");
             Assert.IsTrue(prefabVariantSurface.navMeshData != null, "NavMeshSurface must have NavMeshData after baking.");
 
@@ -215,9 +261,20 @@ namespace Unity.AI.Navigation.Editor.Tests
             var theNewVariantNavMeshData = prefabVariantSurface.navMeshData;
             var theNewVariantAssetPath = AssetDatabase.GetAssetPath(theNewVariantNavMeshData);
 
-            Assert.IsTrue(modifiedVariantNavMeshData == null, "Initial NavMeshData of the modified variant must no longer exist after saving the variant.");
-            // ReSharper disable once HeuristicUnreachableCode - modifiedVariantNavMeshData is affected by BakeNavMeshAsync()
-            Assert.IsFalse(File.Exists(modifiedVariantAssetPath), "Initial NavMeshData file of the modified and saved variant must no longer exist after saving the variant. ({0})", modifiedVariantAssetPath);
+            if (EditorApplication.isPlaying)
+            {
+                Assert.IsTrue(modifiedVariantNavMeshData != null, "Playmode: Initial NavMeshData of the modified variant must still exist until the end of playmode.");
+
+                Assert.IsTrue(File.Exists(modifiedVariantAssetPath), "Playmode: Initial NavMeshData file of the modified and saved variant must still exist after saving the variant during playmode. ({0})", modifiedVariantAssetPath);
+            }
+            else
+            {
+                Assert.IsTrue(modifiedVariantNavMeshData == null, "Editmode: Initial NavMeshData of the modified variant must no longer exist after saving the variant.");
+
+                // This code is still reachable because modifiedVariantNavMeshData has been affected by BakeNavMeshAsync()
+                Assert.IsFalse(File.Exists(modifiedVariantAssetPath), "Editmode: Initial NavMeshData file of the modified and saved variant must no longer exist after saving the variant. ({0})", modifiedVariantAssetPath);
+            }
+
             Assert.IsTrue(File.Exists(theNewVariantAssetPath), "Variant's own NavMeshData exists in a file after saving. ({0})", theNewVariantAssetPath);
             Assert.IsTrue(File.Exists(theOriginalPrefabAssetPath), "NavMeshData file of the original prefab still exists after saving the variant. ({0})", theOriginalPrefabAssetPath);
             Assert.AreNotEqual(theOriginalPrefabNavMeshData, theNewVariantNavMeshData, "Re-baked modified variant must have a NavMeshData different than that of the original prefab.");
@@ -225,14 +282,9 @@ namespace Unity.AI.Navigation.Editor.Tests
             StageUtility.GoToMainStage();
 
             yield return null;
-        }
 
-        static IEnumerator BakeNavMeshAsync(Func<NavMeshSurface> getSurface, int defaultArea)
-        {
-            var surface = getSurface();
-            surface.defaultArea = defaultArea;
-            NavMeshAssetManager.instance.StartBakingSurfaces(new Object[] {surface});
-            yield return new WaitWhile(() => NavMeshAssetManager.instance.IsSurfaceBaking(surface));
+            if (EditorApplication.isPlaying)
+                yield return new ExitPlayMode();
         }
     }
 }

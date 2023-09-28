@@ -399,7 +399,7 @@ namespace Unity.AI.Navigation
             }
 
 #if UNITY_EDITOR
-            if (!EditorApplication.isPlaying)
+            if (!EditorApplication.isPlaying || IsPartOfPrefab())
             {
 #if UNITY_2022_2_OR_NEWER
                 if (m_CollectObjects == CollectObjects.All)
@@ -644,6 +644,13 @@ namespace Unity.AI.Navigation
             // if (isPrefab)
             //     Debug.Log($"NavMeshData from {navMeshSurface.gameObject.name}.{navMeshSurface.name} will not be added to the NavMesh world because the gameObject is a prefab.");
             return isPrefab;
+        }
+
+        internal bool IsPartOfPrefab()
+        {
+            var prefabStage = PrefabStageUtility.GetPrefabStage(gameObject);
+            var isPartOfPrefab = prefabStage != null && prefabStage.IsPartOfPrefabContents(gameObject);
+            return isPartOfPrefab;
         }
 #endif
     }

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 namespace Unity.AI.Navigation
 {
     /// <summary> Component used by the NavMesh building process to assign a different area type to the region inside the specified volume.</summary>
-    [ExecuteInEditMode]
+    [ExecuteAlways]
     [AddComponentMenu("Navigation/NavMeshModifierVolume", 31)]
     [HelpURL(HelpUrls.Manual + "NavMeshModifierVolume.html")]
     public class NavMeshModifierVolume : MonoBehaviour

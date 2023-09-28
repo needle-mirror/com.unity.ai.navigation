@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-pre.4] - 2023-09-28
+### Fixed
+* Long warning popping up when user starts playmode while editing a prefab that contains NavMesh components ([NAVB-47](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-47))
+
 ## [2.0.0-pre.3] - 2023-05-31
 ### Added
 * New `activated` property in NavMeshLink, useful to control whether agents are allowed to traverse the link

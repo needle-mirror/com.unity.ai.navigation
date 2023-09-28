@@ -15,7 +15,7 @@ namespace Unity.AI.Navigation
     /// in the hierarchy. This modifier overrides the properties set to this GameObject by
     /// any other NavMeshModifier in the parent hierarchy.</remarks>
 #endif
-    [ExecuteInEditMode]
+    [ExecuteAlways]
     [AddComponentMenu("Navigation/NavMeshModifier", 32)]
     [HelpURL(HelpUrls.Manual + "NavMeshModifier.html")]
     public class NavMeshModifier : MonoBehaviour
