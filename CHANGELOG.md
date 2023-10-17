@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2023-10-17
+### Fixed
+* When the "Auto Update Position" option of NavMeshLink is enabled, the link now correctly updates the connection in the next frame after any of the link's ends change their world position.
+
 ## [2.0.0-pre.4] - 2023-09-28
 ### Fixed
 * Long warning popping up when user starts playmode while editing a prefab that contains NavMesh components ([NAVB-47](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-47))

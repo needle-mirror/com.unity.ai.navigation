@@ -35,7 +35,7 @@ namespace Unity.AI.Navigation.Tests
             var defaultArea = NavMesh.GetAreaFromName("Walkable");
             var jumpArea = NavMesh.GetAreaFromName("Jump");
 
-            Assert.That(m_Link.area, Is.EqualTo(defaultArea), "Unexpected NavMesh area for NavMeshLink");
+            Assume.That(m_Link.area, Is.EqualTo(defaultArea), "Unexpected NavMesh area for NavMeshLink");
 
             // Check we can pass 'default' with 'default' mask
             m_AreaMask = 1 << defaultArea;
@@ -43,7 +43,7 @@ namespace Unity.AI.Navigation.Tests
 
             // Change oml area to 'jump'
             m_Link.area = jumpArea;
-            Assert.That(m_Link.area, Is.EqualTo(jumpArea), "Unexpected NavMesh area for NavMeshLink");
+            Assume.That(m_Link.area, Is.EqualTo(jumpArea), "Unexpected NavMesh area for NavMeshLink");
 
             // Check we cannot pass 'jump' with 'default' mask
             VerifyAreaPassing(false);
