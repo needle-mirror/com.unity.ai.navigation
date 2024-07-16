@@ -1,4 +1,3 @@
-#if UNITY_2022_2_OR_NEWER
 namespace Unity.AI.Navigation.Editor.Converter
 {
     /// <summary>
@@ -15,4 +14,3 @@ namespace Unity.AI.Navigation.Editor.Converter
         public int index { get; internal set; }
     }
 }
-#endif

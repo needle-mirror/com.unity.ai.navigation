@@ -1,4 +1,3 @@
-#if UNITY_2022_2_OR_NEWER
 using System;
 using System.IO;
 using UnityEditor;
@@ -26,7 +25,9 @@ namespace Unity.AI.Navigation.Updater
             OpenAndSetActiveScene(path, out Scene convertedScene, out bool alreadyOpened);
 
             // Retrieve the legacy NavMesh data from the active scene
+#pragma warning disable CS0618 // UnityEditor.AI.NavMeshBuilder is necessary in this implementation
             var settingObject = new SerializedObject(UnityEditor.AI.NavMeshBuilder.navMeshSettingsObject);
+#pragma warning restore CS0618
             var navMeshDataProperty = settingObject.FindProperty(k_NavMeshDataPropertyPath);
             var navMeshData = navMeshDataProperty.objectReferenceValue as NavMeshData;
 
@@ -162,4 +163,3 @@ namespace Unity.AI.Navigation.Updater
         }
     }
 }
-#endif

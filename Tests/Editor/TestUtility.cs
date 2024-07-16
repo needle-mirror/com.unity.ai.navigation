@@ -1,3 +1,5 @@
+#if UNITY_EDITOR || UNITY_STANDALONE
+
 using UnityEditor;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
@@ -7,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Unity.AI.Navigation.Editor.Tests
 {
-    public class TestUtility
+    class TestUtility
     {
         [return: NotNull]
         public static GameObject InstantiatePrefab(GameObject prefab, string name)
@@ -50,3 +52,4 @@ namespace Unity.AI.Navigation.Editor.Tests
         PlayMode
     }
 }
+#endif

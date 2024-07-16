@@ -1,9 +1,6 @@
-#if UNITY_2022_2_OR_NEWER
-
 using UnityEngine;
 using UnityEditor.AI;
 using UnityEditorInternal;
-using EditorNavMeshBuilder = UnityEditor.AI.NavMeshBuilder;
 using Object = UnityEngine.Object;
 using UnityEditor;
 
@@ -104,7 +101,7 @@ namespace Unity.AI.Navigation.Editor
 
         public void OnEnable()
         {
-            var iconPath = $"{NavMeshComponentsGUIUtility.k_PackageEditorResourcesFolder}NavigationWindowIcon.png";
+            var iconPath = $"{NavMeshComponentsGUIUtility.k_PackageEditorResourcesFolder}NavigationWindowIcon.asset";
             titleContent = EditorGUIUtility.TrTextContentWithIcon("Navigation", iconPath);
             s_NavigationWindow = this;
             EditorApplication.searchChanged += Repaint;
@@ -154,7 +151,7 @@ namespace Unity.AI.Navigation.Editor
             }
         }
 
-        // This code is replicated from the navmesh debug draw code.
+        // This code is replicated from the NavMesh debug draw code.
         int Bit(int a, int b)
         {
             return (a & (1 << b)) >> b;
@@ -252,7 +249,7 @@ namespace Unity.AI.Navigation.Editor
                     allowChangeCost = true;
                     break;
             }
-            
+
             GetAreaListRects(rect, out Rect stripeRect, out Rect labelRect, out Rect nameRect, out Rect costRect);
 
             bool oldEnabled = GUI.enabled;
@@ -415,5 +412,3 @@ namespace Unity.AI.Navigation.Editor
         }
     }
 }
-
-#endif

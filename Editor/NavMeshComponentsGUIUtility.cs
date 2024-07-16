@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.AI;
 using UnityEngine;
@@ -8,34 +9,52 @@ namespace Unity.AI.Navigation.Editor
     /// <summary> Class containing a set of utility functions meant for presenting information from the NavMeshComponents into the GUI. </summary>
     public static class NavMeshComponentsGUIUtility
     {
+        static readonly GUIContent s_TempContent = new();
+
+        static GUIContent TempContent(string text)
+        {
+            s_TempContent.image = default;
+            s_TempContent.text = text;
+            s_TempContent.tooltip = default;
+            return s_TempContent;
+        }
+
         internal const string k_PackageEditorResourcesFolder = "Packages/com.unity.ai.navigation/EditorResources/";
-        
-        /// <summary> Displays a GUI element for selecting the area type used by a <see cref="NavMeshSurface"/>, <see cref="NavMeshLink"/>, <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/>. </summary>
-        /// <param name="labelName"></param>
-        /// <param name="areaProperty"></param>
-        public static void AreaPopup(string labelName, SerializedProperty areaProperty)
+        static readonly string k_OpenAreaSettingsText = L10n.Tr("Open Area Settings...");
+
+        /// <summary> Displays a GUI element for selecting the area type used by a <see cref="NavMeshSurface"/>, <see cref="NavMeshLink"/>, <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/>.</summary>
+        /// <remarks> The dropdown menu lists all of the area types defined in the <a href="../manual/NavigationWindow.html#areas-tab">Areas tab</a> of the Navigation window. </remarks>
+        /// <param name="labelName">The label for the field.</param>
+        /// <param name="areaProperty">The serialized property that this GUI element displays and modifies. It represents a NavMesh <see cref="NavMeshModifier.area">area type</see> and it needs to store values of type <see cref="SerializedPropertyType.Integer"/>.</param>
+        /// <seealso cref="NavMeshSurface.defaultArea">NavMeshSurface.defaultArea</seealso>
+        /// <seealso cref="NavMeshBuildSource.area">NavMeshBuildSource.area</seealso>
+        public static void AreaPopup(string labelName, SerializedProperty areaProperty) =>
+            AreaPopup(TempContent(labelName), areaProperty);
+
+        internal static void AreaPopup(GUIContent label, SerializedProperty areaProperty)
         {
             var areaIndex = -1;
-            var areaNames = GameObjectUtility.GetNavMeshAreaNames();
+            var areaNames = GetNavMeshAreaNames();
             for (var i = 0; i < areaNames.Length; i++)
             {
-                var areaValue = GameObjectUtility.GetNavMeshAreaFromName(areaNames[i]);
+                var areaValue = GetNavMeshAreaFromName(areaNames[i]);
                 if (areaValue == areaProperty.intValue)
                     areaIndex = i;
             }
+
             ArrayUtility.Add(ref areaNames, "");
-            ArrayUtility.Add(ref areaNames, "Open Area Settings...");
+            ArrayUtility.Add(ref areaNames, k_OpenAreaSettingsText);
 
             var rect = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight);
             EditorGUI.BeginProperty(rect, GUIContent.none, areaProperty);
 
             EditorGUI.BeginChangeCheck();
-            areaIndex = EditorGUI.Popup(rect, labelName, areaIndex, areaNames);
+            areaIndex = EditorGUI.Popup(rect, label, areaIndex, areaNames);
 
             if (EditorGUI.EndChangeCheck())
             {
                 if (areaIndex >= 0 && areaIndex < areaNames.Length - 2)
-                    areaProperty.intValue = GameObjectUtility.GetNavMeshAreaFromName(areaNames[areaIndex]);
+                    areaProperty.intValue = GetNavMeshAreaFromName(areaNames[areaIndex]);
                 else if (areaIndex == areaNames.Length - 1)
                     NavMeshEditorHelpers.OpenAreaSettings();
             }
@@ -43,10 +62,21 @@ namespace Unity.AI.Navigation.Editor
             EditorGUI.EndProperty();
         }
 
+        internal static readonly string k_OpenAgentSettingsText = L10n.Tr("Open Agent Settings...");
+        static readonly string k_AgentTypeInvalidText = L10n.Tr("Agent Type invalid.");
+
         /// <summary> Displays a GUI element for selecting the agent type used by a <see cref="NavMeshSurface"/> or <see cref="NavMeshLink"/>. </summary>
-        /// <param name="labelName"></param>
-        /// <param name="agentTypeID"></param>
-        public static void AgentTypePopup(string labelName, SerializedProperty agentTypeID)
+        /// <remarks> The dropdown menu lists all of the agent types defined in the <a href="../manual/NavigationWindow.html#agents-tab">Agents tab</a> of the Navigation window. </remarks>
+        /// <param name="labelName">The label for the field.</param>
+        /// <param name="agentTypeID">The serialized property that this GUI element displays and modifies. It stores an <see cref="SerializedPropertyType.Integer"/> value that represents a NavMesh <see cref="NavMeshSurface.agentTypeID">agent type ID</see>.<br/>
+        /// The selected item is displayed as the <a href="https://docs.unity3d.com/ScriptReference/AI.NavMesh.GetSettingsNameFromID.html">name</a> that corresponds to the stored ID.</param>
+        /// <seealso href="https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent-agentTypeID.html">NavMeshAgent.agentTypeID</seealso>
+        /// <seealso href="https://docs.unity3d.com/ScriptReference/AI.NavMeshBuildSettings-agentTypeID.html">NavMeshBuildSettings.agentTypeID</seealso>
+        /// <seealso href="https://docs.unity3d.com/ScriptReference/AI.NavMesh.GetSettingsNameFromID.html">NavMesh.GetSettingsNameFromID</seealso>
+        public static void AgentTypePopup(string labelName, SerializedProperty agentTypeID) =>
+            AgentTypePopup(TempContent(labelName), agentTypeID);
+
+        internal static void AgentTypePopup(GUIContent label, SerializedProperty agentTypeID)
         {
             var index = -1;
             var count = NavMesh.GetSettingsCount();
@@ -59,20 +89,21 @@ namespace Unity.AI.Navigation.Editor
                 if (id == agentTypeID.intValue)
                     index = i;
             }
+
             agentTypeNames[count] = "";
-            agentTypeNames[count + 1] = "Open Agent Settings...";
+            agentTypeNames[count + 1] = k_OpenAgentSettingsText;
 
             bool validAgentType = index != -1;
             if (!validAgentType)
             {
-                EditorGUILayout.HelpBox("Agent Type invalid.", MessageType.Warning);
+                EditorGUILayout.HelpBox(k_AgentTypeInvalidText, MessageType.Warning);
             }
 
             var rect = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight);
             EditorGUI.BeginProperty(rect, GUIContent.none, agentTypeID);
 
             EditorGUI.BeginChangeCheck();
-            index = EditorGUI.Popup(rect, labelName, index, agentTypeNames);
+            index = EditorGUI.Popup(rect, label, index, agentTypeNames);
             if (EditorGUI.EndChangeCheck())
             {
                 if (index >= 0 && index < count)
@@ -93,10 +124,17 @@ namespace Unity.AI.Navigation.Editor
         // It is used to describe which agents modifiers apply to.
         // There is a special case of "None" which is an empty array.
         // There is a special case of "All" which is an array of length 1, and value of -1.
-        /// <summary> Displays a GUI element for selecting multiple agent types for which a <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/> can influence the NavMesh. </summary>
-        /// <param name="labelName"></param>
-        /// <param name="agentMask"></param>
-        public static void AgentMaskPopup(string labelName, SerializedProperty agentMask)
+        /// <summary> Displays a GUI element for selecting multiple agent types for which a <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/> can influence the NavMesh.</summary>
+        /// <remarks> The dropdown menu lists all of the agent types defined in the <a href="../manual/NavigationWindow.html#agents-tab">Agents tab</a> of the Navigation window. </remarks>
+        /// <param name="labelName">The label for the field.</param>
+        /// <param name="agentMask">The serialized property that holds the <a href="https://docs.unity3d.com/ScriptReference/SerializedProperty-isArray.html">array</a> of NavMesh <see cref="NavMeshSurface.agentTypeID">agent type</see> values that are selected from the items defined in the <a href="../manual/NavigationWindow.html#agents-tab">Agents tab</a> of the Navigation window. The items are stored as <see cref="SerializedPropertyType.Integer"/> <see cref="NavMeshBuildSettings.agentTypeID">ID values</see> and are displayed as their corresponding <a href="https://docs.unity3d.com/ScriptReference/AI.NavMesh.GetSettingsNameFromID.html">names</a>.</param>
+        /// <seealso href="https://docs.unity3d.com/ScriptReference/AI.NavMesh.GetSettingsByIndex.html">NavMesh.GetSettingsByIndex</seealso>
+        /// <seealso href="Unity.AI.Navigation.NavMeshModifier.AffectsAgentType.html">NavMeshModifier.AffectsAgentType</seealso>
+        /// <seealso href="Unity.AI.Navigation.NavMeshModifierVolume.AffectsAgentType.html">NavMeshModifierVolume.AffectsAgentType</seealso>
+        public static void AgentMaskPopup(string labelName, SerializedProperty agentMask) =>
+            AgentMaskPopup(TempContent(labelName), agentMask);
+
+        internal static void AgentMaskPopup(GUIContent label, SerializedProperty agentMask)
         {
             // Contents of the dropdown box.
             string popupContent = "";
@@ -106,11 +144,11 @@ namespace Unity.AI.Navigation.Editor
             else
                 popupContent = GetAgentMaskLabelName(agentMask);
 
-            var content = new GUIContent(popupContent);
+            var content = TempContent(popupContent);
             var popupRect = GUILayoutUtility.GetRect(content, EditorStyles.popup);
 
             EditorGUI.BeginProperty(popupRect, GUIContent.none, agentMask);
-            popupRect = EditorGUI.PrefixLabel(popupRect, 0, new GUIContent(labelName));
+            popupRect = EditorGUI.PrefixLabel(popupRect, 0, label);
             bool pressed = GUI.Button(popupRect, content, EditorStyles.popup);
 
             if (pressed)
@@ -141,26 +179,23 @@ namespace Unity.AI.Navigation.Editor
             EditorGUI.EndProperty();
         }
 
-        /// <summary> Creates a new GameObject as a child of another one and selects it immediately. </summary>
-        /// <param name="suggestedName"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
+        /// <summary> Creates and selects a new GameObject as a child of another GameObject. </summary>
+        /// <param name="suggestedName">The name given to the created child GameObject. If necessary, this method <a href="https://docs.unity3d.com/ScriptReference/GameObjectUtility.GetUniqueNameForSibling.html">modifies</a> the name in order to distinguish it from the other children of the same parent object.</param>
+        /// <param name="parent">The GameObject to which the created GameObject is attached as a child object.</param>
+        /// <returns>A new GameObject that is a child of the specified parent GameObject.</returns>
         public static GameObject CreateAndSelectGameObject(string suggestedName, GameObject parent)
         {
-            var parentTransform = parent != null ? parent.transform : null;
-            var uniqueName = GameObjectUtility.GetUniqueNameForSibling(parentTransform, suggestedName);
-            var child = new GameObject(uniqueName);
+            return CreateAndSelectGameObject(suggestedName, parent, Array.Empty<Type>());
+        }
 
-            Undo.RegisterCreatedObjectUndo(child, "Create " + uniqueName);
-            if (parentTransform != null)
-                Undo.SetTransformParent(child.transform, parentTransform, "Parent " + uniqueName);
-
-            Selection.activeGameObject = child;
-
+        internal static GameObject CreateAndSelectGameObject(string suggestedName, GameObject parent, params Type[] components)
+        {
+            var child = ObjectFactory.CreateGameObject(suggestedName, components);
+            GOCreationCommands.Place(child, parent);
             return child;
         }
 
-        /// <summary> Checks whether a serialized property has all the bits set when intepreted as a bitmask. </summary>
+        /// <summary> Checks whether a serialized property has all the bits set when interpreted as a bitmask. </summary>
         /// <param name="agentMask"></param>
         /// <returns></returns>
         static bool IsAll(SerializedProperty agentMask)
@@ -247,16 +282,20 @@ namespace Unity.AI.Navigation.Editor
             agentMask.serializedObject.ApplyModifiedProperties();
         }
 
+        static readonly string k_AgentMaskNoneText = L10n.Tr("None");
+        static readonly string k_AgentTypeAllText = L10n.Tr("All");
+        static readonly string k_AgentTypeMixedText = L10n.Tr("Mixed...");
+
         /// <summary> Obtains one string that represents the current selection of agent types. </summary>
         /// <param name="agentMask"></param>
         /// <returns> One string that represents the current selection of agent types.</returns>
         static string GetAgentMaskLabelName(SerializedProperty agentMask)
         {
             if (agentMask.arraySize == 0)
-                return "None";
+                return k_AgentMaskNoneText;
 
             if (IsAll(agentMask))
-                return "All";
+                return k_AgentTypeAllText;
 
             if (agentMask.arraySize <= 3)
             {
@@ -272,10 +311,11 @@ namespace Unity.AI.Navigation.Editor
                         labelName += ", ";
                     labelName += settingsName;
                 }
+
                 return labelName;
             }
 
-            return "Mixed...";
+            return k_AgentTypeMixedText;
         }
 
         /// <summary> Checks whether a certain agent type is selected. </summary>
@@ -290,7 +330,26 @@ namespace Unity.AI.Navigation.Editor
                 if (elem.intValue == agentTypeID)
                     return true;
             }
+
             return false;
+        }
+
+        static string[] GetNavMeshAreaNames()
+        {
+#if EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED
+            return NavMesh.GetAreaNames();
+#else
+            return GameObjectUtility.GetNavMeshAreaNames();
+#endif
+        }
+
+        static int GetNavMeshAreaFromName(string name)
+        {
+#if EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED
+            return NavMesh.GetAreaFromName(name);
+#else
+            return GameObjectUtility.GetNavMeshAreaFromName(name);
+#endif
         }
     }
 }

@@ -96,13 +96,13 @@ namespace Unity.AI.Navigation.Tests
         }
 
         [Test]
+#if !NMC_CAN_ACCESS_PHYSICS        
+        [Ignore("This test requires the com.unity.modules.physics package in order to run. Make sure to reference it in the project.")]
+#endif        
         public void CanBuildRenderMeshesAndIgnoreColliders()
         {
 #if NMC_CAN_ACCESS_PHYSICS
             plane.GetComponent<Collider>().enabled = false;
-#else
-        Assert.Inconclusive("This test requires the com.unity.modules.physics package in order to run. Make sure to reference it in the project.");
-#endif
             surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
             surface.BuildNavMesh();
             Assert.IsFalse(HasNavMeshAtOrigin());
@@ -110,6 +110,7 @@ namespace Unity.AI.Navigation.Tests
             surface.useGeometry = NavMeshCollectGeometry.RenderMeshes;
             surface.BuildNavMesh();
             Assert.IsTrue(HasNavMeshAtOrigin());
+#endif             
         }
 
         [Test]
@@ -212,8 +213,8 @@ namespace Unity.AI.Navigation.Tests
         [UnityTest]
         public IEnumerator UpdatingAndAddingNavMesh()
         {
-            var navmeshData = new NavMeshData();
-            var oper = surface.UpdateNavMesh(navmeshData);
+            var navMeshData = new NavMeshData();
+            var oper = surface.UpdateNavMesh(navMeshData);
             Assert.IsFalse(HasNavMeshAtOrigin());
 
             do
@@ -222,7 +223,7 @@ namespace Unity.AI.Navigation.Tests
             } while (!oper.isDone);
 
             surface.RemoveData();
-            surface.navMeshData = navmeshData;
+            surface.navMeshData = navMeshData;
             surface.AddData();
 
             Assert.IsTrue(HasNavMeshAtOrigin());

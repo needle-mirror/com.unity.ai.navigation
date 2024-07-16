@@ -1,4 +1,4 @@
-#if UNITY_2022_2_OR_NEWER
+#if UNITY_EDITOR || UNITY_STANDALONE
 
 using NUnit.Framework;
 using UnityEditor;
@@ -6,7 +6,9 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.AI.Navigation.Updater;
+#pragma warning disable CS0618 // UnityEditor.AI.NavMeshBuilder is necessary in this implementation
 using NavMeshBuilder = UnityEditor.AI.NavMeshBuilder;
+#pragma warning restore CS0618
 
 namespace Unity.AI.Navigation.Editor.Tests
 {

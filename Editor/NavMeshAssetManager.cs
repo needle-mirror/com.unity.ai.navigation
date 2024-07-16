@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-#if !UNITY_2021_2_OR_NEWER
-using UnityEditor.Experimental.SceneManagement;
-#endif
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,7 +8,7 @@ using UnityEngine.AI;
 namespace Unity.AI.Navigation.Editor
 {
     /// <summary>
-    /// Manages assets and baking operation of the navmesh 
+    /// Manages assets and baking operation of the NavMesh 
     /// </summary>
     public class NavMeshAssetManager : ScriptableSingleton<NavMeshAssetManager>
     {
@@ -47,11 +44,7 @@ namespace Unity.AI.Navigation.Editor
             else if (surface.IsPartOfPrefab())
             {
                 var prefabStage = PrefabStageUtility.GetPrefabStage(surface.gameObject);
-#if UNITY_2020_1_OR_NEWER
                 var assetPath = prefabStage.assetPath;
-#else
-                var assetPath = prefabStage.prefabAssetPath;
-#endif
                 if (!string.IsNullOrEmpty(assetPath))
                 {
                     var prefabDirectoryName = Path.GetDirectoryName(assetPath);
@@ -185,7 +178,7 @@ namespace Unity.AI.Navigation.Editor
         /// <summary>
         /// Checks if an operation of baking is in progress for a specified surface
         /// </summary>
-        /// <param name="surface">A navmesh surface</param>
+        /// <param name="surface">A NavMesh surface</param>
         /// <returns>True if the specified surface is baking</returns>
         public bool IsSurfaceBaking(NavMeshSurface surface)
         {
@@ -205,7 +198,7 @@ namespace Unity.AI.Navigation.Editor
         }
 
         /// <summary>
-        /// Clear navmesh surfaces
+        /// Clear NavMesh surfaces
         /// </summary>
         /// <param name="surfaces">List of surfaces</param>
         public void ClearSurfaces(Object[] surfaces)
@@ -344,7 +337,7 @@ namespace Unity.AI.Navigation.Editor
                     }
                     else if (surfaceInPrefab != null && storedPrefabInfo.surface == surfaceInPrefab)
                     {
-                        //Debug.LogFormat("The surface {0} from the prefab was storing the original navmesh data and now will be forgotten", surfaceInPrefab);
+                        //Debug.LogFormat("The surface {0} from the prefab was storing the original NavMesh data and now will be forgotten", surfaceInPrefab);
 
                         var baseSurface = PrefabUtility.GetCorrespondingObjectFromSource(surfaceInPrefab) as NavMeshSurface;
                         if (baseSurface == null || surfaceInPrefab.navMeshData != baseSurface.navMeshData)

@@ -1,25 +1,68 @@
-# OffMesh Link
+# OffMesh Link component reference
 
-OffMeshLink component allows you to incorporate navigation shortcuts which cannot be represented using a walkable surface. For example, jumping over a ditch or a fence, or opening a door before walking through it, can all be described as OffMesh links.
+> [!Important]
+> The OffMesh Link component is deprecated and no longer supported. Use the [NavMesh Link component](./NavMeshLink.md) instead.
 
-## Properties
+Use OffMesh Link components to incorporate navigation shortcuts, which can't be represented using a walkable surface, into your scene. For example, with OffMesh links, an agent can jump over a ditch or a fence, or open a door then walk through it. 
 
-![](./Images/OffMeshLink.png)
+OffMesh Links only apply to the Humanoid agent type, so if the NavMeshes in your scene use a different agent type, the OffMesh Link won't create a link between them.
 
-| Property| Function |
-|:---|:---|
-| **Start** | Object describing the start location of the OffMesh Link. |
-| **End** | Object describing the end location of the OffMesh Link. |
-| **Cost Override** | If value is positive, use it when calculating path cost on processing a path request. Otherwise, the default cost is used (the cost of the area to which this game object belongs). If the Cost Override is set to the value 3.0, moving over the OffMesh link will be three times more expensive than moving the same distance on a default [**NavMesh**][1] area. The cost override becomes useful when you want to make the agents generally favor walking, but use the OffMesh link when the walk distance is clearly longer. |
-| **Bi-Directional** | If enabled, the link can be traversed in either direction. Otherwise, it can only be traversed from _Start_ to _End_. |
-| **Activated** | Specifies if this link will used by the pathfinder (it will just be ignored if this is set to false). |
-| **Auto Update Positions** | When enabled, the OffMesh link will be reconnected to the NavMesh when the end points move. If disabled the link will stay at its start location even if the end points are moved. |
-| **Navigation Area** | Describes the [navigation area type](./AreasAndCosts.md) of the link. The area type allows you to apply a common traversal cost to similar area types and prevent certain characters from accessing the OffMesh Link based on the agent’s Area Mask. |
+The following table describes the properties available in the OffMesh Link component:
 
-[1]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+<table>
+  <thead>
+    <tr>
+      <th colspan="1"><strong>Property</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="1"><strong>Start</strong></td>
+      <td colspan="2">Select the GameObject that represents the start location of the link.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>End</strong></td>
+      <td colspan="2">Select the GameObject that represents the end location of the link.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Cost Override</strong></td>
+      <td colspan="2">Override the cost to move across the link. <br/>If the Cost Override value is negative, the cost of the Navigation Area type is used. If the Cost Override value is non-negative, the cost of moving over the link is equal to the Cost Override value multiplied by the length of the link. The length of the link is the distance between the start and end points of the link.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Bidirectional</strong></td>
+      <td colspan="2">Control the direction NavMesh Agents move across the link. When you select this checkbox, NavMesh Agents can move across the link in both directions (from the start to the end, and from the end to the start).<br/>When you clear this checkbox, NavMesh Agents can only move across the link in one direction (from the start to the end).</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Activated</strong></td>
+      <td colspan="2">Allow the link to be used in pathfinding.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Auto Update Positions</strong></td>
+      <td colspan="2">Reconnect the OffMesh link to the NavMesh if you move the end points. If disabled, the link stays at its start location even if the end points move.</td>
+    </tr>
+    <tr>
+      <td rowspan="4"><strong>Navigation Area</strong></td>
+      <td colspan="2">Specify the area type of the OffMesh Link. Use the area type to apply a common traversal cost to similar area types and prevent certain characters from crossing the link based on the agent’s Area Mask.</td>
+    </tr>
+    <tr>
+      <td><strong>Walkable</strong></td>
+      <td>Make the link walkable for the affected agent types. This is the default option.</td>
+    </tr>
+    <tr>
+      <td><strong>Not Walkable</strong></td>
+      <td>Prevent the affected agent types from crossing the link.</td>
+    </tr>
+    <tr>
+      <td><strong>Jump</strong></td>
+      <td>Change the area type of the link to Jump.</td>
+    </tr>
+  </tbody>
+</table>
 
 
-### Additional resources
+## Additional resources
 
-- [Creating an OffMesh Link](./CreateOffMeshLink.md) – workflow for setting up an OffMesh link.
-- [OffMesh Link scripting reference](https://docs.unity3d.com/ScriptReference/AI.OffMeshLink.html) - full description of the OffMesh Link scripting API.
+- [NavMesh Link component reference](./NavMeshLink.md)
+- [Create OffMesh Links](./CreateOffMeshLink.md)
+- [OffMesh Link scripting reference](https://docs.unity3d.com/ScriptReference/AI.OffMeshLink.html) 

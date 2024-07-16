@@ -1,3 +1,5 @@
+#if UNITY_EDITOR || UNITY_STANDALONE
+
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEditor;
@@ -7,7 +9,7 @@ namespace Unity.AI.Navigation.Editor.Tests
 {
     [TestFixture]
     [Description("Verifies that the desired Navigation editor menus are accessible with the package.")]
-    public class NavigationPresenceInMenus
+    class NavigationPresenceInMenus
     {
         GameObject m_ComponentsReceiver;
 
@@ -23,10 +25,10 @@ namespace Unity.AI.Navigation.Editor.Tests
         {
             yield return "Component/Navigation/Nav Mesh Agent";
             yield return "Component/Navigation/Nav Mesh Obstacle";
-            yield return "Component/Navigation/NavMeshSurface";
-            yield return "Component/Navigation/NavMeshModifierVolume";
-            yield return "Component/Navigation/NavMeshModifier";
-            yield return "Component/Navigation/NavMeshLink";
+            yield return "Component/Navigation/NavMesh Surface";
+            yield return "Component/Navigation/NavMesh Modifier Volume";
+            yield return "Component/Navigation/NavMesh Modifier";
+            yield return "Component/Navigation/NavMesh Link";
             yield return "Window/AI/Navigation";
         }
 
@@ -45,3 +47,4 @@ namespace Unity.AI.Navigation.Editor.Tests
         }
     }
 }
+#endif

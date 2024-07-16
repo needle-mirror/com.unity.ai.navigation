@@ -1,3 +1,5 @@
+#if UNITY_EDITOR || UNITY_STANDALONE
+
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
@@ -59,10 +61,10 @@ namespace Unity.AI.Navigation.Tests
             NavMesh.CalculatePath(m_PlaneStart.position, m_PlaneEnd.position, m_AreaMask, path);
             if (expectToPass)
                 Assert.That(path.status, Is.EqualTo(NavMeshPathStatus.PathComplete),
-                    "Expected complete path; with navmesh area mask " + m_AreaMask + " when NavMeshLink area is " + m_Link.area);
+                    "Expected complete path; with NavMesh area mask " + m_AreaMask + " when NavMeshLink area is " + m_Link.area);
             else
                 Assert.That(path.status, Is.EqualTo(NavMeshPathStatus.PathPartial),
-                    "Expected partial path; with navmesh area mask " + m_AreaMask + " when NavMeshLink area is " + m_Link.area);
+                    "Expected partial path; with NavMesh area mask " + m_AreaMask + " when NavMeshLink area is " + m_Link.area);
         }
 
         [UnityTearDown]
@@ -72,3 +74,4 @@ namespace Unity.AI.Navigation.Tests
         }
     }
 }
+#endif

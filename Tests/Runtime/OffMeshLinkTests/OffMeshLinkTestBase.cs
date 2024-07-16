@@ -1,3 +1,5 @@
+#if UNITY_EDITOR || UNITY_STANDALONE
+
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.AI;
@@ -36,3 +38,4 @@ namespace Unity.AI.Navigation.Tests
         }
     }
 }
+#endif

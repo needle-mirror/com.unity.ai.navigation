@@ -1,9 +1,7 @@
 using UnityEditor;
-using UnityEditor.AI;
 using UnityEditor.IMGUI.Controls;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Unity.AI.Navigation.Editor
 {
@@ -32,17 +30,7 @@ namespace Unity.AI.Navigation.Editor
             m_Area = serializedObject.FindProperty("m_Area");
             m_Center = serializedObject.FindProperty("m_Center");
             m_Size = serializedObject.FindProperty("m_Size");
-#if !UNITY_2022_2_OR_NEWER
-            NavMeshVisualizationSettings.showNavigation++;
-#endif
         }
-
-#if !UNITY_2022_2_OR_NEWER
-        void OnDisable()
-        {
-            NavMeshVisualizationSettings.showNavigation--;
-        }
-#endif
 
         Bounds GetBounds()
         {
@@ -57,21 +45,17 @@ namespace Unity.AI.Navigation.Editor
             EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.Collider, "Edit Volume",
                 EditorGUIUtility.IconContent("EditCollider"), GetBounds, this);
 
-            EditorGUILayout.PropertyField(m_Size);
-            EditorGUILayout.PropertyField(m_Center);
+            EditorGUILayout.PropertyField(m_Size, Content.Size);
+            EditorGUILayout.PropertyField(m_Center, Content.Center);
 
-            NavMeshComponentsGUIUtility.AreaPopup("Area Type", m_Area);
-            NavMeshComponentsGUIUtility.AgentMaskPopup("Affected Agents", m_AffectedAgents);
+            NavMeshComponentsGUIUtility.AreaPopup(Content.Area, m_Area);
+            NavMeshComponentsGUIUtility.AgentMaskPopup(Content.AffectedAgents, m_AffectedAgents);
             EditorGUILayout.Space();
 
             serializedObject.ApplyModifiedProperties();
         }
-        
-#if !UNITY_2022_2_OR_NEWER
-        [DrawGizmo(GizmoType.Selected | GizmoType.Active)]
-#else
+
         [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active)]
-#endif
         static void RenderBoxGizmo(NavMeshModifierVolume navModifier, GizmoType gizmoType)
         {
             var color = navModifier.enabled ? s_HandleColor : s_HandleColorDisabled;
@@ -97,22 +81,17 @@ namespace Unity.AI.Navigation.Editor
         [DrawGizmo(GizmoType.NotInSelectionHierarchy | GizmoType.Pickable)]
         static void RenderBoxGizmoNotSelected(NavMeshModifierVolume navModifier, GizmoType gizmoType)
         {
-#if !UNITY_2022_2_OR_NEWER
-            if (NavMeshVisualizationSettings.showNavigation > 0)
-#endif
-            {
-                var color = navModifier.enabled ? s_HandleColor : s_HandleColorDisabled;
-                var oldColor = Gizmos.color;
-                var oldMatrix = Gizmos.matrix;
+            var color = navModifier.enabled ? s_HandleColor : s_HandleColorDisabled;
+            var oldColor = Gizmos.color;
+            var oldMatrix = Gizmos.matrix;
 
-                Gizmos.matrix = navModifier.transform.localToWorldMatrix;
+            Gizmos.matrix = navModifier.transform.localToWorldMatrix;
 
-                Gizmos.color = color;
-                Gizmos.DrawWireCube(navModifier.center, navModifier.size);
+            Gizmos.color = color;
+            Gizmos.DrawWireCube(navModifier.center, navModifier.size);
 
-                Gizmos.matrix = oldMatrix;
-                Gizmos.color = oldColor;
-            }
+            Gizmos.matrix = oldMatrix;
+            Gizmos.color = oldColor;
 
             Gizmos.DrawIcon(navModifier.transform.position, "NavMeshModifierVolume Icon", true);
         }
@@ -133,7 +112,7 @@ namespace Unity.AI.Navigation.Editor
                 m_BoundsHandle.DrawHandle();
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(vol, "Modified NavMesh Modifier Volume");
+                    Undo.RecordObject(vol, Content.UndoModifyVolume);
                     Vector3 center = m_BoundsHandle.center;
                     Vector3 size = m_BoundsHandle.size;
                     vol.center = center;
@@ -147,11 +126,16 @@ namespace Unity.AI.Navigation.Editor
         public static void CreateNavMeshModifierVolume(MenuCommand menuCommand)
         {
             var parent = menuCommand.context as GameObject;
-            var go = NavMeshComponentsGUIUtility.CreateAndSelectGameObject("NavMesh Modifier Volume", parent);
-            go.AddComponent<NavMeshModifierVolume>();
-            var view = SceneView.lastActiveSceneView;
-            if (view != null)
-                view.MoveToView(go.transform);
+            NavMeshComponentsGUIUtility.CreateAndSelectGameObject("NavMesh Modifier Volume", parent, typeof(NavMeshModifierVolume));
+        }
+
+        static class Content
+        {
+            public static readonly GUIContent Size = EditorGUIUtility.TrTextContent("Size", "Dimensions of the NavMesh Modifier Volume.");
+            public static readonly GUIContent Center = EditorGUIUtility.TrTextContent("Center", "The center of the NavMesh Modifier Volume relative to the GameObject center.");
+            public static readonly GUIContent Area = EditorGUIUtility.TrTextContent("Area Type", "Describes the area type to which the NavMesh Modifier Volume applies.");
+            public static readonly GUIContent AffectedAgents = EditorGUIUtility.TrTextContent("Affected Agents", "A selection of agent types that the NavMesh Modifier Volume affects.");
+            public static readonly string UndoModifyVolume = L10n.Tr("Modify NavMesh Modifier Volume");
         }
     }
 }

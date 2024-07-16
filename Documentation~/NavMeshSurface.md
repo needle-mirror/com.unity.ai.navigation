@@ -1,47 +1,144 @@
-# NavMesh Surface
+# NavMesh Surface component reference
 
-The NavMesh Surface component represents the walkable area for a specific [NavMesh Agent](https://docs.unity3d.com/Manual/class-NavMeshAgent.html) type, and defines a part of the Scene where a NavMesh should be built. 
+Use the NavMesh Surface component to define and build a [NavMesh](Glossary.md#NavMesh) for a specific type of [NavMesh Agent](NavMeshAgent.md) in your scene. Use the available properties to specify the type of NavMesh Agent that can use the NavMesh, the area type to assign to the generated NavMesh, and the geometry to use when you bake the NavMesh.
 
-To use the NavMesh Surface component, navigate to **GameObject > AI > NavMesh Surface**. This creates an empty GameObject with a NavMesh Surface component attached to it. A Scene can contain multiple NavMesh Surfaces.
+To use the NavMesh Surface component, apply it to the [GameObject](Glossary.md#gameobject) on which you want to build the NavMesh.
 
-You can add the NavMesh Surface component to any GameObject. This is useful for when you want to use the GameObject parenting [Hierarchy](https://docs.unity3d.com/Manual/Hierarchy.html) to define which GameObjects contribute to the NavMesh.
+To apply the NavMesh Surface component to a GameObject, do the following:
 
-![NavMeshSurface example](Images/NavMeshSurface-Example.png "A NavMesh Surface component open in the Inspector window")
+1. Select the GameObject.
+1. In the Inspector, select **Add Component** &gt; **Navigation** &gt; **NavMesh Surface**. <br/> The Inspector window displays the NavMesh Surface component.
 
-## Parameters
-| **Property**        | **Description**            |
-|:--------------------|:---------------------------|
-| **Agent Type**      | The [NavMesh Agent](https://docs.unity3d.com/Manual/class-NavMeshAgent.html) type using the NavMesh Surface. Use for bake settings and matching the NavMesh Agent to proper surfaces during pathfinding. |
-| **Default Area**    | Defines the area type generated when building the NavMesh.<br/> - **Walkable** (this is the default option)<br/> - **Not Walkable**<br/> - **Jump** <br/> Use the [NavMesh Modifier](NavMeshModifier.md) component to modify the area type in more detail. |
-| **Generate Links**  | If this option is enabled, objects collected by the surface will be considered to generate links during the baking process.<br/>See the **Links Generation** section for more information. |
-| **Use Geometry**    | Select which geometry to use for baking.<br/>- **Render Meshes** – Use geometry from Render Meshes and [Terrains](https://docs.unity3d.com/Manual/terrain-UsingTerrains.html).<br/>-  **Physics [Colliders](https://docs.unity3d.com/Manual/CollidersOverview.html)** – Use geometry from Colliders and Terrains. Agents can move closer to the edge of the physical bounds of the environment with this option than they can with the **Render Meshes** option.      |
-| **NavMesh Data**    | (Read-only) Locate the asset file where the NavMesh is stored. |
-| **Clear**           | |
-| **Bake**            | Bake a NavMesh with the current settings. |
+ A [Scene](Glossary.md#scenes) can contain multiple NavMesh surfaces. You can add the NavMesh Surface component to any GameObject in your scene. This is useful for when you want to use the GameObject parenting [Hierarchy](https://docs.unity3d.com/Manual/Hierarchy.html) to define which GameObjects contribute to the NavMesh.
 
-Use the main settings for the NavMesh Surface component to filter the input geometry on a broad scale. Fine tune how Unity treats input geometry on a per-GameObject basis, using the [NavMesh Modifier](NavMeshModifier.md) component. 
+The following table describes the properties available in the NavMesh Surface component. Use the main settings for the NavMesh Surface component to filter the input geometry on a broad scale. Use the [NavMesh Modifier](NavMeshModifier.md) component to adjust how Unity treats input geometry on a per-GameObject basis. 
 
-The baking process automatically excludes GameObjects that have a NavMesh Agent or NavMesh Obstacle. They are dynamic users of the NavMesh, and so do not contribute to NavMesh building.
+<table>
+  <thead>
+    <tr>
+      <th colspan="1"><strong>Property</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="1"><strong>Agent Type</strong></td>
+     <td colspan="2">Select the type of <a href="NavMeshAgent.html">NavMesh Agent</a> that can use the NavMesh.</td>
+    </tr>
+    <tr>
+      <td rowspan="4"><strong>Default Area</strong></td>
+      <td colspan="2">Specify the area type to assign to the generated NavMesh. The area types define how difficult it is for agents to move across the NavMesh. The available options include all of the area types defined on the Areas tab of the Navigation window. There are 29 custom area types and 3 built-in area types: </td>
+    </tr>
+    <tr>
+      <td><strong>Walkable</strong></td>
+      <td>Make the NavMesh walkable for the assigned Agent type. (This is the default option.)</td>
+    </tr>
+    <tr>
+      <td><strong>Not Walkable</strong></td>
+      <td>Prevent the specified Agent type from crossing this surface unless there is a GameObject that <a href="NavMeshModifier.html">overrides the area type</a>.</td>
+    </tr>
+    <tr>
+      <td><strong>Jump</strong></td>
+      <td>This option is used for automatically generated links. <br/> For more details about area types, refer to <a href="AreasAndCosts.html">Navigation Areas and Costs</a>.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Generate Links</strong></td>
+      <td colspan="2">Automatically generate links between objects that the NavMesh Surface collects when you bake the NavMesh. If you select <strong>Generate Links</strong>, NavMesh Surface attempts to generate links between any collected GameObjects when you bake the NavMesh. If you do not select <strong>Generate Links</strong>, NavMesh Surface doesn't attempt to generate any links between the collected GameObjects when you bake the NavMesh.<br/> Refer to the <a href="BuildingOffMeshLinksAutomatically.html#links-generation">Links Generation</a> section for more information.</td>
+    </tr>
+    <tr>
+      <td rowspan="3"><strong>Use Geometry</strong></td>
+      <td colspan="2">Select which geometry to use when you bake the NavMesh.</td>
+    </tr>
+    <tr>
+      <td><strong>Render Meshes</strong></td>
+      <td>Use geometry from Render Meshes and <a href="https://docs.unity3d.com/Manual/terrain-UsingTerrains.html">Terrains</a>.</td>
+    </tr>
+    <tr>
+      <td><strong>Physics Colliders</strong></td>
+      <td>Use geometry from Colliders and Terrains. Agents can move closer to the edge of the physical bounds of the environment with this option than they can with the <strong>Render Meshes</strong> option. For more information on Colliders, refer to <a href="https://docs.unity3d.com/Manual/CollidersOverview.html">Introduction to collision</a>.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>NavMesh Data</strong></td>
+      <td colspan="2">(Read-only) Locate the asset file where the NavMesh is stored. </td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Clear</strong></td>
+      <td colspan="2">Remove the asset file where the NavMesh is stored.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Bake</strong></td>
+      <td colspan="2">Bake a NavMesh with the current settings. When you bake the NavMesh, it automatically excludes GameObjects that have a <strong>NavMesh Agent</strong> or <strong>NavMesh Obstacle</strong>. They are dynamic users of the NavMesh and don't contribute to the process.</td>
+    </tr>
+  </tbody>
+</table>
+
+
 
 ## Object collection
 
+Use the Object Collection settings to define which GameObjects to use when you bake the NavMesh.
 
-| **Property**        | **Description**      |
-|:--------------------|:---------------------|
-| **Collect Objects** | Defines which GameObjects to use for baking.<br/>- **All** – Use all active GameObjects (this is the default option).<br/>- **Volume** – Use all active GameObjects overlapping the bounding volume. Geometry outside of the bounding volume but within the agent radius is taken into account for baking.<br/>- **Children** – Use all active GameObjects which are children of the NavMesh Surface component, in addition to the object the component is placed on. |
-| **Include Layers**  | Define the layers on which GameObjects are included in the bake process. In addition to **Collect Objects**, this allows for further exclusion of specific GameObjects from the bake (for example, effects or animated characters).<br/> This is set to **Everything** by default, but you can toggle options on (denoted by a tick) or off individually. |
+<table>
+  <thead>
+    <tr>
+      <th colspan="1"><strong>Property</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="5"><strong>Collect Objects</strong></td>
+      <td colspan="2">Define which GameObjects to use when you bake the NavMesh.</td>
+    </tr>
+    <tr>
+      <td><strong>All Game Objects</strong></td>
+      <td>Use all active GameObjects in the scene. (This is the default option.)</td>
+    </tr>
+    <tr>
+      <td><strong>Volume</strong></td>
+      <td>Use all active GameObjects that overlap the bounding volume. Geometry that is located outside of the bounding volume but within the agent radius is included when you bake the NavMesh.</td>
+    </tr>
+    <tr>
+      <td><strong>Current Object Hierarchy</strong></td>
+      <td>Use the GameObject that the <strong>NavMesh Surface</strong> component is placed on and all active GameObjects which are children of this GameObject. </td>
+    </tr>
+    <tr>
+      <td><strong>NavMeshModifier Component Only</strong></td>
+      <td>Use any GameObjects in the scene that have a NavMesh Modifier attached to them and, if their <strong>Apply To Children</strong> option is turned on, use their child objects as well.</td>
+    </tr>
+    <tr>
+      <td rowspan="1"><strong>Include Layers</strong></td>
+      <td colspan="2">Select the layers for which GameObjects are included in the bake process. In addition to <strong>Collect Objects</strong>, this allows for further exclusion of specific GameObjects from the bake process (for example, effects or animated characters).<br/> This is set to <strong>Everything</strong> by default, but you can toggle options on (denoted by a checkmark) or off, individually.</td>
+    </tr>
+  </tbody>
+</table>
 
+Futhermore, you can use the [NavMesh Modifier](./NavMeshModifier.md) component to designate more precisely the objects, and their hierarchies, that the NavMesh Surface can or cannot collect.
 
 ## Advanced Settings
 
-The Advanced settings section allows you to customize the following additional parameters:
+Use the Advanced settings section to customize the following additional properties:
 
 | **Property**            | **Description**      |
 |:------------------------|:---------------------|
-| **Override Voxel Size** | Controls how accurately Unity processes the input geometry for NavMesh baking (this is a tradeoff between speed and accuracy). Select the checkbox to enable. The default is unchecked (disabled).<br/> 3 voxels per Agent radius (6 per diameter) allows the capture of narrow passages, such as doors, while maintaining a quick baking time. For big open areas, using 1 or 2 voxels per radius speeds up baking. Tight indoor spots are better suited to smaller voxels, for example 4 to 6 voxels per radius. More than 8 voxels per radius does not usually provide much additional benefit. |
-| **Override Tile Size** | In order to make the bake process parallel and memory efficient, the Scene is divided into tiles for baking. The white lines visible on the NavMesh are tile boundaries. <br/> The default tile size is 256 voxels, which provides a good tradeoff between memory usage and NavMesh fragmentation. <br/> To change this default tile size, check this checkbox and, in the **Tile Size** field,  enter the number of voxels you want the Tile Size to be. <br/> The smaller the tiles, the more fragmented the NavMesh is. This can sometimes cause non-optimal paths. NavMesh carving also operates on tiles. If you have a lot of obstacles, you can often speed up carving by making the tile size smaller (for example around 64 to 128 voxels). If you plan to bake the NavMesh at runtime, using a smaller tile size to keep the maximum memory usage low. |
-| **Minimum Region Area**| Allows you to cull away the small regions disconnected from the larger NavMesh. The process that builds the NavMesh does not retain the stretches of the mesh that have a surface size smaller than the specified value. Please note that some areas may not get removed despite the Minimum Region Area parameter. The NavMesh is built in parallel as a grid of tiles. If an area straddles a tile boundary, the area is not removed. The reason for this is that the area pruning step takes place at a stage in the build process when the surrounding tiles are not accessible. |
-| **Build Height Mesh** | Enables the creation of additional data used for determining more accurately the height at any position on the NavMesh. See the **Height Mesh** section for more information. This option is available starting with Unity 2022.2.0f1. |
+| **Override Voxel Size** | Control how accurately Unity processes the input geometry when you bake the NavMesh. This is a tradeoff between speed and accuracy. <br/> The default size is one third of the Agent [radius](./NavigationWindow.md#agents-tab), which translates into 3 [voxels](NavInnerWorkings.md#about-voxels) per Agent radius. This voxel size allows the capture of narrow passages, such as doors, and maintains a quick baking time. For big open areas, you can use 1 or 2 voxels per radius to speed up baking. Tight indoor spots are better suited to smaller voxels, for example 4 to 6 voxels per radius. More than 8 voxels per radius doesn't usually provide much additional benefit. <br/> To change the default size, select this checkbox. In the **Voxel Size** field, specify the size of the voxels to use when you bake the NavMesh. |
+| **Voxel Size**         | Specify the size, in world units, of the voxels to use when you bake the NavMesh. This property is only available if you select the **Override Voxel Size** option.|
+| **Override Tile Size** | Change the default Tile Size of the NavMesh. To make the bake process parallel and memory efficient, the Scene is divided into tiles for baking. The white lines visible on the NavMesh are tile boundaries. <br/> The default tile size is 256 voxels, which provides a good tradeoff between memory use and NavMesh fragmentation. <br/> To change this default tile size, select this checkbox. In the **Tile Size** field, specify the number of voxels you want the tile size to be. <br/> The smaller the tiles, the more fragmented the NavMesh is. This can sometimes cause non-optimal paths. NavMesh carving also operates on tiles. If you have a lot of obstacles in your scene, you can often speed up carving by making the tile size smaller (for example around 64 to 128 voxels). For more information, refer to [Carving](AboutObstacles.md#carving). <br/> If you plan to bake the NavMesh at runtime, use a smaller tile size to keep the maximum memory use low.|
+| **Tile Size**          | Specify the desired Tile Size in voxels. This property is only available if you select the **Override Tile Size** option. |
+| **Minimum Region Area**| Remove small regions that are disconnected from the larger NavMesh. The process that builds the NavMesh doesn't retain the stretches of the mesh that have a surface size smaller than the specified value. <br/> **Note**: Some areas might not get removed despite the **Minimum Region Area** parameter. The NavMesh is built in parallel as a grid of tiles. If an area straddles a tile boundary, the area isn't removed. The reason for this is that the area pruning step takes place at a stage in the build process when the surrounding tiles aren't accessible. |
+| **Build Height Mesh** | Generate additional data that specifies the height of the surface at each point on the NavMesh. Select this option to generate HeightMesh data. Clear this option if you do not want to generate HeightMesh data. For more information, refer to [**About HeightMeshes**](AboutHeightMesh.md).  |
 
 
 
+## Additional resources
+
+- [About NavMesh agents](AboutAgents.md)
+- [About HeightMeshes](AboutHeightMesh.md)
+- [Links Generation](BuildingOffMeshLinksAutomatically.md#links-generation)
+- [Carving](AboutObstacles.md#carving)
+- [Hierarchy](https://docs.unity3d.com/Manual/Hierarchy.html)
+- [Create a NavMesh agent](CreateNavMeshAgent.md)
+- [Navigation areas and costs](AreasAndCosts.md)
+- [NavMesh Modifier component reference](NavMeshModifier.md)
+- Physics [Colliders](https://docs.unity3d.com/Manual/CollidersOverview.html)
+- [Terrains](https://docs.unity3d.com/Manual/terrain-UsingTerrains.html)

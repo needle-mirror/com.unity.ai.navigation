@@ -1,15 +1,15 @@
 # Navigation Areas and Costs
 
-The _Navigation Areas_ define how difficult it is to walk across a specific area, the lower cost areas will be preferred during path finding. In addition each [**NavMesh**][1] Agent has an _Area Mask_ which can be used to specify on which areas the agent can move.
+The **Navigation Area** defines how difficult it is to walk across a specific area. This is important for finding the path with the lowest total cost. In addition, each [NavMesh Agent](./NavMeshAgent.md) has an **Area Mask** which you can use to specify which areas the agent can move on.
 
 ![](./Images/NavMeshAreaType.svg)
 
-In the above example the area types are used for two common use cases:
+In the example above the area types are used for two common use cases:
 
-- **Water** area is made more costly to walk by assigning it a higher cost, to deal with a scenario where walking on shallow water is slower.
-- **Door** area is made accessible by specific characters, to create a scenario where humans can walk through doors, but zombies cannot.
+- The **Water** area is made more costly to walk through by assigning it a higher cost, to deal with a scenario where walking in shallow water is slower.
+- The **Door** area is made accessible to specific characters, to create a scenario where humans can walk through doors, but zombies cannot.
 
-The area type can be assigned to every object that is included in the NavMesh baking, in addition, each Off-Mesh Link has a property to specify the area type.
+You can assign the area type to every object that is included in the [**NavMesh**][1] baking. In addition, each **NavMesh Link** has a property to specify the area type.
 
 ## Pathfinding Cost
 
@@ -29,9 +29,9 @@ The yellow dots and lines in the above picture shows how the nodes and links are
 
 The cost to move between two nodes depends on the distance to travel and the cost associated with the area type of the polygon under the link, that is, _distance \* cost_. In practice this means, that if the cost of an area is 2.0, the distance across such polygon will appear to be twice as long. The A\* algorithm requires that all costs must be larger than 1.0.
 
-The effect of the costs on the resulting path can be hard to tune, especially for longer paths. The best way to approach costs is to treat them as hints. For example, if you want the agents to not to use Off-Mesh Links too often, you could increase their cost. But it can be challenging to tune a behavior where the agents to prefer to walk on sidewalks.
+The effect of the costs on the resulting path can be hard to tune, especially for longer paths. The best way to approach costs is to treat them as hints. For example, if you want the agents to not use **NavMesh Links** too often, you could increase their cost. But it can be challenging to tune a behavior where the agents prefer to walk on sidewalks.
 
-Another thing you may notice on some levels is that the pathfinder does not always choose the very shortest path. The reason for this is the node placement. The effect can be noticeable in scenarios where big open areas are next to tiny obstacles, which results navigation mesh with very big and small polygons. In such cases the nodes on the big polygons may get placed anywhere in the big polygon and from the pathfinder’s point of view it looks like a detour.
+Another thing you may notice on some levels is that the pathfinder does not always choose the shortest path. The reason for this is the node placement. The effect can be noticeable in scenarios where big open areas are next to tiny obstacles, which results in a navigation mesh with very big and small polygons. In such cases the nodes on the big polygons may get placed anywhere in the big polygon and from the pathfinder’s point of view it looks like a detour.
 
 The _cost_ per _area type_ can be set globally in the _Areas_ tab, or you can override them per agent using a script.
 
@@ -43,9 +43,9 @@ The area types are specified in the _Navigation Window_’s _Areas_ tab. There a
 
 - **Walkable** is a generic area type which specifies that the area can be walked on.
 - **Not Walkable** is a generic area type which prevents navigation. It is useful for cases where you want to mark certain object to be an obstacle, but without getting NavMesh on top of it.
-- **Jump** is an area type that is assigned to all auto-generated Off-Mesh Links.
+- **Jump** is an area type that is assigned to all auto-generated **NavMesh Links**.
 
-If several objects of different area types are overlapping, the resulting navmesh area type will generally be the one with the highest index. There is one exception however: _Not Walkable_ always takes precedence. Which can be helpful if you need to block out an area.
+If several objects of different area types are overlapping, the resulting NavMesh area type will generally be the one with the highest index. There is one exception however: _Not Walkable_ always takes precedence. Which can be helpful if you need to block out an area.
 
 ## Area Mask
 

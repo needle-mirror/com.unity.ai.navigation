@@ -21,7 +21,6 @@ namespace Unity.AI.Navigation.Tests
         readonly Vector3 m_OffsetX = new(11f, 0f, 0f);
         readonly Vector3 m_OffsetZ = new(0f, 0f, 11f);
         readonly Vector3 m_DefaultEndpointOffset = new(0f, 0f, 2.5f);
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
         readonly int m_PandaTypeID = NavMesh.CreateSettings().agentTypeID;
         const int k_AreaTypeForPanda = 3;
         NavMeshAgent m_Agent;
@@ -33,7 +32,6 @@ namespace Unity.AI.Navigation.Tests
         NavMeshDataInstance m_NavMeshClone;
         NavMeshDataInstance m_NavMeshForPanda;
         NavMeshSurface m_SurfaceForPanda;
-#endif
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -50,7 +48,6 @@ namespace Unity.AI.Navigation.Tests
             Assume.That(HasPathConnecting(m_PlaneAtOrigin, m_PlaneOnTheSide), Is.False);
             Assume.That(HasPathConnecting(m_PlaneOnTheSide, m_PlaneAtOrigin), Is.False);
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
             m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
             m_Agent.transform.position = m_PlaneOnTheSide.transform.position - 2f * Vector3.back;
             m_Agent.enabled = false;
@@ -83,7 +80,6 @@ namespace Unity.AI.Navigation.Tests
             m_SurfaceForPanda.defaultArea = k_AreaTypeForPanda;
             m_SurfaceForPanda.BuildNavMesh();
             m_SurfaceForPanda.enabled = false;
-#endif
         }
 
         [SetUp]
@@ -99,7 +95,6 @@ namespace Unity.AI.Navigation.Tests
             Assume.That(HasPathConnecting(m_PlaneAtOrigin, m_PlaneOnTheSide), Is.True);
             Assume.That(HasPathConnecting(m_PlaneOnTheSide, m_PlaneAtOrigin), Is.True);
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
             if (m_Agent.isActiveAndEnabled)
             {
                 m_Agent.ResetPath();
@@ -108,20 +103,17 @@ namespace Unity.AI.Navigation.Tests
 
             m_PathfindingStart.transform.position = m_Link.transform.position + m_Link.startPoint;
             m_PathfindingEnd.transform.position = m_Link.transform.position + m_Link.endPoint;
-#endif
         }
 
         [TearDown]
         public void TearDown()
         {
             Object.DestroyImmediate(m_Link.gameObject);
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
             if (m_TempGO != null)
                 Object.DestroyImmediate(m_TempGO);
             if (m_NavMeshForPanda.valid)
                 NavMesh.RemoveNavMeshData(m_NavMeshForPanda);
             m_Agent.enabled = false;
-#endif
         }
 
         [OneTimeTearDown]
@@ -130,7 +122,6 @@ namespace Unity.AI.Navigation.Tests
             Object.DestroyImmediate(m_Surface.gameObject);
             Object.DestroyImmediate(m_PlaneAtOrigin);
             Object.DestroyImmediate(m_PlaneOnTheSide);
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
             Object.DestroyImmediate(m_Agent);
             Object.DestroyImmediate(m_ExtraNavMesh);
             Object.DestroyImmediate(m_FarFromNavMesh);
@@ -138,7 +129,6 @@ namespace Unity.AI.Navigation.Tests
             Object.DestroyImmediate(m_PathfindingEnd);
             if (m_NavMeshClone.valid)
                 NavMesh.RemoveNavMeshData(m_NavMeshClone);
-#endif
         }
 
         [Test]
@@ -152,8 +142,74 @@ namespace Unity.AI.Navigation.Tests
         }
 
         [Test]
+        public void Link_WhenCreatedAtRuntime_HasNullStartAndEndTransforms()
+        {
+            var link = m_Link.gameObject.AddComponent<NavMeshLink>();
+            Assert.That(link.startTransform, Is.EqualTo(null),
+                "A NavMeshLink newly created should have a null start transform.");
+            Assert.That(link.endTransform, Is.EqualTo(null),
+                "A NavMeshLink newly created should have a null end transform.");
+        }
+
+        [Test]
+        public void Link_WhenCreated_HasTheExpectedValuesForProperties()
+        {
+            var link = m_Link.gameObject.AddComponent<NavMeshLink>();
+
+            Assert.That(link.area, Is.EqualTo(0),
+                "Newly created NavMeshLink should have the Walkable area type.");
+
+            Assert.That(link.agentTypeID, Is.EqualTo(0),
+                "Newly created NavMeshLink should have the Humanoid agent type ID.");
+
+            Assert.That(link.bidirectional, Is.True,
+                "Newly created NavMeshLink should have bidirectional switched on.");
+
+            Assert.That(link.costModifier, Is.Negative,
+                "Newly created NavMeshLink should have a negative cost modifier, which means the cost from area type is not overridden.");
+
+            Assert.That(link.width, Is.EqualTo(0f),
+                "Newly created NavMeshLink should have a width of zero.");
+
+            Assert.That(link.autoUpdate, Is.False,
+                "Newly created NavMeshLink should have autoUpdate switched off.");
+
+            Assert.That(link.activated, Is.True,
+                "Newly created NavMeshLink should be activated.");
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(-1)]
+        [TestCase(42)]
+        [TestCase(-42)]
+        public void CostModifier_SetValue_GetValueIsTheSame(int costModifier)
+        {
+            m_Link.costModifier = costModifier;
+            Assert.That(m_Link.costModifier, Is.EqualTo(costModifier));
+        }
+
+        [Test]
         public void Link_WithValidParameters_ConnectsTwoSurfaces()
         {
+            VerifyLinkConnection(ResultsIn.PathForward);
+        }
+
+        [Test]
+        public void Link_OnScaledObject_DoesNotScaleEndPoints()
+        {
+            m_Link.enabled = false;
+            m_Link.transform.localScale = new Vector3(1f, 1f, m_OffsetZ.z);
+            m_Link.startPoint = m_PlaneAtOrigin.transform.position + Vector3.forward;
+            m_Link.endPoint = m_PlaneOnTheSide.transform.position + Vector3.forward;
+            m_Link.enabled = true;
+
+            m_PathfindingStart.transform.position = m_Link.transform.TransformPoint(m_Link.startPoint);
+            m_PathfindingEnd.transform.position = m_Link.transform.TransformPoint(m_Link.endPoint);
+            VerifyLinkConnection(ResultsIn.NoPath);
+
+            m_PathfindingStart.transform.position = m_PlaneAtOrigin.transform.position;
+            m_PathfindingEnd.transform.position = m_PlaneOnTheSide.transform.position;
             VerifyLinkConnection(ResultsIn.PathForward);
         }
 
@@ -165,6 +221,69 @@ namespace Unity.AI.Navigation.Tests
 
             m_Link.UpdateLink();
             VerifyLinkConnection(ResultsIn.NoPath);
+        }
+
+        [Test]
+        public void Link_OnUpdateLink_AppliesChangesImmediately()
+        {
+            m_Link.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+
+            m_Link.UpdateLink();
+
+            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
+            VerifyLinkConnection(ResultsIn.PathForward, m_Link.area, m_Link.agentTypeID);
+        }
+
+        [Test]
+        public void Link_WhenEnabled_AppliesChangesImmediately()
+        {
+            m_Link.enabled = false;
+            VerifyLinkConnection(ResultsIn.NoPath);
+
+            AddNavMeshForPandaAgent();
+            ReconfigureLinkForPandaAgent(m_Link);
+
+            m_PathfindingStart.transform.position = m_ExtraNavMesh.transform.position;
+            m_PathfindingEnd.transform.position = m_PlaneAtOrigin.transform.position;
+            VerifyLinkConnection(ResultsIn.NoPath, m_Link.area, m_Link.agentTypeID);
+
+            m_Link.enabled = true;
+            VerifyLinkConnection(ResultsIn.PathOnlyForward, m_Link.area, m_Link.agentTypeID);
+        }
+
+        void ReconfigureLinkForPandaAgent(NavMeshLink link)
+        {
+            var wasEnabled = link.enabled;
+            link.enabled = false;
+            link.agentTypeID = m_PandaTypeID;
+            link.area = k_AreaTypeForPanda;
+            link.bidirectional = false;
+            link.costModifier = 3f;
+            link.width = 6f;
+            link.startTransform = m_ExtraNavMesh.transform;
+            link.endTransform = m_PlaneAtOrigin.transform;
+            link.startPoint = 3f * Vector3.forward;
+            link.endPoint = 3f * Vector3.forward + Vector3.right;
+            link.enabled = wasEnabled;
+        }
+
+        void AddNavMeshForPandaAgent()
+        {
+            m_NavMeshForPanda = NavMesh.AddNavMeshData(m_SurfaceForPanda.navMeshData,
+                m_ExtraNavMesh.transform.position + 0.05f * Vector3.up, Quaternion.Euler(0f, 90f, 0f));
+        }
+
+        [Test]
+        public void Link_WhenGameObjectTransformMoves_EndpointsMoveRelativeToLinkOnUpdate()
+        {
+            m_Link.transform.position += Vector3.forward;
+            Assert.IsFalse(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneAtOrigin.transform.position + Vector3.forward));
+            Assert.IsFalse(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneOnTheSide.transform.position + Vector3.forward));
+
+            m_Link.UpdateLink();
+
+            Assert.IsTrue(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneAtOrigin.transform.position + Vector3.forward));
+            Assert.IsTrue(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneOnTheSide.transform.position + Vector3.forward));
         }
 
         [Test]
@@ -244,48 +363,48 @@ namespace Unity.AI.Navigation.Tests
             Assert.IsTrue(HasPathConnecting(m_PlaneAtOrigin, m_PlaneOnTheSide));
         }
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
         [Test]
-        public void Link_WhenPropertyActivatedChanges_UpdatesConnectionImmediately([Values(false, true)] bool activated)
+        public void Link_WhenPropertyActivatedChanges_UpdatesConnectionImmediately()
         {
-            m_Link.activated = activated;
-            var asExpected = activated ? ResultsIn.PathForward : ResultsIn.NoPath;
-            VerifyLinkConnection(asExpected);
+            m_Link.activated = false;
+            VerifyLinkConnection(ResultsIn.NoPath);
+
+            m_Link.activated = true;
+            VerifyLinkConnection(ResultsIn.PathForward);
         }
 
         [Test]
-        [Description("This behavior needed to match the legacy OffMeshLink behavior.")]
-        public void Link_WhenStartTransformAssigned_SetsStartPointOffsetToZero()
+        public void Link_WhenTransformAssignedAtStart_RetainsValueOfStartPoint()
         {
             m_TempGO = new GameObject("Link");
             var link = m_TempGO.AddComponent<NavMeshLink>();
             Assume.That(link.startPoint, Is.Not.EqualTo(Vector3.zero));
+            var startPointBefore = link.startPoint;
 
             link.startTransform = m_ExtraNavMesh.transform;
             link.UpdateLink();
-            Assert.That(link.startPoint, Is.EqualTo(Vector3.zero),
-                "NavMeshLink should have a zero start point after a start transform has been assigned to it.");
-            Assume.That(link.endPoint, Is.Not.EqualTo(Vector3.zero), "End point should keep a default offset.");
+            Assert.That(link.startPoint, Is.EqualTo(startPointBefore),
+                "NavMeshLink should retain the start point after a start transform has been assigned to it.");
+            Assume.That(link.endPoint, Is.Not.EqualTo(Vector3.zero), "End point should retain a default offset.");
         }
 
         [Test]
-        [Description("This behavior needed to match the legacy OffMeshLink behavior.")]
-        public void Link_WhenEndTransformAssigned_SetsEndPointOffsetToZero()
+        public void Link_WhenTransformAssignedAtEnd_RetainsValueOfEndPoint()
         {
             m_TempGO = new GameObject("Link");
             var link = m_TempGO.AddComponent<NavMeshLink>();
             Assume.That(link.endPoint, Is.Not.EqualTo(Vector3.zero));
+            var endPointBefore = link.endPoint;
 
             link.endTransform = m_ExtraNavMesh.transform;
             link.UpdateLink();
-            Assert.That(link.endPoint, Is.EqualTo(Vector3.zero),
-                "NavMeshLink should have a zero end point after a end transform has been assigned to it.");
+            Assert.That(link.endPoint, Is.EqualTo(endPointBefore),
+                "NavMeshLink should preserve the end point after an end transform has been assigned to it.");
             Assume.That(link.startPoint, Is.Not.EqualTo(Vector3.zero), "Start point should keep a default offset.");
         }
 
         [Test]
-        [Description("This behavior is different than the legacy OffMeshLink behavior.")]
-        public void Link_WhenTransformRemovedAtStart_KeepsStartPointOffsetUnchanged()
+        public void Link_WhenTransformRemovedAtStart_KeepsStartPointUnchanged()
         {
             m_TempGO = new GameObject("Link");
             var pointBefore = new Vector3(1f, 2f, 3f);
@@ -302,8 +421,7 @@ namespace Unity.AI.Navigation.Tests
         }
 
         [Test]
-        [Description("This behavior is different than the legacy OffMeshLink behavior.")]
-        public void Link_WhenTransformRemovedAtEnd_KeepsEndPointOffsetUnchanged()
+        public void Link_WhenTransformRemovedAtEnd_KeepsEndPointUnchanged()
         {
             m_TempGO = new GameObject("Link");
             var pointBefore = new Vector3(1f, 2f, 3f);
@@ -317,6 +435,90 @@ namespace Unity.AI.Navigation.Tests
                 "NavMeshLink should retain the same end point after the end transform has been unassigned.");
             Assume.That(link.startPoint, Is.EqualTo(-m_DefaultEndpointOffset),
                 "Start point should keep a default offset.");
+        }
+
+        [Test]
+        public void Link_WhenTransformAssignedAtStart_OverridesStartPointImmediately()
+        {
+            m_Link.startPoint = m_ExtraNavMesh.transform.position + m_OffsetX - m_Link.transform.position;
+            m_PathfindingStart.transform.position = m_ExtraNavMesh.transform.position + m_OffsetX;
+            VerifyLinkConnection(ResultsIn.PathForward);
+
+            m_Link.startTransform = m_ExtraNavMesh.transform;
+            VerifyLinkConnection(ResultsIn.NoPath);
+
+            m_PathfindingStart.transform.position = m_ExtraNavMesh.transform.position;
+            VerifyLinkConnection(ResultsIn.PathForward);
+        }
+
+        [Test]
+        public void Link_WhenTransformAssignedAtEnd_OverridesEndPointImmediately()
+        {
+            m_Link.endPoint = m_ExtraNavMesh.transform.position + m_OffsetX - m_Link.transform.position;
+            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position + m_OffsetX;
+            VerifyLinkConnection(ResultsIn.PathForward);
+
+            m_Link.endTransform = m_ExtraNavMesh.transform;
+            VerifyLinkConnection(ResultsIn.NoPath);
+
+            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
+            VerifyLinkConnection(ResultsIn.PathForward);
+        }
+
+        [Test]
+        public void Link_WhenTransformRemovedAtStart_FallsBackToStartPointImmediately()
+        {
+            m_TempGO = Object.Instantiate(m_ExtraNavMesh);
+
+            m_Link.enabled = false;
+            m_Link.startPoint = m_ExtraNavMesh.transform.position + m_OffsetX - m_Link.transform.position;
+            m_Link.startTransform = m_TempGO.transform;
+            m_Link.enabled = true;
+
+            m_PathfindingStart.transform.position = m_ExtraNavMesh.transform.position + m_OffsetX;
+            VerifyLinkConnection(ResultsIn.NoPath);
+
+            m_Link.startTransform = null;
+
+            VerifyLinkConnection(ResultsIn.PathForward);
+        }
+
+        [Test]
+        public void Link_WhenTransformRemovedAtEnd_FallsBackToEndPointImmediately()
+        {
+            m_TempGO = Object.Instantiate(m_ExtraNavMesh);
+
+            m_Link.enabled = false;
+            m_Link.endPoint = m_ExtraNavMesh.transform.position + m_OffsetX - m_Link.transform.position;
+            m_Link.endTransform = m_TempGO.transform;
+            m_Link.enabled = true;
+
+            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position + m_OffsetX;
+            VerifyLinkConnection(ResultsIn.NoPath);
+
+            m_Link.endTransform = null;
+
+            VerifyLinkConnection(ResultsIn.PathForward);
+        }
+
+        [Test]
+        public void Link_WhenBothTransformAndPointChangeAtStart_AppliesOnlyStartTransform()
+        {
+            m_Link.startTransform = m_ExtraNavMesh.transform;
+            m_Link.startPoint = -2f * m_OffsetX;
+
+            m_PathfindingStart.transform.position = m_ExtraNavMesh.transform.position;
+            VerifyLinkConnection(ResultsIn.PathForward);
+        }
+
+        [Test]
+        public void Link_WhenBothTransformAndPointChangeAtEnd_AppliesOnlyEndTransform()
+        {
+            m_Link.endTransform = m_ExtraNavMesh.transform;
+            m_Link.endPoint = -2f * m_OffsetX;
+
+            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
+            VerifyLinkConnection(ResultsIn.PathForward);
         }
 
         [UnityTest]
@@ -342,77 +544,6 @@ namespace Unity.AI.Navigation.Tests
             }
 
             Assert.IsFalse(m_Link.occupied, "Link is occupied, but agent has left the link.");
-        }
-
-        [Test]
-        public void Link_WhenPropertyStartTransformAssigned_UpdatesConnectionImmediately()
-        {
-            m_Link.startTransform = m_ExtraNavMesh.transform;
-            m_PathfindingStart.transform.position = m_ExtraNavMesh.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward);
-        }
-
-        [Test]
-        public void Link_WhenPropertyEndTransformAssigned_UpdatesConnectionImmediately()
-        {
-            m_Link.endTransform = m_ExtraNavMesh.transform;
-            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward);
-        }
-
-        [Test]
-        public void Link_WhenPropertyStartTransformRemoved_UpdatesConnectionImmediately()
-        {
-            m_TempGO = Object.Instantiate(m_ExtraNavMesh);
-            m_Link.startTransform = m_TempGO.transform;
-            m_Link.UpdateLink();
-
-            m_PathfindingStart.transform.position = m_ExtraNavMesh.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward);
-
-            m_Link.startTransform = null;
-
-            m_PathfindingStart.transform.position = m_Link.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward);
-        }
-
-        [Test]
-        public void Link_WhenPropertyEndTransformRemoved_UpdatesConnectionImmediately()
-        {
-            m_TempGO = Object.Instantiate(m_ExtraNavMesh);
-            m_Link.endTransform = m_TempGO.transform;
-            m_Link.startTransform = null;
-            m_Link.startPoint = m_PlaneOnTheSide.transform.position - m_Link.transform.position;
-            m_Link.UpdateLink();
-
-            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
-            m_PathfindingStart.transform.position = m_PlaneOnTheSide.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward);
-
-            m_Link.endTransform = null;
-
-            m_PathfindingEnd.transform.position = m_Link.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward);
-        }
-
-        [Test]
-        public void Link_WhenPropertiesTransformAndPointAtStartChange_AppliesStartPointRelativeToStartTransform()
-        {
-            m_Link.startTransform = m_FarFromNavMesh.transform;
-            m_Link.startPoint = 2f * m_OffsetX;
-
-            m_PathfindingStart.transform.position = m_ExtraNavMesh.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward);
-        }
-
-        [Test]
-        public void Link_WhenPropertiesTransformAndPointAtEndChange_AppliesStartPointRelativeToStartTransform()
-        {
-            m_Link.endTransform = m_FarFromNavMesh.transform;
-            m_Link.endPoint = 2f * m_OffsetX;
-
-            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward);
         }
 
         [UnityTest]
@@ -455,68 +586,6 @@ namespace Unity.AI.Navigation.Tests
             VerifyLinkConnection(ResultsIn.PathForward);
         }
 
-        [Test]
-        public void Link_OnUpdateLink_AppliesChangesImmediately()
-        {
-            m_Link.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
-
-            m_Link.UpdateLink();
-
-            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
-            VerifyLinkConnection(ResultsIn.PathForward, m_Link.area, m_Link.agentTypeID);
-        }
-
-        [Test]
-        public void Link_WhenEnabled_AppliesChangesImmediately()
-        {
-            m_Link.enabled = false;
-            VerifyLinkConnection(ResultsIn.NoPath);
-
-            AddNavMeshForPanda();
-            ReconfigureLinkForPanda(m_Link);
-
-            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
-            VerifyLinkConnection(ResultsIn.NoPath, m_Link.area, m_Link.agentTypeID);
-
-            m_Link.enabled = true;
-            VerifyLinkConnection(ResultsIn.PathOnlyForward, m_Link.area, m_Link.agentTypeID);
-        }
-
-        void ReconfigureLinkForPanda(NavMeshLink link)
-        {
-            var wasEnabled = link.enabled;
-            link.enabled = false;
-            link.agentTypeID = m_PandaTypeID;
-            link.area = k_AreaTypeForPanda;
-            link.bidirectional = false;
-            link.costModifier = 3f;
-            link.width = 6f;
-            link.startTransform = m_ExtraNavMesh.transform;
-            link.endTransform = m_ExtraNavMesh.transform;
-            link.startPoint = -m_OffsetZ + 3f * Vector3.right;
-            link.endPoint = Vector3.zero + 3f * Vector3.right;
-            link.enabled = wasEnabled;
-        }
-
-        void AddNavMeshForPanda()
-        {
-            m_NavMeshForPanda = NavMesh.AddNavMeshData(m_SurfaceForPanda.navMeshData,
-                m_ExtraNavMesh.transform.position + 0.05f * Vector3.up, Quaternion.Euler(0f, 90f, 0f));
-        }
-#endif
-        [Test]
-        public void Link_WhenGameObjectTransformMoves_EndpointsMoveRelativeToLinkOnUpdate()
-        {
-            m_Link.transform.position += Vector3.forward;
-            Assert.IsFalse(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneAtOrigin.transform.position + Vector3.forward));
-            Assert.IsFalse(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneOnTheSide.transform.position + Vector3.forward));
-
-            m_Link.UpdateLink();
-
-            Assert.IsTrue(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneAtOrigin.transform.position + Vector3.forward));
-            Assert.IsTrue(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneOnTheSide.transform.position + Vector3.forward));
-        }
-
         [UnityTest]
         public IEnumerator LinkWithAutoUpdateOn_WhenGameObjectMoves_UpdatesConnectionNextFrame()
         {
@@ -541,6 +610,7 @@ namespace Unity.AI.Navigation.Tests
             Assert.That(HasPathConnectingViaPoint(m_PlaneAtOrigin, m_PlaneOnTheSide, m_PlaneOnTheSide.transform.position), Is.True);
 
             m_Link.transform.position += Vector3.forward;
+
             // Skip a few frames
             yield return null;
             yield return null;
@@ -571,6 +641,7 @@ namespace Unity.AI.Navigation.Tests
             m_Link.autoUpdate = false;
 
             m_Link.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+
             // Skip a few frames
             yield return null;
             yield return null;
@@ -617,15 +688,21 @@ namespace Unity.AI.Navigation.Tests
         }
 
         [UnityTest]
-        public IEnumerator LinkWithAutoUpdateOn_WhenTransformAtStartDestroyed_UpdatesConnectionNextFrame()
+        public IEnumerator LinkWithAutoUpdateOn_WhenTransformAtStartDestroyed_AppliesStartPointNextFrame()
         {
             m_Link.autoUpdate = true;
 
             m_TempGO = Object.Instantiate(m_ExtraNavMesh);
+            m_Link.enabled = false;
             m_Link.startTransform = m_TempGO.transform;
-            m_Link.UpdateLink();
+            m_Link.startPoint = m_PlaneOnTheSide.transform.position - m_Link.transform.position;
+            m_Link.endTransform = null;
+            m_Link.endPoint = Vector3.zero;
+            m_Link.bidirectional = false;
+            m_Link.enabled = true;
 
             m_PathfindingStart.transform.position = m_TempGO.transform.position;
+            m_PathfindingEnd.transform.position = m_PlaneAtOrigin.transform.position;
 
             Object.DestroyImmediate(m_TempGO);
 
@@ -635,23 +712,26 @@ namespace Unity.AI.Navigation.Tests
 
             VerifyLinkConnection(ResultsIn.NoPath);
 
-            m_PathfindingStart.transform.position = m_Link.transform.position;
+            m_PathfindingStart.transform.position = m_PlaneOnTheSide.transform.position;
             VerifyLinkConnection(ResultsIn.PathForward);
         }
 
         [UnityTest]
-        public IEnumerator LinkWithAutoUpdateOn_WhenTransformAtEndDestroyed_UpdatesConnectionNextFrame()
+        public IEnumerator LinkWithAutoUpdateOn_WhenTransformAtEndDestroyed_AppliesEndPointNextFrame()
         {
             m_Link.autoUpdate = true;
 
             m_TempGO = Object.Instantiate(m_ExtraNavMesh);
-            m_Link.endTransform = m_TempGO.transform;
+            m_Link.enabled = false;
             m_Link.startTransform = null;
             m_Link.startPoint = m_PlaneOnTheSide.transform.position - m_Link.transform.position;
-            m_Link.UpdateLink();
+            m_Link.endTransform = m_TempGO.transform;
+            m_Link.endPoint = Vector3.zero;
+            m_Link.bidirectional = false;
+            m_Link.enabled = true;
 
-            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
             m_PathfindingStart.transform.position = m_PlaneOnTheSide.transform.position;
+            m_PathfindingEnd.transform.position = m_TempGO.transform.position;
 
             Object.DestroyImmediate(m_TempGO);
 
@@ -661,7 +741,7 @@ namespace Unity.AI.Navigation.Tests
 
             VerifyLinkConnection(ResultsIn.NoPath);
 
-            m_PathfindingEnd.transform.position = m_Link.transform.position;
+            m_PathfindingEnd.transform.position = m_PlaneAtOrigin.transform.position;
             VerifyLinkConnection(ResultsIn.PathForward);
         }
 
@@ -710,6 +790,100 @@ namespace Unity.AI.Navigation.Tests
             m_PathfindingEnd.transform.position = m_TempGO.transform.position;
             VerifyLinkConnection(ResultsIn.NoPath);
         }
+
+#pragma warning disable CS0618 // Test deprecated members
+        [Test]
+        public void Link_WhenCreated_HasTheExpectedValuesForDeprecatedProperties()
+        {
+            var link = m_Link.gameObject.AddComponent<NavMeshLink>();
+
+            Assert.That(link.biDirectional, Is.True,
+                "Newly created NavMeshLink should have deprecated biDirectional switched on.");
+
+            Assert.That(link.autoUpdatePositions, Is.False,
+                "Newly created NavMeshLink should have deprecated autoUpdatePositions switched off.");
+
+            Assert.That(link.costOverride, Is.Negative,
+                "Newly created NavMeshLink should have a negative deprecated cost override, which means the cost from area type is not overridden.");
+        }
+
+        [Test]
+        public void Link_WhenBidirectionalChanges_DeprecatedBiDirectionalChangesToo()
+        {
+            m_Link.bidirectional = false;
+            Assert.That(m_Link.biDirectional, Is.False);
+
+            m_Link.bidirectional = true;
+            Assert.That(m_Link.biDirectional, Is.True);
+        }
+
+        [Test]
+        public void Link_WhenDeprecatedBiDirectionalChanges_BidirectionalChangesToo()
+        {
+            m_Link.biDirectional = false;
+            Assert.That(m_Link.bidirectional, Is.False);
+
+            m_Link.biDirectional = true;
+            Assert.That(m_Link.bidirectional, Is.True);
+        }
+
+        [Test]
+        public void Link_WhenAutoUpdateChanges_DeprecatedAutoUpdatePositionsChangesToo()
+        {
+            m_Link.autoUpdate = true;
+            Assert.That(m_Link.autoUpdatePositions, Is.True);
+
+            m_Link.autoUpdate = false;
+            Assert.That(m_Link.autoUpdatePositions, Is.False);
+        }
+
+        [Test]
+        public void Link_WhenDeprecatedAutoUpdatePositionsChanges_AutoUpdateChangesToo()
+        {
+            m_Link.autoUpdatePositions = true;
+            Assert.That(m_Link.autoUpdate, Is.True);
+
+            m_Link.autoUpdatePositions = false;
+            Assert.That(m_Link.autoUpdate, Is.False);
+        }
+
+        [Test]
+        public void Link_WhenCostModifierChanges_DeprecatedCostOverrideChangesToo()
+        {
+            m_Link.costModifier = 1f;
+            Assert.That(m_Link.costOverride, Is.EqualTo(1f));
+
+            m_Link.costModifier = 0f;
+            Assert.That(m_Link.costOverride, Is.EqualTo(0f));
+
+            m_Link.costModifier = -4.123f;
+            Assert.That(m_Link.costOverride, Is.EqualTo(-4.123f));
+        }
+
+        [Test]
+        public void Link_WhenDeprecatedCostOverrideChanges_CostModifierChangesToo()
+        {
+            m_Link.costOverride = 1f;
+            Assert.That(m_Link.costModifier, Is.EqualTo(1f));
+
+            m_Link.costOverride = 0f;
+            Assert.That(m_Link.costModifier, Is.EqualTo(0f));
+
+            m_Link.costOverride = -4.123f;
+            Assert.That(m_Link.costModifier, Is.EqualTo(-4.123f));
+        }
+
+        [Test]
+        public void Link_OnDeprecatedUpdatePositions_AppliesChangesImmediately()
+        {
+            m_Link.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+
+            m_Link.UpdatePositions();
+
+            m_PathfindingEnd.transform.position = m_ExtraNavMesh.transform.position;
+            VerifyLinkConnection(ResultsIn.PathForward, m_Link.area, m_Link.agentTypeID);
+        }
+#pragma warning restore CS0618
 
         internal enum ResultsIn
         {

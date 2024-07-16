@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools.Utils;
+#pragma warning disable CS0618 // UnityEditor.AI.NavMeshBuilder is necessary in this implementation
 
 namespace Unity.AI.Navigation.Tests
 {

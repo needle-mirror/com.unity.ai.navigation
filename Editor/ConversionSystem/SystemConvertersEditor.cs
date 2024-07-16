@@ -1,4 +1,3 @@
-#if UNITY_2022_2_OR_NEWER
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -664,4 +663,3 @@ namespace Unity.AI.Navigation.Editor.Converter
         }
     }
 }
-#endif

@@ -13,11 +13,11 @@ We’re going to add an Off-Mesh Link component to describe a jump from the uppe
 5. Select the **first cylinder** cylinder and add an Off-Mesh Link component to it. Choose **Add Component** from the inspector and choose **Navigation > OffMesh Link**.
 6. Assign the **first cylinder** in the **Start** field and the **second cylinder** in the **End** field.
 
-Now you have a functioning Off-Mesh Link set up! If the path via the off-mesh link is shorter than via walking along the Navmesh, the off-mesh link will be used.
+Now you have a functioning Off-Mesh Link set up! If the path via the off-mesh link is shorter than via walking along the NavMesh, the off-mesh link will be used.
 
 You can use any game object in the [**Scene**][3] to hold the Off-Mesh link component, for example a fence [**prefab**][4] could contain the off-mesh link component. Similarly you can use any game object with a Transform as the start and end marker.
 
-The NavMesh bake process can detect and create common jump-across and drop-down links automatically. Take a look at the [Building Off-Mesh Links Automatically](./BuildingOffMeshLinksAutomatically.md) for more details.
+The NavMesh bake process can detect and create common jump-across and drop-down links automatically. Take a look at [Building Off-Mesh Links Automatically](./BuildingOffMeshLinksAutomatically.md) for more details.
 
 ## Details
 
@@ -25,13 +25,13 @@ The NavMesh bake process can detect and create common jump-across and drop-down 
 
 If the agent does not traverse an OffMesh link make sure that both end points are connected correctly. A properly connected end point should show a circle around the access point.
 
-Another common cause is that the Navmesh Agent’s _Area Mask_ does not have the OffMesh Link’s area included.
+Another common cause is that the NavMesh Agent’s _Area Mask_ does not have the OffMesh Link’s area included.
 
 ### Additional resources
 
 - [Navigation HowTos](./NavHowTos.md) - common use cases for NavMesh Agent, with source code.
-- [OffMesh Link component reference](https://docs.unity3d.com/Manual/class-OffMeshLink.html) – full description of all the Off-Mesh Link properties.
-- [Off-Mesh Link scripting reference](https://docs.unity3d.com/ScriptReference/AI.OffMeshLink.html) - full description of the Off-Mesh Link scripting API.
+- [OffMesh Link component (deprecated) reference](./OffMeshLink.md) – full description of all the legacy Off-Mesh Link properties.
+- [Off-Mesh Link (deprecated) scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.OffMeshLink.html) - full description of the legacy Off-Mesh Link scripting API.
 
 [1]: https://docs.unity3d.com/Manual/mesh-introduction.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
 [2]: ./Glossary.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."

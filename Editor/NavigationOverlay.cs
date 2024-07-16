@@ -1,5 +1,3 @@
-﻿#if UNITY_2022_2_OR_NEWER
-
 using UnityEditor;
 using UnityEditor.AI;
 using UnityEditor.Overlays;
@@ -55,7 +53,7 @@ namespace Unity.AI.Navigation.Editor
                 EditorGUIUtility.TrTextContent("Obstacles");
 
             internal static readonly GUIContent ObstaclesCarveHullText =
-                EditorGUIUtility.TrTextContent("Show Carve Hull", "Shows the hull used to carve the obstacle from navmesh.");
+                EditorGUIUtility.TrTextContent("Show Carve Hull", "Shows the hull used to carve the obstacle from the NavMesh.");
 
             internal static readonly GUIContent DeveloperModeSectionTexts =
                 EditorGUIUtility.TrTextContent("Developer Mode");
@@ -340,5 +338,3 @@ namespace Unity.AI.Navigation.Editor
         }
     }
 }
-
-#endif

@@ -1,6 +1,6 @@
 # AI Navigation
 
-The navigation system allows you to create characters that can intelligently move around the game world. These characters use navigation meshes that are created automatically from your [Scene][1] geometry. Dynamic obstacles allow you to alter the navigation of the characters at runtime, while offmesh links let you build specific actions like opening doors or jumping over gaps or down from a ledge. This section describes Unity's navigation and pathfinding systems in detail.
+The navigation system allows you to create characters that can intelligently move around the game world. These characters use navigation meshes that are created automatically from your [Scene][1] geometry. Dynamic obstacles allow you to alter the navigation of the characters at runtime, while NavMesh links let you build specific actions like opening doors or jumping over gaps or down from a ledge. This section describes Unity's navigation and pathfinding systems in detail.
 
 The following table describes the main topics of the AI Navigation package documentation.
 

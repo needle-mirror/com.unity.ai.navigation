@@ -15,7 +15,7 @@ The AI Navigation package makes available the following tools for working with n
 # Using AI Navigation
 For detailed information on how to use the package, see the [User manual](Documentation~/index.md).\
 You can add it to your project by [installing it from the list](https://docs.unity3d.com/Manual/upm-ui-install.html) in the __Package Manager__ window or by [specifying its name](https://docs.unity3d.com/Manual/upm-ui-quick.html) `com.unity.ai.navigation`. Alternatively, you can add an entry with the package name directly in the [project manifest](https://docs.unity3d.com/Manual/upm-manifestPrj.html).\
-The package is available as of Unity 2022.2.
+Version 2.0.0 of the package is available as of Unity 2023.2.
 
 # Notice on the Change of License
 

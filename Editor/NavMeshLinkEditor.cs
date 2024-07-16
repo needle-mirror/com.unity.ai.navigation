@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,16 +10,15 @@ namespace Unity.AI.Navigation.Editor
     {
         SerializedProperty m_AgentTypeID;
         SerializedProperty m_Area;
+        SerializedProperty m_IsOverridingCost;
         SerializedProperty m_CostModifier;
         SerializedProperty m_AutoUpdatePosition;
         SerializedProperty m_Bidirectional;
         SerializedProperty m_EndPoint;
         SerializedProperty m_StartPoint;
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
         SerializedProperty m_EndTransform;
         SerializedProperty m_StartTransform;
         SerializedProperty m_Activated;
-#endif
         SerializedProperty m_Width;
 
         static int s_SelectedID;
@@ -31,209 +31,185 @@ namespace Unity.AI.Navigation.Editor
         {
             m_AgentTypeID = serializedObject.FindProperty("m_AgentTypeID");
             m_Area = serializedObject.FindProperty("m_Area");
+            m_IsOverridingCost = serializedObject.FindProperty("m_IsOverridingCost");
             m_CostModifier = serializedObject.FindProperty("m_CostModifier");
             m_AutoUpdatePosition = serializedObject.FindProperty("m_AutoUpdatePosition");
             m_Bidirectional = serializedObject.FindProperty("m_Bidirectional");
             m_EndPoint = serializedObject.FindProperty("m_EndPoint");
             m_StartPoint = serializedObject.FindProperty("m_StartPoint");
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
             m_EndTransform = serializedObject.FindProperty("m_EndTransform");
             m_StartTransform = serializedObject.FindProperty("m_StartTransform");
             m_Activated = serializedObject.FindProperty("m_Activated");
-#endif
             m_Width = serializedObject.FindProperty("m_Width");
 
             s_SelectedID = 0;
             s_SelectedPoint = -1;
-
-#if !UNITY_2022_2_OR_NEWER
-            NavMeshVisualizationSettings.showNavigation++;
-#endif
         }
 
-#if !UNITY_2022_2_OR_NEWER
-        void OnDisable()
+        internal static void AlignTransformToEndPoints(NavMeshLink navLink)
         {
-            NavMeshVisualizationSettings.showNavigation--;
-        }
-#endif
+            var toWorld = navLink.LocalToWorldUnscaled();
 
-        static Matrix4x4 UnscaledLocalToWorldMatrix(Transform t)
-        {
-            return Matrix4x4.TRS(t.position, t.rotation, Vector3.one);
-        }
+            var allLinksOnGameObject = navLink.gameObject.GetComponents<NavMeshLink>();
+            Span<(Vector3 start, Vector3 end)> serializedEndpointsWorld = stackalloc (Vector3, Vector3)[allLinksOnGameObject.Length];
+            Span<(Vector3 start, Vector3 end)> worldEndpointsBeforeAlign = stackalloc (Vector3, Vector3)[allLinksOnGameObject.Length];
+            var thisLink = -1;
+            for (var i = 0; i < allLinksOnGameObject.Length; i++)
+            {
+                var link = allLinksOnGameObject[i];
+                if (link == navLink)
+                    thisLink = i;
 
-        static void AlignTransformToEndPoints(NavMeshLink navLink)
-        {
-            var mat = UnscaledLocalToWorldMatrix(navLink.transform);
+                // Store the world positions of the serialized point values
+                serializedEndpointsWorld[i].start = toWorld.MultiplyPoint3x4(link.startPoint);
+                serializedEndpointsWorld[i].end = toWorld.MultiplyPoint3x4(link.endPoint);
 
-            var worldStartPt = mat.MultiplyPoint(navLink.localStartPosition);
-            var worldEndPt = mat.MultiplyPoint(navLink.localEndPosition);
+                // Store the world positions of the used endpoints
+                link.GetWorldPositions(out var initialStartPos, out var initialEndPos);
+                worldEndpointsBeforeAlign[i].start = initialStartPos;
+                worldEndpointsBeforeAlign[i].end = initialEndPos;
+            }
 
-            var forward = worldEndPt - worldStartPt;
+            // Use overall world position of target points or transforms to determine midpoint
+            var worldStartPt = worldEndpointsBeforeAlign[thisLink].start;
+            var worldEndPt = worldEndpointsBeforeAlign[thisLink].end;
+            var startToEnd = worldEndPt - worldStartPt;
             var up = navLink.transform.up;
 
             // Flatten
-            forward -= Vector3.Dot(up, forward) * up;
+            var forward = startToEnd - Vector3.Dot(up, startToEnd) * up;
 
-            var transform = navLink.transform;
-            transform.rotation = Quaternion.LookRotation(forward, up);
-            transform.position = (worldEndPt + worldStartPt) * 0.5f;
-            transform.localScale = Vector3.one;
+            Undo.RecordObject(navLink.transform, Content.UndoReCenterOrigin);
+            var middlePos = (worldEndPt + worldStartPt) * 0.5f;
+            var lookTowardsEndAndKeepUp = Quaternion.LookRotation(forward, up);
+            navLink.transform.SetPositionAndRotation(middlePos, lookTowardsEndAndKeepUp);
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-            if (navLink.startRelativeToThisGameObject)
-                navLink.startPoint = transform.InverseTransformPoint(worldStartPt);
-            if (navLink.endRelativeToThisGameObject)
-                navLink.endPoint = transform.InverseTransformPoint(worldEndPt);
-#else
-            navLink.startPoint = transform.InverseTransformPoint(worldStartPt);
-            navLink.endPoint = transform.InverseTransformPoint(worldEndPt);
-#endif
+            // Transform points back to local space
+            var toNewLocal = navLink.LocalToWorldUnscaled().inverse;
+            for (var i = 0; i < allLinksOnGameObject.Length; i++)
+            {
+                var link = allLinksOnGameObject[i];
+                Undo.RecordObject(link, Content.UndoReCenterOrigin);
+                var startAtOwnChild = link.startTransform != null && link.startTransform.IsChildOf(link.transform);
+                var endAtOwnChild = link.endTransform != null && link.endTransform.IsChildOf(link.transform);
+                if (startAtOwnChild)
+                    Undo.RecordObject(link.startTransform, Content.UndoReCenterOrigin);
+                if (endAtOwnChild)
+                    Undo.RecordObject(link.endTransform, Content.UndoReCenterOrigin);
+                using (new DeferredLinkUpdateScope(link))
+                {
+                    link.startPoint = toNewLocal.MultiplyPoint3x4(serializedEndpointsWorld[i].start);
+                    link.endPoint = toNewLocal.MultiplyPoint3x4(serializedEndpointsWorld[i].end);
+
+                    // Ensure transform targets return to world positions, in case they are children of the NavMeshLink object
+                    if (startAtOwnChild)
+                        link.startTransform.position = worldEndpointsBeforeAlign[i].start;
+
+                    if (endAtOwnChild)
+                        link.endTransform.position = worldEndpointsBeforeAlign[i].end;
+                }
+            }
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            NavMeshComponentsGUIUtility.AgentTypePopup("Agent Type", m_AgentTypeID);
+            NavMeshComponentsGUIUtility.AgentTypePopup(Content.AgentType, m_AgentTypeID);
+            NavMeshComponentsGUIUtility.AreaPopup(Content.AreaType, m_Area);
+
+            EditorGUILayout.PropertyField(m_IsOverridingCost, Content.CostOverrideToggle);
+            EditorGUI.BeginDisabled(!m_IsOverridingCost.boolValue);
+            EditorGUILayout.PropertyField(m_CostModifier, Content.CostModifier);
+            EditorGUI.EndDisabled();
+
             EditorGUILayout.Space();
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-            m_StartPoint.isExpanded = EditorGUILayout.Foldout(m_StartPoint.isExpanded, "Positions");
+            m_StartPoint.isExpanded = EditorGUILayout.Foldout(m_StartPoint.isExpanded, Content.Positions);
             if (m_StartPoint.isExpanded)
             {
                 EditorGUI.indentLevel++;
 
-                EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(m_StartTransform);
-                if (EditorGUI.EndChangeCheck())
-                    m_StartPoint.vector3Value = Vector3.zero;
+                EditorGUILayout.PropertyField(m_StartTransform, Content.StartTransform);
+                using (new EditorGUI.DisabledScope(m_StartTransform.objectReferenceValue != null))
+                    EditorGUILayout.PropertyField(m_StartPoint, Content.StartPoint);
 
-                EditorGUILayout.PropertyField(m_StartPoint);
+                EditorGUILayout.PropertyField(m_EndTransform, Content.EndTransform);
+                using (new EditorGUI.DisabledScope(m_EndTransform.objectReferenceValue != null))
+                    EditorGUILayout.PropertyField(m_EndPoint, Content.EndPoint);
 
-                EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(m_EndTransform);
-                if (EditorGUI.EndChangeCheck())
-                    m_EndPoint.vector3Value = Vector3.zero;
-
-                EditorGUILayout.PropertyField(m_EndPoint);
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Space(EditorGUIUtility.labelWidth);
-                if (GUILayout.Button(new GUIContent("Swap", "Alter link direction by swapping the start and end")))
+                var buttonRect = EditorGUILayout.GetControlRect();
+                buttonRect = EditorGUI.IndentedRect(buttonRect);
+                buttonRect.width -= EditorGUIUtility.standardVerticalSpacing;
+                buttonRect.width *= 0.5f;
+                if (GUI.Button(buttonRect, Content.ReverseDirectionButton))
                 {
-                    Swap(targets);
-                    SceneView.RepaintAll();
-                }
-
-                if (GUILayout.Button(new GUIContent("Re-Center Origin",
-                        "Place this GameObject at the middle point between the start and end of this link.")))
-                {
+                    Undo.RecordObjects(targets, Content.UndoReverseDirection);
                     foreach (var nml in targets)
-                    {
-                        var navLink = (NavMeshLink)nml;
-                        Undo.RecordObject(navLink.transform, "Align Transform to End Points");
-                        Undo.RecordObject(navLink, "Align Transform to End Points");
-                        AlignTransformToEndPoints(navLink);
-                    }
-
+                        ReverseDirection((NavMeshLink)nml);
                     SceneView.RepaintAll();
                 }
 
-                GUILayout.EndHorizontal();
+                buttonRect.x += buttonRect.width + EditorGUIUtility.standardVerticalSpacing;
+                if (GUI.Button(buttonRect, Content.ReCenterButton))
+                {
+                    Undo.RecordObjects(targets, Content.UndoReCenterOrigin);
+                    foreach (var nml in targets)
+                        AlignTransformToEndPoints((NavMeshLink)nml);
+
+                    SceneView.RepaintAll();
+                }
 
                 EditorGUI.indentLevel--;
             }
-#else
-            EditorGUILayout.PropertyField(m_StartPoint);
-            EditorGUILayout.PropertyField(m_EndPoint);
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(EditorGUIUtility.labelWidth);
-            if (GUILayout.Button("Swap"))
-            {
-                foreach (NavMeshLink navLink in targets)
-                {
-                    var tmp = navLink.startPoint;
-                    navLink.startPoint = navLink.endPoint;
-                    navLink.endPoint = tmp;
-                }
-                SceneView.RepaintAll();
-            }
-            if (GUILayout.Button("Align Transform"))
-            {
-                foreach (NavMeshLink navLink in targets)
-                {
-                    Undo.RecordObject(navLink.transform, "Align Transform to End Points");
-                    Undo.RecordObject(navLink, "Align Transform to End Points");
-                    AlignTransformToEndPoints(navLink);
-                }
-                SceneView.RepaintAll();
-            }
-            GUILayout.EndHorizontal();
-#endif
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(m_Width);
-            EditorGUILayout.PropertyField(m_CostModifier);
-            EditorGUILayout.PropertyField(m_AutoUpdatePosition);
-            EditorGUILayout.PropertyField(m_Bidirectional);
+            EditorGUILayout.PropertyField(m_AutoUpdatePosition, Content.AutoUpdatePositions);
 
-            NavMeshComponentsGUIUtility.AreaPopup("Area Type", m_Area);
+            EditorGUILayout.PropertyField(m_Bidirectional, Content.Bidirectional);
+            EditorGUILayout.PropertyField(m_Width, Content.Width);
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-            EditorGUILayout.PropertyField(m_Activated);
-#endif
+            EditorGUILayout.PropertyField(m_Activated, Content.Activated);
+
             serializedObject.ApplyModifiedProperties();
 
             EditorGUILayout.Space();
         }
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-        private static void Swap(Object[] targets)
+        internal static void ReverseDirection(NavMeshLink navLink)
         {
-            foreach (NavMeshLink navLink in targets)
+            using (new DeferredLinkUpdateScope(navLink))
             {
-                var tmpStartPoint = navLink.startPoint;
-                var tmpStartTransform = navLink.startTransform;
-                navLink.startTransform = navLink.endTransform;
-                navLink.startPoint = navLink.endPoint;
-                navLink.endTransform = tmpStartTransform;
-                navLink.endPoint = tmpStartPoint;
+                (navLink.startPoint, navLink.endPoint) = (navLink.endPoint, navLink.startPoint);
+                (navLink.startTransform, navLink.endTransform) = (navLink.endTransform, navLink.startTransform);
             }
         }
-#endif
-        static Vector3 CalcLinkRight(NavMeshLink navLink)
+
+        internal static Vector3 GetLocalDirectionRight(NavMeshLink navLink, out Vector3 localStartPosition, out Vector3 localEndPosition)
         {
-            var dir = navLink.localEndPosition - navLink.localStartPosition;
-            return (new Vector3(-dir.z, 0.0f, dir.x)).normalized;
+            navLink.GetLocalPositions(out localStartPosition, out localEndPosition);
+            var dir = localEndPosition - localStartPosition;
+            return new Vector3(dir.z, 0.0f, -dir.x).normalized;
         }
 
         static void DrawLink(NavMeshLink navLink)
         {
-            var right = CalcLinkRight(navLink);
+            var right = GetLocalDirectionRight(navLink, out var startPos, out var endPos);
             var rad = navLink.width * 0.5f;
             var edgeRadius = right * rad;
-            var startPos = navLink.localStartPosition;
-            var endPos = navLink.localEndPosition;
 
-            var corners = new Vector3[4]
+            ReadOnlySpan<Vector3> corners = stackalloc[]
             {
                 startPos - edgeRadius,
                 startPos + edgeRadius,
                 endPos + edgeRadius,
-                endPos - edgeRadius 
+                endPos - edgeRadius
             };
             Gizmos.DrawLineStrip(corners, true);
         }
 
-#if !UNITY_2022_2_OR_NEWER
-        [DrawGizmo(GizmoType.Selected | GizmoType.Active | GizmoType.Pickable)]
-#else
         [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active | GizmoType.Pickable)]
-#endif
         static void RenderBoxGizmo(NavMeshLink navLink, GizmoType gizmoType)
         {
             if (!EditorApplication.isPlaying && navLink.isActiveAndEnabled && navLink.HaveTransformsChanged())
@@ -246,8 +222,7 @@ namespace Unity.AI.Navigation.Editor
             var oldColor = Gizmos.color;
             var oldMatrix = Gizmos.matrix;
 
-            Gizmos.matrix = UnscaledLocalToWorldMatrix(navLink.transform);
-
+            Gizmos.matrix = navLink.LocalToWorldUnscaled();
             Gizmos.color = color;
             DrawLink(navLink);
 
@@ -263,25 +238,19 @@ namespace Unity.AI.Navigation.Editor
             if (!EditorApplication.isPlaying && navLink.isActiveAndEnabled && navLink.HaveTransformsChanged())
                 navLink.UpdateLink();
 
-#if !UNITY_2022_2_OR_NEWER
-            if (NavMeshVisualizationSettings.showNavigation > 0)
-#endif
-            {
-                var color = s_HandleColor;
-                if (!navLink.enabled)
-                    color = s_HandleColorDisabled;
+            var color = s_HandleColor;
+            if (!navLink.enabled)
+                color = s_HandleColorDisabled;
 
-                var oldColor = Gizmos.color;
-                var oldMatrix = Gizmos.matrix;
+            var oldColor = Gizmos.color;
+            var oldMatrix = Gizmos.matrix;
 
-                Gizmos.matrix = UnscaledLocalToWorldMatrix(navLink.transform);
+            Gizmos.matrix = navLink.LocalToWorldUnscaled();
+            Gizmos.color = color;
+            DrawLink(navLink);
 
-                Gizmos.color = color;
-                DrawLink(navLink);
-
-                Gizmos.matrix = oldMatrix;
-                Gizmos.color = oldColor;
-            }
+            Gizmos.matrix = oldMatrix;
+            Gizmos.color = oldColor;
 
             Gizmos.DrawIcon(navLink.transform.position, "NavMeshLink Icon", true);
         }
@@ -292,29 +261,27 @@ namespace Unity.AI.Navigation.Editor
             if (!navLink.enabled)
                 return;
 
-            var mat = UnscaledLocalToWorldMatrix(navLink.transform);
+            var toWorld = navLink.LocalToWorldUnscaled();
 
-            var worldStartPt = mat.MultiplyPoint(navLink.localStartPosition);
-            var worldEndPt = mat.MultiplyPoint(navLink.localEndPosition);
+            navLink.GetWorldPositions(out var worldStartPt, out var worldEndPt);
             var worldMidPt = Vector3.Lerp(worldStartPt, worldEndPt, 0.35f);
             var startSize = HandleUtility.GetHandleSize(worldStartPt);
             var endSize = HandleUtility.GetHandleSize(worldEndPt);
             var midSize = HandleUtility.GetHandleSize(worldMidPt);
 
             var zup = Quaternion.FromToRotation(Vector3.forward, Vector3.up);
-            var right = mat.MultiplyVector(CalcLinkRight(navLink));
+            var right = toWorld.MultiplyVector(GetLocalDirectionRight(navLink, out _, out _));
 
             var oldColor = Handles.color;
             Handles.color = s_HandleColor;
 
             Vector3 newWorldPos;
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-            var startRelativeToThisGameObject = navLink.startRelativeToThisGameObject;
-            if (navLink.GetInstanceID() == s_SelectedID && s_SelectedPoint == 0)
+            var startIsLocal = navLink.startTransform == null;
+            if (s_SelectedPoint == 0 && navLink.GetInstanceID() == s_SelectedID)
             {
                 EditorGUI.BeginChangeCheck();
-                if (startRelativeToThisGameObject)
+                if (startIsLocal)
                     Handles.CubeHandleCap(0, worldStartPt, zup, 0.1f * startSize, Event.current.type);
                 else
                     Handles.SphereHandleCap(0, worldStartPt, zup, 0.1f * startSize, Event.current.type);
@@ -322,50 +289,33 @@ namespace Unity.AI.Navigation.Editor
                 newWorldPos = Handles.PositionHandle(worldStartPt, navLink.transform.rotation);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(navLink, "Move link start point");
-                    if (startRelativeToThisGameObject)
-                        navLink.startPoint = mat.inverse.MultiplyPoint(newWorldPos);
+                    if (startIsLocal)
+                    {
+                        Undo.RecordObject(navLink, Content.UndoMoveLinkStartPoint);
+                        navLink.startPoint = toWorld.inverse.MultiplyPoint3x4(newWorldPos);
+                    }
                     else
-                        navLink.startPoint = newWorldPos - navLink.startTransform.position;
+                    {
+                        Undo.RecordObject(navLink.startTransform, Content.UndoMoveLinkStartObject);
+                        navLink.startTransform.position = newWorldPos;
+                    }
                 }
             }
             else
             {
                 if (Handles.Button(worldStartPt, zup, 0.1f * startSize, 0.1f * startSize,
-                        startRelativeToThisGameObject ? Handles.CubeHandleCap : Handles.SphereHandleCap))
+                        startIsLocal ? Handles.CubeHandleCap : Handles.SphereHandleCap))
                 {
                     s_SelectedPoint = 0;
                     s_SelectedID = navLink.GetInstanceID();
                 }
             }
-#else
-            if (navLink.GetInstanceID() == s_SelectedID && s_SelectedPoint == 0)
-            {
-                EditorGUI.BeginChangeCheck();
-                Handles.CubeHandleCap(0, worldStartPt, zup, 0.1f * startSize, Event.current.type);
-                newWorldPos = Handles.PositionHandle(worldStartPt, navLink.transform.rotation);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RecordObject(navLink, "Move link point");
-                    navLink.startPoint = mat.inverse.MultiplyPoint(newWorldPos);
-                }
-            }
-            else
-            {
-                if (Handles.Button(worldStartPt, zup, 0.1f * startSize, 0.1f * startSize, Handles.CubeHandleCap))
-                {
-                    s_SelectedPoint = 0;
-                    s_SelectedID = navLink.GetInstanceID();
-                }
-            }
-#endif
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-            var endRelativeToThisGameObject = navLink.endRelativeToThisGameObject;
-            if (navLink.GetInstanceID() == s_SelectedID && s_SelectedPoint == 1)
+            var endIsLocal = navLink.endTransform == null;
+            if (s_SelectedPoint == 1 && navLink.GetInstanceID() == s_SelectedID)
             {
                 EditorGUI.BeginChangeCheck();
-                if (endRelativeToThisGameObject)
+                if (endIsLocal)
                     Handles.CubeHandleCap(0, worldEndPt, zup, 0.1f * endSize, Event.current.type);
                 else
                     Handles.SphereHandleCap(0, worldEndPt, zup, 0.1f * endSize, Event.current.type);
@@ -373,56 +323,41 @@ namespace Unity.AI.Navigation.Editor
                 newWorldPos = Handles.PositionHandle(worldEndPt, navLink.transform.rotation);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(navLink, "Move link end point");
-                    if (endRelativeToThisGameObject)
-                        navLink.endPoint = mat.inverse.MultiplyPoint(newWorldPos);
+                    if (endIsLocal)
+                    {
+                        Undo.RecordObject(navLink, Content.UndoMoveLinkEndPoint);
+                        navLink.endPoint = toWorld.inverse.MultiplyPoint3x4(newWorldPos);
+                    }
                     else
-                        navLink.endPoint = newWorldPos - navLink.endTransform.position;
+                    {
+                        Undo.RecordObject(navLink.endTransform, Content.UndoMoveLinkEndObject);
+                        navLink.endTransform.position = newWorldPos;
+                    }
                 }
             }
             else
             {
                 if (Handles.Button(worldEndPt, zup, 0.1f * endSize, 0.1f * endSize,
-                        endRelativeToThisGameObject ? Handles.CubeHandleCap : Handles.SphereHandleCap))
+                        endIsLocal ? Handles.CubeHandleCap : Handles.SphereHandleCap))
                 {
                     s_SelectedPoint = 1;
                     s_SelectedID = navLink.GetInstanceID();
                 }
             }
-#else
-            if (navLink.GetInstanceID() == s_SelectedID && s_SelectedPoint == 1)
-            {
-                EditorGUI.BeginChangeCheck();
-                Handles.CubeHandleCap(0, worldEndPt, zup, 0.1f * endSize, Event.current.type);
-                newWorldPos = Handles.PositionHandle(worldEndPt, navLink.transform.rotation);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RecordObject(navLink, "Move link point");
-                    navLink.endPoint = mat.inverse.MultiplyPoint(newWorldPos);
-                }
-            }
-            else
-            {
-                if (Handles.Button(worldEndPt, zup, 0.1f * endSize, 0.1f * endSize, Handles.CubeHandleCap))
-                {
-                    s_SelectedPoint = 1;
-                    s_SelectedID = navLink.GetInstanceID();
-                }
-            }
-#endif
+
             EditorGUI.BeginChangeCheck();
-            newWorldPos = Handles.Slider(worldMidPt + right * navLink.width * 0.5f, right, midSize * 0.03f, Handles.DotHandleCap, 0);
+            newWorldPos = Handles.Slider(worldMidPt + 0.5f * navLink.width * right, right, midSize * 0.03f, Handles.DotHandleCap, 0);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(navLink, "Adjust link width");
+                Undo.RecordObject(navLink, Content.UndoModifyLinkWidth);
                 navLink.width = Mathf.Max(0.0f, 2.0f * Vector3.Dot(right, (newWorldPos - worldMidPt)));
             }
 
             EditorGUI.BeginChangeCheck();
-            newWorldPos = Handles.Slider(worldMidPt - right * navLink.width * 0.5f, -right, midSize * 0.03f, Handles.DotHandleCap, 0);
+            newWorldPos = Handles.Slider(worldMidPt - 0.5f * navLink.width * right, -right, midSize * 0.03f, Handles.DotHandleCap, 0);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(navLink, "Adjust link width");
+                Undo.RecordObject(navLink, Content.UndoModifyLinkWidth);
                 navLink.width = Mathf.Max(0.0f, 2.0f * Vector3.Dot(-right, (newWorldPos - worldMidPt)));
             }
 
@@ -433,11 +368,51 @@ namespace Unity.AI.Navigation.Editor
         public static void CreateNavMeshLink(MenuCommand menuCommand)
         {
             var parent = menuCommand.context as GameObject;
-            GameObject go = NavMeshComponentsGUIUtility.CreateAndSelectGameObject("NavMesh Link", parent);
-            go.AddComponent<NavMeshLink>();
-            var view = SceneView.lastActiveSceneView;
-            if (view != null)
-                view.MoveToView(go.transform);
+            NavMeshComponentsGUIUtility.CreateAndSelectGameObject("NavMesh Link", parent, typeof(NavMeshLink));
+        }
+
+        internal class DeferredLinkUpdateScope : IDisposable
+        {
+            readonly NavMeshLink m_NavLink;
+            readonly bool m_WasEnabled;
+
+            public DeferredLinkUpdateScope(NavMeshLink link)
+            {
+                m_NavLink = link;
+                m_WasEnabled = link.enabled;
+                link.enabled = false;
+            }
+
+            public void Dispose()
+            {
+                m_NavLink.enabled = m_WasEnabled;
+            }
+        }
+
+        static class Content
+        {
+            public static readonly GUIContent AgentType = EditorGUIUtility.TrTextContent("Agent Type", "Specifies the agent type that can use the link.");
+            public static readonly GUIContent AreaType = EditorGUIUtility.TrTextContent("Area Type", "The area type of the NavMesh Link, which affects pathfinding costs.");
+            public static readonly GUIContent CostOverrideToggle = EditorGUIUtility.TrTextContent("Cost Override", "If enabled, the value below will be used instead of the area cost defined in the Navigation window.");
+            public static readonly GUIContent CostModifier = EditorGUIUtility.TrTextContent(" ", "If Cost Override is enabled, the link uses this cost instead of the area cost defined in the Navigation window.");
+            public static readonly GUIContent Positions = EditorGUIUtility.TrTextContent("Positions", "Configure the ends of the link, each specified either as a Transform's position or as an unscaled offset in the space of this GameObject.");
+            public static readonly GUIContent StartTransform = EditorGUIUtility.TrTextContent("Start Transform", "Transform whose world position specifies the link start point.");
+            public static readonly GUIContent StartPoint = EditorGUIUtility.TrTextContent("Start Point", "A local position where the link starts. Used only if Start Transform does not reference any object.");
+            public static readonly GUIContent EndTransform = EditorGUIUtility.TrTextContent("End Transform", "Transform whose world position specifies the link end point.");
+            public static readonly GUIContent EndPoint = EditorGUIUtility.TrTextContent("End Point", "A local position where the link ends. Used only if End Transform does not reference any object.");
+            public static readonly GUIContent ReverseDirectionButton = EditorGUIUtility.TrTextContent("Swap", "Reverse the direction of the link by swapping the start and end.");
+            public static readonly GUIContent ReCenterButton = EditorGUIUtility.TrTextContent("Re-Center Origin", "Place this GameObject at the middle point between the start and end of this link, and rotate it to point forward from the link start towards the end.");
+            public static readonly GUIContent Width = EditorGUIUtility.TrTextContent("Width", "World-space width of the segments making up the ends of the link.");
+            public static readonly GUIContent AutoUpdatePositions = EditorGUIUtility.TrTextContent("Auto Update Positions", "If enabled, the link will automatically update when the Start Transform, End Transform, or this GameObject's Transform changes.");
+            public static readonly GUIContent Bidirectional = EditorGUIUtility.TrTextContent("Bidirectional", "If enabled, agents can traverse the link in both directions.");
+            public static readonly GUIContent Activated = EditorGUIUtility.TrTextContent("Activated", "If enabled, allows the agents to traverse the link.");
+            public static readonly string UndoReCenterOrigin = L10n.Tr("Re-Center NavMesh Link origin");
+            public static readonly string UndoReverseDirection = L10n.Tr("Swap NavMesh Link start and end");
+            public static readonly string UndoMoveLinkStartPoint = L10n.Tr("Move NavMesh Link start point");
+            public static readonly string UndoMoveLinkStartObject = L10n.Tr("Move NavMesh Link start object");
+            public static readonly string UndoMoveLinkEndPoint = L10n.Tr("Move NavMesh Link end point");
+            public static readonly string UndoMoveLinkEndObject = L10n.Tr("Move NavMesh Link end object");
+            public static readonly string UndoModifyLinkWidth = L10n.Tr("Modify NavMesh Link width");
         }
     }
 }

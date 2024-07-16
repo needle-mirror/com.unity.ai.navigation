@@ -1,3 +1,5 @@
+#if UNITY_EDITOR || UNITY_STANDALONE
+
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
@@ -40,7 +42,7 @@ namespace Unity.AI.Navigation.Tests
 
             Assert.That(m_Agent.isOnOffMeshLink, Is.True, "NavMeshAgent is currently not positioned on NavMeshLink.");
 
-            // Move to gap between the navmeshes connected by the NavMeshLink
+            // Move to gap between the NavMeshes connected by the NavMeshLink
             var midAirPosition = new Vector3(17.71f, 3.92f, -6.66f);
             m_Agent.transform.position = midAirPosition;
             yield return null;
@@ -56,3 +58,4 @@ namespace Unity.AI.Navigation.Tests
         }
     }
 }
+#endif

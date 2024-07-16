@@ -1,12 +1,10 @@
+#if UNITY_EDITOR || UNITY_STANDALONE
 //#define KEEP_ARTIFACTS_FOR_INSPECTION
 
 using System.Collections;
 using System.IO;
 using NUnit.Framework;
 using UnityEditor;
-#if !UNITY_2021_2_OR_NEWER
-using UnityEditor.Experimental.SceneManagement;
-#endif
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
@@ -288,3 +286,4 @@ namespace Unity.AI.Navigation.Editor.Tests
         }
     }
 }
+#endif

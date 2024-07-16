@@ -1,4 +1,3 @@
-#if UNITY_2022_2_OR_NEWER
 using UnityEditor;
 using UnityEngine;
 
@@ -22,4 +21,3 @@ namespace Unity.AI.Navigation.Editor.Converter
         }
     }
 }
-#endif

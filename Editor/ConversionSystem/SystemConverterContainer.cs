@@ -1,4 +1,3 @@
-#if UNITY_2022_2_OR_NEWER
 namespace Unity.AI.Navigation.Editor.Converter
 {
     /// <summary>
@@ -19,4 +18,3 @@ namespace Unity.AI.Navigation.Editor.Converter
         public abstract string info { get; }
     }
 }
-#endif

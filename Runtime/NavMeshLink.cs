@@ -1,4 +1,8 @@
 using System.Collections.Generic;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 using UnityEngine;
 using UnityEngine.AI;
 #pragma warning disable IDE1006 // Unity-specific lower case public property names
@@ -8,10 +12,16 @@ namespace Unity.AI.Navigation
     /// <summary> Component used to create a navigable link between two NavMesh locations. </summary>
     [ExecuteAlways]
     [DefaultExecutionOrder(-101)]
-    [AddComponentMenu("Navigation/NavMeshLink", 33)]
+    [AddComponentMenu("Navigation/NavMesh Link", 33)]
     [HelpURL(HelpUrls.Manual + "NavMeshLink.html")]
     public partial class NavMeshLink : MonoBehaviour
     {
+        // Serialized version is used to upgrade older serialized data to the current format.
+        // Version 0: Initial version.
+        // Version 1: Added m_IsOverridingCost field and made m_CostModifier always positive.
+        [SerializeField, HideInInspector]
+        byte m_SerializedVersion = 0;
+
         [SerializeField]
         int m_AgentTypeID;
 
@@ -21,7 +31,6 @@ namespace Unity.AI.Navigation
         [SerializeField]
         Vector3 m_EndPoint = new(0.0f, 0.0f, 2.5f);
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
         [SerializeField]
         Transform m_StartTransform;
 
@@ -30,12 +39,21 @@ namespace Unity.AI.Navigation
 
         [SerializeField]
         bool m_Activated = true;
-#endif
+
         [SerializeField]
         float m_Width;
 
+        // This field's value in combination with m_IsOverridingCost determines the value of the costModifier property,
+        // where m_IsOverridingCost determines the sign of the value. The costModifier property is positive or zero when
+        // m_IsOverridingCost is true, and negative when m_IsOverridingCost is false.
+        // Note that when m_SerializedVersion >= 1, m_CostModifier will always become positive or zero. Newly created
+        // components are always upgraded to at least version 1 at initialization time.
         [SerializeField]
-        float m_CostModifier = -1;
+        [Min(0f)]
+        float m_CostModifier = -1f;
+
+        [SerializeField]
+        bool m_IsOverridingCost = false;
 
         [SerializeField]
         bool m_Bidirectional = true;
@@ -61,7 +79,8 @@ namespace Unity.AI.Navigation
         }
 
         /// <summary> Gets or sets the local position at the middle of the link's start edge, relative to the GameObject origin. </summary>
-        /// <remarks> The position is translated and rotated by <see cref="startTransform"/> when `startTransform` is `null` or equal to the GameObject transform. Otherwise, the link is only translated by `startTransform`. The scale of the specified transform is never used.</remarks>
+        /// <remarks> This property determines the position of the link's start edge only when <see cref="startTransform"/> is `null`. Otherwise, it is the `startTransform` that determines the edge's position.  <br/>
+        /// The world scale of the GameObject is never used.</remarks>
         public Vector3 startPoint
         {
             get => m_StartPoint;
@@ -76,7 +95,8 @@ namespace Unity.AI.Navigation
         }
 
         /// <summary> Gets or sets the local position at the middle of the link's end edge, relative to the GameObject origin. </summary>
-        /// <remarks> The position is translated and rotated by <see cref="endTransform"/> when `endTransform` is `null` or equal to the GameObject transform. Otherwise, the link is only translated by `endTransform`. The scale of the specified transform is never used.</remarks>
+        /// <remarks> This property determines the position of the link's end edge only when <see cref="endTransform"/> is `null`. Otherwise, it is the `endTransform` that determines the edge's position. <br/>
+        /// The world scale of the GameObject is never used.</remarks>
         public Vector3 endPoint
         {
             get => m_EndPoint;
@@ -90,9 +110,8 @@ namespace Unity.AI.Navigation
             }
         }
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
         /// <summary> Gets or sets the <see cref="Transform"/> tracked by the middle of the link's start edge. </summary>
-        /// <remarks> When this property is `null` or equal to the GameObject transform, it applies the GameObject's translation and rotation as a transform to <see cref="startPoint"/> in order to establish the world position of the link's start edge. When this property takes any other value, it applies only its translation to `startPoint`.</remarks>
+        /// <remarks> The link places the start edge at the world position of the object referenced by this property. In that case <see cref="startPoint"/> is not used. Otherwise, when this property is `null`, the component applies the GameObject's translation and rotation as a transform to <see cref="startPoint"/> in order to establish the world position of the link's start edge. </remarks>
         public Transform startTransform
         {
             get => m_StartTransform;
@@ -102,15 +121,13 @@ namespace Unity.AI.Navigation
                     return;
 
                 m_StartTransform = value;
-                if (m_StartTransform != null)
-                    m_StartPoint = Vector3.zero;
 
                 UpdateLink();
             }
         }
 
-        /// <summary> Gets or sets the Transform tracked by the middle of the link's end edge. </summary>
-        /// <remarks> When this property is `null` or equal to the GameObject transform, it applies the GameObject's translation and rotation as a transform to <see cref="endPoint"/> in order to establish the world position of the link's end edge. When this property takes any other value, it applies only its translation to the `endPoint`.</remarks>
+        /// <summary> Gets or sets the <see cref="Transform"/> tracked by the middle of the link's end edge. </summary>
+        /// <remarks> The link places the end edge at the world position of the object referenced by this property. In that case <see cref="endPoint"/> is not used. Otherwise, when this property is `null`, the component applies the GameObject's translation and rotation as a transform to <see cref="endPoint"/> in order to establish the world position of the link's end edge. </remarks>
         public Transform endTransform
         {
             get => m_EndTransform;
@@ -120,46 +137,8 @@ namespace Unity.AI.Navigation
                     return;
 
                 m_EndTransform = value;
-                if (m_EndTransform != null)
-                    m_EndPoint = Vector3.zero;
 
                 UpdateLink();
-            }
-        }
-
-        internal bool startRelativeToThisGameObject => m_StartTransform == null || m_StartTransform == transform;
-        internal bool endRelativeToThisGameObject => m_EndTransform == null || m_EndTransform == transform;
-#endif
-
-        // Start position relative to the game object position
-        internal Vector3 localStartPosition
-        {
-            get
-            {
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-                if (!startRelativeToThisGameObject)
-                    return transform.InverseTransformPoint(m_StartTransform.position + m_StartPoint);
-
-                return m_StartPoint;
-#else
-                return m_StartPoint;
-#endif
-            }
-        }
-
-        // End position relative to the game object position
-        internal Vector3 localEndPosition
-        {
-            get
-            {
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-                if (!endRelativeToThisGameObject)
-                    return transform.InverseTransformPoint(m_EndTransform.position + m_EndPoint);
-
-                return m_EndPoint;
-#else
-                return m_EndPoint;
-#endif
             }
         }
 
@@ -179,23 +158,25 @@ namespace Unity.AI.Navigation
         }
 
         /// <summary> Gets or sets a value that determines the cost of traversing the link.</summary>
-        /// <remarks> A negative value implies that the traversal cost is obtained based on the area type.
-        /// A positive or zero value applies immediately, overriding the cost associated with the area type.</remarks>
+        /// <remarks> A negative value implies that the cost of traversing the link is obtained based on the area type.<br/>
+        /// A positive or zero value overrides the cost associated with the area type.</remarks>
         public float costModifier
         {
-            get => m_CostModifier;
+            get => m_IsOverridingCost ? m_CostModifier : -m_CostModifier;
             set
             {
-                if (value.Equals(m_CostModifier))
+                var shouldOverride = value >= 0f;
+                if (value.Equals(costModifier) && shouldOverride == m_IsOverridingCost)
                     return;
 
-                m_CostModifier = value;
+                m_IsOverridingCost = shouldOverride;
+                m_CostModifier = Mathf.Abs(value);
                 UpdateLink();
             }
         }
 
-        /// <summary> Gets or sets whether the link can be traversed in both directions. </summary>
-        /// <remarks> A link that connects to NavMeshes at both ends can always be traversed from the start position to the end position. When this property is set to `true` it allows the agents to traverse the link also in the direction from end to start. When the value is `false` the agents will never move over the link from the end position to the start position.</remarks>
+        /// <summary> Gets or sets whether agents can traverse the link in both directions. </summary>
+        /// <remarks> When a link connects to NavMeshes at both ends, agents can always traverse that link from the start position to the end position. When this property is set to `true` it allows the agents to traverse the link from the end position to the start position as well. When the value is `false` the agents will not traverse the link from the end position to the start position. </remarks>
         public bool bidirectional
         {
             get => m_Bidirectional;
@@ -210,7 +191,7 @@ namespace Unity.AI.Navigation
         }
 
         /// <summary> Gets or sets whether the world positions of the link's edges update whenever
-        /// the GameObject transform changes at runtime. </summary>
+        /// the GameObject transform, the <see cref="startTransform"/> or the <see cref="endTransform"/> change at runtime. </summary>
         public bool autoUpdate
         {
             get => m_AutoUpdatePosition;
@@ -242,7 +223,6 @@ namespace Unity.AI.Navigation
             }
         }
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
         /// <summary> Gets or sets whether the link can be traversed by agents. </summary>
         /// <remarks> When this property is set to `true` it allows the agents to traverse the link. When the value is `false` no paths pass through this link and no agent can traverse it as part of their autonomous movement. </remarks>
         public bool activated
@@ -258,20 +238,52 @@ namespace Unity.AI.Navigation
         /// <summary> Checks whether any agent occupies the link at this moment in time. </summary>
         /// <remarks> This property evaluates the internal state of the link every time it is used. </remarks>
         public bool occupied => NavMesh.IsLinkOccupied(m_LinkInstance);
-#endif
 
         NavMeshLinkInstance m_LinkInstance;
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
         bool m_StartTransformWasEmpty = true;
         bool m_EndTransformWasEmpty = true;
+
         Vector3 m_LastStartWorldPosition = Vector3.positiveInfinity;
         Vector3 m_LastEndWorldPosition = Vector3.positiveInfinity;
-#endif
         Vector3 m_LastPosition = Vector3.positiveInfinity;
         Quaternion m_LastRotation = Quaternion.identity;
 
         static readonly List<NavMeshLink> s_Tracked = new();
+
+#if UNITY_EDITOR
+        bool m_DelayEndpointUpgrade;
+        static string s_LastWarnedPrefab;
+        static double s_NextPrefabWarningTime;
+#endif
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void ClearTrackedList()
+        {
+            s_Tracked.Clear();
+        }
+
+        void UpgradeSerializedVersion()
+        {
+            if (m_SerializedVersion < 1)
+            {
+#if UNITY_EDITOR
+                if (!StartEndpointUpgrade())
+                    return;
+#endif
+                m_SerializedVersion = 1;
+                m_IsOverridingCost = m_CostModifier >= 0f;
+                m_CostModifier = Mathf.Abs(m_CostModifier);
+
+                if (m_StartTransform == gameObject.transform)
+                    m_StartTransform = null;
+
+                if (m_EndTransform == gameObject.transform)
+                    m_EndTransform = null;
+            }
+        }
+
+        // ensures serialized version is up-to-date at run-time, in case it was not updated in the Editor
+        void Awake() => UpgradeSerializedVersion();
 
         void OnEnable()
         {
@@ -309,6 +321,8 @@ namespace Unity.AI.Navigation
                 NavMesh.onPreUpdate += UpdateTrackedInstances;
 
             s_Tracked.Add(link);
+
+            link.RecordEndpointTransforms();
         }
 
         static void RemoveTracking(NavMeshLink link)
@@ -317,6 +331,36 @@ namespace Unity.AI.Navigation
 
             if (s_Tracked.Count == 0)
                 NavMesh.onPreUpdate -= UpdateTrackedInstances;
+        }
+
+        /// <summary>Gets the world positions of the start and end points for the link.</summary>
+        /// <param name="worldStartPosition">Returns the world position of <see cref="startTransform"/> if it is not <c>null</c>; otherwise, <see cref="startPoint"/> transformed into world space.</param>
+        /// <param name="worldEndPosition">Returns the world position of <see cref="endTransform"/> if it is not <c>null</c>; otherwise, <see cref="endPoint"/> transformed into world space.</param>
+        internal void GetWorldPositions(
+            out Vector3 worldStartPosition,
+            out Vector3 worldEndPosition)
+        {
+            var startIsLocal = m_StartTransform == null;
+            var endIsLocal = m_EndTransform == null;
+            var toWorld = startIsLocal || endIsLocal ? LocalToWorldUnscaled() : Matrix4x4.identity;
+
+            worldStartPosition = startIsLocal ? toWorld.MultiplyPoint3x4(m_StartPoint) : m_StartTransform.position;
+            worldEndPosition = endIsLocal ? toWorld.MultiplyPoint3x4(m_EndPoint) : m_EndTransform.position;
+        }
+
+        /// <summary>Gets the positions of the start and end points in the local space of the link.</summary>
+        /// <param name="localStartPosition">Returns the local position of <see cref="startTransform"/> if it is not <c>null</c>; otherwise, <see cref="startPoint"/>.</param>
+        /// <param name="localEndPosition">Returns the local position of <see cref="endTransform"/> if it is not <c>null</c>; otherwise, <see cref="endPoint"/>.</param>
+        internal void GetLocalPositions(
+            out Vector3 localStartPosition,
+            out Vector3 localEndPosition)
+        {
+            var startIsLocal = m_StartTransform == null;
+            var endIsLocal = m_EndTransform == null;
+            var toLocal = startIsLocal && endIsLocal ? Matrix4x4.identity : LocalToWorldUnscaled().inverse;
+
+            localStartPosition = startIsLocal ? m_StartPoint : toLocal.MultiplyPoint3x4(m_StartTransform.position);
+            localEndPosition = endIsLocal ? m_EndPoint : toLocal.MultiplyPoint3x4(m_EndTransform.position);
         }
 
         void AddLink()
@@ -328,12 +372,13 @@ namespace Unity.AI.Navigation
                 return;
             }
 #endif
+            GetLocalPositions(out var localStartPosition, out var localEndPosition);
             var link = new NavMeshLinkData
             {
                 startPosition = localStartPosition,
                 endPosition = localEndPosition,
                 width = m_Width,
-                costModifier = m_CostModifier,
+                costModifier = costModifier,
                 bidirectional = m_Bidirectional,
                 area = m_Area,
                 agentTypeID = m_AgentTypeID,
@@ -342,53 +387,46 @@ namespace Unity.AI.Navigation
             if (NavMesh.IsLinkValid(m_LinkInstance))
             {
                 NavMesh.SetLinkOwner(m_LinkInstance, this);
-
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
                 NavMesh.SetLinkActive(m_LinkInstance, m_Activated);
-#endif
             }
 
             m_LastPosition = transform.position;
             m_LastRotation = transform.rotation;
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
             RecordEndpointTransforms();
 
-            m_LastStartWorldPosition = transform.TransformPoint(localStartPosition);
-            m_LastEndWorldPosition = transform.TransformPoint(localEndPosition);
-#endif
+            GetWorldPositions(out m_LastStartWorldPosition, out m_LastEndWorldPosition);
         }
 
         internal void RecordEndpointTransforms()
         {
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
             m_StartTransformWasEmpty = m_StartTransform == null;
             m_EndTransformWasEmpty = m_EndTransform == null;
-#endif
         }
 
         internal bool HaveTransformsChanged()
         {
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-            if (m_StartTransform == null && m_EndTransform == null &&
+            var startIsLocal = m_StartTransform == null;
+            var endIsLocal = m_EndTransform == null;
+
+            if (startIsLocal && endIsLocal &&
                 m_StartTransformWasEmpty && m_EndTransformWasEmpty &&
                 transform.position == m_LastPosition && transform.rotation == m_LastRotation)
                 return false;
 
-            var startWorldPos = startRelativeToThisGameObject ? transform.TransformPoint(m_StartPoint) : m_StartTransform!.position + m_StartPoint;
+            var toWorld = startIsLocal || endIsLocal ? LocalToWorldUnscaled() : Matrix4x4.identity;
+
+            var startWorldPos = startIsLocal ? toWorld.MultiplyPoint3x4(m_StartPoint) : m_StartTransform.position;
             if (startWorldPos != m_LastStartWorldPosition)
                 return true;
 
-            var endWorldPos = endRelativeToThisGameObject ? transform.TransformPoint(m_EndPoint) : m_EndTransform!.position + m_EndPoint;
+            var endWorldPos = endIsLocal ? toWorld.MultiplyPoint3x4(m_EndPoint) : m_EndTransform.position;
             return endWorldPos != m_LastEndWorldPosition;
-#else
-            if (m_LastPosition != transform.position)
-                return true;
-            if (m_LastRotation != transform.rotation)
-                return true;
+        }
 
-            return false;
-#endif
+        internal Matrix4x4 LocalToWorldUnscaled()
+        {
+            return Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         }
 
         void OnDidApplyAnimationProperties()
@@ -410,20 +448,15 @@ namespace Unity.AI.Navigation
 #if UNITY_EDITOR
         void OnValidate()
         {
+            // Ensures serialized version is up-to-date in the Editor irrespective of GameObject active state
+            UpgradeSerializedVersion();
+
             m_Width = Mathf.Max(0.0f, m_Width);
 
             if (!NavMesh.IsLinkValid(m_LinkInstance))
                 return;
 
-#if ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
-            if (m_StartTransform == null)
-                m_StartTransform = transform;
-
-            if (m_EndTransform == null)
-                m_EndTransform = transform;
-#endif
-            if (!UnityEditor.EditorApplication.isPlaying)
-                UpdateLink();
+            UpdateLink();
 
             if (!m_AutoUpdatePosition)
             {
@@ -433,6 +466,140 @@ namespace Unity.AI.Navigation
             {
                 AddTracking(this);
             }
+        }
+
+        void Reset()
+        {
+            UpgradeSerializedVersion();
+        }
+
+        bool StartEndpointUpgrade()
+        {
+            m_DelayEndpointUpgrade =
+                (m_StartTransform != null &&
+                    m_StartTransform != gameObject.transform &&
+                    m_StartPoint.sqrMagnitude > 0.0001f)
+                || (m_EndTransform != null &&
+                    m_EndTransform != gameObject.transform &&
+                    m_EndPoint.sqrMagnitude > 0.0001f);
+
+            if (m_DelayEndpointUpgrade)
+            {
+                if (PrefabUtility.IsPartOfAnyPrefab(this))
+                {
+                    var isInstance = PrefabUtility.IsPartOfPrefabInstance(this);
+                    var prefabPath = isInstance
+                        ? PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject)
+                        : AssetDatabase.GetAssetPath(gameObject);
+
+                    if ((prefabPath != s_LastWarnedPrefab
+                            || EditorApplication.timeSinceStartup > s_NextPrefabWarningTime)
+                        && prefabPath != "")
+                    {
+                        var prefabToPing = AssetDatabase.LoadAssetAtPath<Object>(prefabPath);
+
+                        Debug.LogWarning(L10n.Tr(
+                                "A NavMesh Link component has an outdated format. "
+                                + "To upgrade it, open and save the prefab at: ") + prefabPath
+                            + (isInstance
+                                ? L10n.Tr(" . The prefab instance is ") + PrefabUtility.GetNearestPrefabInstanceRoot(gameObject).name
+                                : ""),
+                            prefabToPing);
+
+                        s_LastWarnedPrefab = prefabPath;
+                        s_NextPrefabWarningTime = EditorApplication.timeSinceStartup + 5f;
+                    }
+
+                    m_DelayEndpointUpgrade = false;
+                    return false;
+                }
+
+                if (IsInAuthoringScene())
+                {
+                    EditorApplication.delayCall += CompleteEndpointUpgrade;
+
+                    EditorApplication.delayCall -= WarnAboutUnsavedUpgrade;
+                    EditorApplication.delayCall += WarnAboutUnsavedUpgrade;
+
+                    EditorSceneManager.MarkSceneDirty(gameObject.scene);
+
+                    Debug.Log(L10n.Tr(
+                            "A NavMesh Link component has auto-upgraded and it references a newly created object. "
+                            + "Save your scene to keep the changes. "
+                            + "GameObject: ") + gameObject.name,
+                        gameObject);
+                }
+                else
+                {
+                    Debug.LogWarning(L10n.Tr(
+                            "The NavMesh Link component does not reference the intended transforms. " +
+                            "To correct it, save this NavMesh Link again at edit time. GameObject: ") + gameObject.name,
+                        gameObject);
+                }
+            }
+
+            return true;
+        }
+
+        static void WarnAboutUnsavedUpgrade()
+        {
+            Debug.LogWarning(L10n.Tr(
+                "At least one NavMesh Link component has auto-upgraded to a new format. "
+                + "Save your scene to keep the changes. "));
+        }
+
+        void CompleteEndpointUpgrade()
+        {
+            var discardedByPrefabStageOnHiddenReload = this == null;
+            if (discardedByPrefabStageOnHiddenReload ||
+                gameObject == null || !m_DelayEndpointUpgrade)
+                return;
+
+            var linkIndexString = "";
+            var allMyLinks = gameObject.GetComponents<NavMeshLink>();
+            if (allMyLinks.Length > 1)
+            {
+                for (var i = 0; i < allMyLinks.Length; i++)
+                {
+                    if (allMyLinks[i] == this)
+                    {
+                        linkIndexString = " " + i;
+                        break;
+                    }
+                }
+            }
+
+            var localToWorldUnscaled = LocalToWorldUnscaled();
+
+            if (m_StartTransform != null &&
+                m_StartTransform != gameObject.transform &&
+                m_StartPoint.sqrMagnitude > 0.0001f)
+            {
+                var startGO = new GameObject($"Link Start {gameObject.name}{linkIndexString}");
+                startGO.transform.SetParent(m_StartTransform);
+                startGO.transform.position = localToWorldUnscaled.MultiplyPoint3x4(transform.InverseTransformPoint(m_StartTransform.position + m_StartPoint));
+                m_StartTransform = startGO.transform;
+            }
+
+            if (m_EndTransform != null &&
+                m_EndTransform != gameObject.transform &&
+                m_EndPoint.sqrMagnitude > 0.0001f)
+            {
+                var endGO = new GameObject($"Link End {gameObject.name}{linkIndexString}");
+                endGO.transform.SetParent(m_EndTransform);
+                endGO.transform.position = localToWorldUnscaled.MultiplyPoint3x4(transform.InverseTransformPoint(m_EndTransform.position + m_EndPoint));
+                m_EndTransform = endGO.transform;
+            }
+
+            if (IsInAuthoringScene())
+                EditorSceneManager.MarkSceneDirty(gameObject.scene);
+
+            m_DelayEndpointUpgrade = false;
+        }
+
+        bool IsInAuthoringScene()
+        {
+            return !EditorApplication.isPlaying || PrefabStageUtility.GetPrefabStage(gameObject) != null;
         }
 #endif
     }

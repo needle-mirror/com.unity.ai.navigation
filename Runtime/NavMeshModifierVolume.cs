@@ -6,10 +6,17 @@ namespace Unity.AI.Navigation
 {
     /// <summary> Component used by the NavMesh building process to assign a different area type to the region inside the specified volume.</summary>
     [ExecuteAlways]
-    [AddComponentMenu("Navigation/NavMeshModifierVolume", 31)]
+    [AddComponentMenu("Navigation/NavMesh Modifier Volume", 31)]
     [HelpURL(HelpUrls.Manual + "NavMeshModifierVolume.html")]
     public class NavMeshModifierVolume : MonoBehaviour
     {
+#pragma warning disable 0414
+        // Serialized version is used to upgrade older serialized data to the current format.
+        // Version 0: Initial version.
+        [SerializeField, HideInInspector]
+        byte m_SerializedVersion = 0;
+#pragma warning restore 0414
+
         [SerializeField]
         Vector3 m_Size = new Vector3(4.0f, 3.0f, 4.0f);
 
@@ -43,6 +50,12 @@ namespace Unity.AI.Navigation
         public static List<NavMeshModifierVolume> activeModifiers
         {
             get { return s_NavMeshModifiers; }
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void ClearNavMeshModifiers()
+        {
+            s_NavMeshModifiers.Clear();
         }
 
         void OnEnable()

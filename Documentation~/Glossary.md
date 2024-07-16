@@ -22,6 +22,12 @@ A collision occurs when the physics engine detects that the colliders of two Gam
 ## GameObject
 The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more.
 
+## HeightMesh
+A navmesh that contains additional data that is used to more accurately determine the height at any point along the navmesh. 
+
+## Input Geometry
+The geometry to consider when baking the navmesh. 
+
 ## Inspector
 A Unity window that displays information about the currently selected GameObject, asset or project settings, allowing you to inspect and edit the values.
 
@@ -33,6 +39,9 @@ A mesh that Unity generates to approximate the walkable areas and obstacles in y
 
 ## Prefab
 An asset type that allows you to store a GameObject complete with components and properties. The prefab acts as a template from which you can create new object instances in the scene.
+
+## Rasterization
+The process of generating an image by calculating pixels for each polygon or triangle in the geometry. This is an alternative to ray tracing.
 
 ## Rigidbody
 A component that allows a GameObject to be affected by simulated gravity and other forces.
@@ -52,3 +61,5 @@ The landscape in your scene. A Terrain GameObject adds a large flat plane to you
 ## Unity unit 
 The unit size used in Unity projects. By default, 1 Unity unit is 1 meter. To use a different scale, set the Scale Factor in the Import Settings when importing assets.
 
+## Voxel
+A 3D pixel.

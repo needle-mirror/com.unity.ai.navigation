@@ -4,7 +4,37 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2024-07-16
+### Changed
+* The ends of the NavMesh Link are solely determined by the Transforms they reference. If a link's end doesn't reference a Transform, it is placed in the scene according to the local Point position set for it. This differs from version 2.0.0 where the Point was used together with, and relative to, the end's Transform, which always pointed to some GameObject. NavMesh Links saved using version 2.0.0 will now find their endpoints in different positions compared to where they would be in version 2.0.0. NavMesh Links saved with versions earlier than 2.0.0 remain unaffected and will continue to function with their existing data as they used to.
+* NavMesh Links saved with version 2.0.0 upgrade automatically to the correct format. Any link endpoint that has previously been defined by a position relative to a GameObject will now reference a new GameObject created as a child of the original transform and moved to the same world position that the endpoint had before.
+* To modify the cost of an individual NavMesh Link you can now select "Cost Override" in the Inspector and then input the new value. NavMesh Links that are saved with this version cannot be loaded correctly with earlier versions of the package.
+* Improved the user manual pages that describe the NavMesh Link and the NavMesh Surface components.
+
+### Fixed
+* Fixed navigation objects created from the GameObject menu being created in the scene instead of a prefab hierarchy when in prefab isolation mode.
+* Fixed creation of navigation objects from the GameObject menu resulting in more than one operation on the undo stack.
+* In accordance with other workflows, creating navigation objects from the GameObject menu now places them directly at the parent's position, instead of at the center of the scene view, when a parent is selected.
+* Fixed regression whereby changing NavMeshLink activated or cost modifier properties in the Inspector would not update the link while in play mode.
+* Added missing tooltips and support for localization throughout Inspector UI.
+* The Navigation window was sometimes issuing errors related to the .png file used as icon.
+* Added a cleanup step for Navigation components static data, so that the components support entering play mode without any domain reload.
+* Fixed warnings in the console when undoing creation of navigation objects from the GameObject menu.
+* Swapping the start and end points of a NavMeshLink via the Inspector now supports undo and redo.
+* Moving the GameObject via the Re-center operation in the NavMesh Link Inspector now supports undo and redo.
+* The deprecated properties `autoUpdatePositions`, `biDirectional`, `costOverride` and the deprecated `UpdatePositions` method of NavMeshLink correctly map now one-to-one to the members `autoUpdate`, `bidirectional`, `costModifier` and `UpdateLink`. This change removes any values that were stored by a serialized object specifically for the deprecated properties.
+* Updated the use of several methods that have been moved between classes as of 2023.3.
+* Added missing documentation for method parameters in `NavMeshComponentsGUIUtility`.
+
+## [2.0.2] - 2024-07-02
+_Version not published._
+
+## [2.0.1] - 2023-12-06
+_Version not published._
+
 ## [2.0.0] - 2023-10-17
+_NavMesh Link sets incorrect endpoint transforms and positions. Use version 2.0.3 instead._
+
 ### Fixed
 * When the "Auto Update Position" option of NavMeshLink is enabled, the link now correctly updates the connection in the next frame after any of the link's ends change their world position.
 
@@ -24,6 +54,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 * Published the missing API reference documentation for the properties made available with 2022.2
+
+### Removed
+* The "Navigation (Obsolete)" window has been removed. This in turn removes the deprecated abilities to enable the "Navigation Static" flag on scene objects and to bake a single NavMesh embedded in the scene.
 
 ## [1.1.3] - 2023-04-13
 ### Changed

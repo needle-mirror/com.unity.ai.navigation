@@ -37,7 +37,7 @@ The following tables describe the properties available in the NavMesh agent comp
 ## Path Finding 
 | Property                       | Description             |
 |:-------------------------------|:------------------------|
-| **Auto Traverse OffMesh Link** | Specify whether or not the agent automatically traverses OffMesh links. When enabled, the agent automatically traverses OffMesh links. Disable **Auto Traverse OffMesh Link** if you want to use animation or a specific way to traverse OffMesh links. |
+| **Auto Traverse OffMesh Link** | Specify whether or not the agent automatically traverses NavMesh links or OffMesh links (deprecated). When enabled, the agent automatically traverses NavMesh links. Disable **Auto Traverse OffMesh Link** if you want to use animation or a specific way to traverse NavMesh links. |
 | **Auto Repath**                | Specify what the agent does when it reaches the end of a partial path. When there is no path to the destination, Unity generates a partial path to the reachable location that is closest to the destination. If this property is enabled, when the agent reaches the end of a partial path it tries again to find a path to the destination. |
 | **Area Mask**                  | Specify which [area types](./AreasAndCosts.md) the agent considers as it tries to find a path. You can select multiple options. When you prepare meshes for NavMesh baking, you can set each mesh's area type. For example, you can mark stairs with a special area type, and restrict some agent types from using the stairs. |
 
