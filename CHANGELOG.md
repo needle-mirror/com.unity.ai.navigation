@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2024-08-30
+### Fixed
+* NavMesh Modifier was not overriding the area type in a NavMesh built from within an `Awake()` method ([NAVB-39](https://issuetracker.unity3d.com/issues/building-navmesh-with-navmeshsurface-does-not-bake-areas-into-navmeshtriangulation-when-buildnavmesh-is-called-in-awake))
+
 ## [2.0.3] - 2024-07-16
 ### Changed
 * The ends of the NavMesh Link are solely determined by the Transforms they reference. If a link's end doesn't reference a Transform, it is placed in the scene according to the local Point position set for it. This differs from version 2.0.0 where the Point was used together with, and relative to, the end's Transform, which always pointed to some GameObject. NavMesh Links saved using version 2.0.0 will now find their endpoints in different positions compared to where they would be in version 2.0.0. NavMesh Links saved with versions earlier than 2.0.0 remain unaffected and will continue to function with their existing data as they used to.

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "unity": "2023.2",
   "unityRelease": "0a18",
   "description": "The AI Navigation package contains high-level components that allow you to use navmeshes to incorporate navigation and pathfinding in your game. With this package installed you can build and use navmeshes at runtime and at edit time, create dynamic obstacles, and use links to allow specific actions (like jumping) as your characters navigate between navmeshes.",
@@ -36,15 +36,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Changed\n* The ends of the NavMesh Link are solely determined by the Transforms they reference. If a link's end doesn't reference a Transform, it is placed in the scene according to the local Point position set for it. This differs from version 2.0.0 where the Point was used together with, and relative to, the end's Transform, which always pointed to some GameObject. NavMesh Links saved using version 2.0.0 will now find their endpoints in different positions compared to where they would be in version 2.0.0. NavMesh Links saved with versions earlier than 2.0.0 remain unaffected and will continue to function with their existing data as they used to.\n* NavMesh Links saved with version 2.0.0 upgrade automatically to the correct format. Any link endpoint that has previously been defined by a position relative to a GameObject will now reference a new GameObject created as a child of the original transform and moved to the same world position that the endpoint had before.\n* To modify the cost of an individual NavMesh Link you can now select \"Cost Override\" in the Inspector and then input the new value. NavMesh Links that are saved with this version cannot be loaded correctly with earlier versions of the package.\n* Improved the user manual pages that describe the NavMesh Link and the NavMesh Surface components.\n\n### Fixed\n* Fixed navigation objects created from the GameObject menu being created in the scene instead of a prefab hierarchy when in prefab isolation mode.\n* Fixed creation of navigation objects from the GameObject menu resulting in more than one operation on the undo stack.\n* In accordance with other workflows, creating navigation objects from the GameObject menu now places them directly at the parent's position, instead of at the center of the scene view, when a parent is selected.\n* Fixed regression whereby changing NavMeshLink activated or cost modifier properties in the Inspector would not update the link while in play mode.\n* Added missing tooltips and support for localization throughout Inspector UI.\n* The Navigation window was sometimes issuing errors related to the .png file used as icon.\n* Added a cleanup step for Navigation components static data, so that the components support entering play mode without any domain reload.\n* Fixed warnings in the console when undoing creation of navigation objects from the GameObject menu.\n* Swapping the start and end points of a NavMeshLink via the Inspector now supports undo and redo.\n* Moving the GameObject via the Re-center operation in the NavMesh Link Inspector now supports undo and redo.\n* The deprecated properties `autoUpdatePositions`, `biDirectional`, `costOverride` and the deprecated `UpdatePositions` method of NavMeshLink correctly map now one-to-one to the members `autoUpdate`, `bidirectional`, `costModifier` and `UpdateLink`. This change removes any values that were stored by a serialized object specifically for the deprecated properties.\n* Updated the use of several methods that have been moved between classes as of 2023.3.\n* Added missing documentation for method parameters in `NavMeshComponentsGUIUtility`."
+    "changelog": "### Fixed\n* NavMesh Modifier was not overriding the area type in a NavMesh built from within an `Awake()` method ([NAVB-39](https://issuetracker.unity3d.com/issues/building-navmesh-with-navmeshsurface-does-not-bake-areas-into-navmeshtriangulation-when-buildnavmesh-is-called-in-awake))"
   },
   "upmCi": {
-    "footprint": "ddb78878f926974090e5cb83c7575c7c833d23c2"
+    "footprint": "23ba53d0f49f4eb41874ed129edfc2c53ea54f28"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "cf829f57201ee0f688f003e20879cb7651804388"
+    "revision": "2c565f88d424bed980de32ead5a48791e9db9936"
   }
 }

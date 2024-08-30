@@ -98,7 +98,7 @@ namespace Unity.AI.Navigation.Editor
 
             EditorGUILayout.PropertyField(m_UseGeometry, Content.UseGeometry);
 
-            m_CollectObjects.isExpanded = EditorGUILayout.Foldout(m_CollectObjects.isExpanded, Content.ObjectCollectionHeader);
+            m_CollectObjects.isExpanded = EditorGUILayout.Foldout(m_CollectObjects.isExpanded, Content.ObjectCollectionHeader, true);
 
             if (m_CollectObjects.isExpanded)
             {
@@ -129,7 +129,7 @@ namespace Unity.AI.Navigation.Editor
 
             EditorGUILayout.Space();
 
-            m_OverrideVoxelSize.isExpanded = EditorGUILayout.Foldout(m_OverrideVoxelSize.isExpanded, Content.AdvancedHeader);
+            m_OverrideVoxelSize.isExpanded = EditorGUILayout.Foldout(m_OverrideVoxelSize.isExpanded, Content.AdvancedHeader, true);
             if (m_OverrideVoxelSize.isExpanded)
             {
                 EditorGUI.indentLevel++;

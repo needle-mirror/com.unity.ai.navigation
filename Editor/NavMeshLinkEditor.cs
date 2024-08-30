@@ -125,7 +125,7 @@ namespace Unity.AI.Navigation.Editor
 
             EditorGUILayout.Space();
 
-            m_StartPoint.isExpanded = EditorGUILayout.Foldout(m_StartPoint.isExpanded, Content.Positions);
+            m_StartPoint.isExpanded = EditorGUILayout.Foldout(m_StartPoint.isExpanded, Content.Positions, true);
             if (m_StartPoint.isExpanded)
             {
                 EditorGUI.indentLevel++;
