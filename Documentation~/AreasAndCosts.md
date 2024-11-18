@@ -55,11 +55,14 @@ Each agent has an _Area Mask_ which describes which areas it can use when naviga
 
 The area mask is useful when you want only certain types characters to be able to walk through an area. For example, in a zombie evasion game, you could mark the area under each door with a _Door_ area type, and uncheck the Door area from the zombie character’s Area Mask.
 
-### Additional resources
+## Additional resources
 
-- [Create a NavMesh](./CreateNavMesh.md) - Workflow to create a NavMesh
-- [NavMeshAgent.areaMask](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent-areaMask.html) - Script API to set areaMask for an agent.
-- [NavMeshAgent.SetAreaCost()](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent.SetAreaCost.html) - Script API to set area cost for an agent.
+- [Create a NavMesh](./CreateNavMesh.md "Workflow to create a NavMesh.")
+- [NavMesh Modifier component reference](./NavMeshModifier.md "Use for affecting the NavMesh generation of NavMesh area types based on the transform hierarchy.")
+- [NavMesh Modifier Volume component reference](./NavMeshModifierVolume.md "Use for affecting the NavMesh generation of NavMesh area types based on volume.")
+- [NavMeshAgent.areaMask scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-areaMask.html "Script API to set which area types an agent can use for movement.")
+- [NavMeshAgent.SetAreaCost() scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.SetAreaCost.html "Script API to set what cost an agent considers for each area type.")
 
-[1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[2]: https://docs.unity3d.com/Manual/mesh-introduction.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
+[1]: ./Glossary.md#NavMesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+
+[2]: ./Glossary.md#Mesh "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."

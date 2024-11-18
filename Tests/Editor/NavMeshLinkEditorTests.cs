@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.TestTools.Utils;
 using Matrix4x4 = UnityEngine.Matrix4x4;
 using Quaternion = UnityEngine.Quaternion;
@@ -23,6 +25,10 @@ namespace Unity.AI.Navigation.Editor.Tests
         NavMeshLink m_Link;
         NavMeshLink m_LinkSibling1;
         NavMeshLink m_LinkSibling2;
+        GameObject m_StartOnNavMesh;
+        GameObject m_EndOnNavMesh;
+        const int k_NotWalkable = 1;
+        const int k_Walkable = 0;
 
         static readonly Vector3EqualityComparer k_DefaultThreshold = Vector3EqualityComparer.Instance;
 
@@ -41,6 +47,15 @@ namespace Unity.AI.Navigation.Editor.Tests
             m_Start = new GameObject("Start");
             m_End = new GameObject("End");
 
+            m_StartOnNavMesh = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            m_StartOnNavMesh.gameObject.transform.position = new Vector3(20.0f, 0.0f, 20.0f);
+
+            m_EndOnNavMesh = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            m_EndOnNavMesh.gameObject.transform.position = new Vector3(20.0f, 0.0f, 40.0f);
+
+            var surface = m_StartOnNavMesh.gameObject.AddComponent<NavMeshSurface>();
+            surface.BuildNavMesh();
+
             // To debug, add these components, only to show icons for them in the scene
             //m_Start.AddComponent<NavMeshSurface>().enabled = false;
             //m_End.AddComponent<NavMeshModifier>().enabled = false;
@@ -55,6 +70,10 @@ namespace Unity.AI.Navigation.Editor.Tests
                 UnityEngine.Object.DestroyImmediate(m_Start);
             if (m_End != null)
                 UnityEngine.Object.DestroyImmediate(m_End);
+            if (m_StartOnNavMesh != null)
+                UnityEngine.Object.DestroyImmediate(m_StartOnNavMesh);
+            if (m_EndOnNavMesh != null)
+                UnityEngine.Object.DestroyImmediate(m_EndOnNavMesh);
         }
 
         [SetUp]
@@ -62,6 +81,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         {
             using (new NavMeshLinkEditor.DeferredLinkUpdateScope(m_Link))
             {
+                m_Link.area = k_Walkable;
                 m_Link.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
                 m_Link.transform.localScale = Vector3.one;
                 m_Link.startPoint = Vector3.left;
@@ -148,6 +168,51 @@ namespace Unity.AI.Navigation.Editor.Tests
                 Is.EqualTo((new Vector3(0f, 0f, 2f), new Vector3(2f, 0f, 0f))),
                 "Start and end points did not swap."
             );
+        }
+
+        protected static readonly TestCaseData[] k_LinkEnabledInitially =
+        {
+            new TestCaseData(true).SetName("Enabled before setting Not Walkable"),
+            new TestCaseData(false).SetName("Disabled before setting Not Walkable")
+        };
+
+        [Test]
+        [TestCaseSource(nameof(k_LinkEnabledInitially))]
+        public void NavMeshLink_AfterSwitchingFromNonWalkableAreaType_BecomesWalkable(bool enabledInitially)
+        {
+            using (new NavMeshLinkEditor.DeferredLinkUpdateScope(m_Link))
+            {
+                m_Link.startTransform = m_StartOnNavMesh.transform;
+                m_Link.endTransform = m_EndOnNavMesh.transform;
+                m_Link.area = k_Walkable;
+            }
+
+            var navMeshLinkObject = new SerializedObject(m_Link.GetComponent<NavMeshLink>());
+            var navMeshLinkEnabled = navMeshLinkObject.FindProperty("m_Enabled");
+            var areaTypeProperty = navMeshLinkObject.FindProperty("m_Area");
+
+            var path = new NavMeshPath();
+
+            NavMesh.CalculatePath(m_StartOnNavMesh.transform.position, m_EndOnNavMesh.transform.position, NavMesh.AllAreas, path);
+            Assume.That(path.status, Is.EqualTo(NavMeshPathStatus.PathComplete));
+
+            navMeshLinkEnabled.boolValue = enabledInitially;
+            navMeshLinkObject.ApplyModifiedProperties();
+
+            areaTypeProperty.intValue = k_NotWalkable;
+            navMeshLinkObject.ApplyModifiedProperties();
+
+            NavMesh.CalculatePath(m_StartOnNavMesh.transform.position, m_EndOnNavMesh.transform.position, NavMesh.AllAreas, path);
+            Assume.That(path.status, Is.Not.EqualTo(NavMeshPathStatus.PathComplete));
+
+            navMeshLinkEnabled.boolValue = true;
+            navMeshLinkObject.ApplyModifiedProperties();
+
+            areaTypeProperty.intValue = k_Walkable;
+            navMeshLinkObject.ApplyModifiedProperties();
+
+            NavMesh.CalculatePath(m_StartOnNavMesh.transform.position, m_EndOnNavMesh.transform.position, NavMesh.AllAreas, path);
+            Assert.That(path.status, Is.EqualTo(NavMeshPathStatus.PathComplete));
         }
 
         [Test]

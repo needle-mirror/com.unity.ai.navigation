@@ -1,6 +1,6 @@
-# Creating a NavMesh Agent
+# Create a NavMesh Agent
 
-Once you have a [**NavMesh**][1] baked for your level it is time to create a character which can navigate the [**scene**][2]. We’re going to build our prototype agent from a cylinder and set it in motion. This is done using a NavMesh Agent component and a simple script.
+Once you have a [**NavMesh**][1] baked for your level it is time to create a character which can navigate the [**Scene**][2]. We’re going to build our prototype agent from a cylinder and set it in motion. This is done using a NavMesh Agent component and a simple script.
 
 ![](./Images/NavMeshAgentSetup.svg)
 
@@ -16,7 +16,7 @@ When you start to experiment with a NavMesh Agent, you most likely are going to 
 
 The **NavMesh Agent** component handles both the pathfinding and the movement control of a character. In your [**scripts**][3], navigation can be as simple as setting the desired destination point - the NavMesh Agent can handle everything from there on.
 
-```
+``` C#
     // MoveTo.cs
     using UnityEngine;
     using UnityEngine.AI;
@@ -41,15 +41,21 @@ Next we need to build a simple script which allows you to send your character to
 5. Select the character, locate the MoveTo script, and assign the Sphere to the **Goal** property.
 6. **Press Play**; you should see the agent navigating to the location of the sphere.
 
-To sum it up, in your script, you will need to get a reference to the NavMesh Agent component and then to set the agent in motion, you just need to assign a position to its [destination](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent-destination.html) property. The [Navigation How Tos](./NavHowTos.md) will give you further examples on how to solve common gameplay scenarios with the NavMesh Agent.
+To sum it up, in your script, you will need to get a reference to the NavMesh Agent component and then to set the agent in motion, you just need to assign a position to its [destination][4] property. The [Navigation How Tos](./NavHowTos.md) will give you further examples on how to solve common gameplay scenarios with the NavMesh Agent.
 
-### Additional resources
+## Additional resources
 
-- [Navigation HowTos](./NavHowTos.md) - common use cases for NavMesh Agent, with source code.
-- [Inner Workings of the Navigation System](./NavInnerWorkings.md) - learn more about path following.
-- [NavMesh Agent component reference](https://docs.unity3d.com/Manual/class-NavMeshAgent.html) – full description of all the NavMeshAgent properties.
-- [NavMesh Agent scripting reference](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent.html) - full description of the NavMeshAgent scripting API.
+- [Create a NavMesh](./CreateNavMesh.md)
+- [Navigation HowTos](./NavHowTos.md "Common use cases for NavMesh Agent, with source code.")
+- [Inner Workings of the Navigation System](./NavInnerWorkings.md#following-the-path "Learn more about path following.")
+- [Navigation agent configurations](./NavigationWindow.md#agents-tab "Guidance on how to define classes of agents with different attributes.")
+- [NavMesh Agent component reference](./NavMeshAgent.md "Full description of all the NavMeshAgent properties.")
+- [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.html "Full description of the NavMeshAgent scripting API.")
 
-[1]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[2]: https://docs.unity3d.com/Manual/CreatingScenes.html "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
-[3]: https://docs.unity3d.com/Manual/CreatingAndUsingScripts.html "A piece of code that allows you to create your own Components, trigger game events, modify Component properties over time and respond to user input in any way you like."
+[1]: ./Glossary.md#NavMesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+
+[2]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
+
+[3]: ./Glossary.md#scripts "A piece of code that allows you to create your own Components, trigger game events, modify Component properties over time and respond to user input in any way you like." 
+
+[4]: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-destination.html "Script reference for the NavMeshAgent destination property."

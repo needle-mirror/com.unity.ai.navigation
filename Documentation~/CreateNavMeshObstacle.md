@@ -1,4 +1,4 @@
-# Creating a NavMesh Obstacle
+# Create a NavMesh Obstacle
 
 NavMesh Obstacle components can be used to describe obstacles the agents should avoid while navigating. For example the agents should avoid physics controlled objects, such as crates and barrels while moving.
 
@@ -15,12 +15,14 @@ We’re going to add a crate to block the pathway at the top of the level.
 
 Now we have a working crate that is physics controlled, and which the AI knows how to avoid while navigating.
 
-### Additional resources
+## Additional resources
 
-- [Inner Workings of the Navigation System](./NavInnerWorkings.md) - learn more about how obstacles are used as part of navigation.
-- [NavMesh Obstacle component reference](https://docs.unity3d.com/Manual/class-NavMeshObstacle.html) – full description of all the NavMesh Obstacle properties.
-- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/ScriptReference/AI.NavMeshObstacle.html) - full description of the NavMesh Obstacle scripting API.
+- [Inner Workings of the Navigation System](./NavInnerWorkings.md#two-cases-for-obstacles "Learn more about how obstacles are used as part of navigation.")
+- [NavMesh Obstacle component reference](./NavMeshObstacle.md "Full description of all the NavMesh Obstacle properties.")
+- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshObstacle.html "Full description of the NavMesh Obstacle scripting API.")
 
-[1]: https://docs.unity3d.com/Manual/mesh-introduction.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
-[2]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[3]: https://docs.unity3d.com/Manual/UsingTheInspector.html "A Unity window that displays information about the currently selected GameObject, asset or project settings, allowing you to inspect and edit the values."
+[1]: ./Glossary.md#mesh "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
+
+[2]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+
+[3]: ./Glossary.md#inspector "A Unity window that displays information about the currently selected GameObject, asset or project settings, allowing you to inspect and edit the values."

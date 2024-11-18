@@ -1,4 +1,7 @@
-# Creating an Off-mesh Link
+# Create an Off-mesh Link
+
+> [!Important]
+> The OffMesh Link component is deprecated and no longer supported. The **Add Component** menu no longer contains the Off-Mesh Link component. Use the [NavMesh Link component](./NavMeshLink.md) instead.
 
 Off-Mesh Links are used to create paths crossing outside the walkable navigation [**mesh**][1] surface. For example, jumping over a ditch or a fence, or opening a door before walking through it, can be all described as Off-mesh links.
 
@@ -27,13 +30,16 @@ If the agent does not traverse an OffMesh link make sure that both end points ar
 
 Another common cause is that the NavMesh Agent’s _Area Mask_ does not have the OffMesh Link’s area included.
 
-### Additional resources
+## Additional resources
 
-- [Navigation HowTos](./NavHowTos.md) - common use cases for NavMesh Agent, with source code.
-- [OffMesh Link component (deprecated) reference](./OffMeshLink.md) – full description of all the legacy Off-Mesh Link properties.
-- [Off-Mesh Link (deprecated) scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.OffMeshLink.html) - full description of the legacy Off-Mesh Link scripting API.
+- [Navigation HowTos](./NavHowTos.md "Common use cases for NavMesh Agent, with source code.")
+- [Off-Mesh Link component (deprecated) reference](./OffMeshLink.md "Full description of all the legacy Off-Mesh Link properties.")
+- [Off-Mesh Link (deprecated) scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.OffMeshLink.html "Full description of the legacy Off-Mesh Link scripting API.")
 
-[1]: https://docs.unity3d.com/Manual/mesh-introduction.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
-[2]: ./Glossary.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[3]: https://docs.unity3d.com/Manual/CreatingScenes.html "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
-[4]: https://docs.unity3d.com/Manual/Prefabs.html "An asset type that allows you to store a GameObject complete with components and properties. The prefab acts as a template from which you can create new object instances in the scene."
+[1]: ./Glossary.md#mesh "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
+
+[2]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+
+[3]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
+
+[4]: ./Glossary.md#prefab "An asset type that allows you to store a GameObject complete with components and properties. The prefab acts as a template from which you can create new object instances in the scene."

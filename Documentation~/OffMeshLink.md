@@ -64,5 +64,5 @@ The following table describes the properties available in the OffMesh Link compo
 ## Additional resources
 
 - [NavMesh Link component reference](./NavMeshLink.md)
-- [Create OffMesh Links](./CreateOffMeshLink.md)
-- [OffMesh Link scripting reference](https://docs.unity3d.com/ScriptReference/AI.OffMeshLink.html) 
+- [Create Off-Mesh Links (deprecated)](./CreateOffMeshLink.md)
+- [Off-Mesh Link (deprecated) scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.OffMeshLink.html) 

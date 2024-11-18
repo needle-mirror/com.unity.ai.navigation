@@ -1,12 +1,12 @@
 # NavMesh Obstacle component reference
 
-The NavMesh Obstacle component allows you to define obstacles that [NavMesh Agents](AboutAgents) should avoid as they navigate the world (for example, barrels or crates controlled by the physics system). It contains properties that allow you to define the size, shape, and behavior of the obstacle.
+The NavMesh Obstacle component allows you to define obstacles that [NavMesh Agents](./AboutAgents.md) should avoid as they navigate the world (for example, barrels or crates controlled by the physics system). It contains properties that allow you to define the size, shape, and behavior of the obstacle.
 
 To use the NavMesh component you need to add it to a game object as follows: 
 1. Select the GameObject you want to use as an obstacle.
-1. In the Inspector select **Add Component**, then select **Navigation** &gt; **NavMesh Obstacle**. <br/> The NavMesh Obstacle component is displayed in the Inspector window.
+2. In the Inspector select **Add Component**, then select **Navigation** &gt; **NavMesh Obstacle**. <br/> The NavMesh Obstacle component is displayed in the Inspector window.
 
-You can use this component to create NavMesh obstacles. For more information, see [Create a NavMesh Obstacle](./CreateNavMeshObstacle.md). For more information on NavMesh obstacles and how to use them, see [About NavMesh obstacles](AboutObstacles).
+You can use this component to create NavMesh obstacles. For more information, see [Create a NavMesh Obstacle](./CreateNavMeshObstacle.md). For more information on NavMesh obstacles and how to use them, see [About NavMesh obstacles](./AboutObstacles.md).
 
 The following table describes the properties available in the NavMesh Obstacle component.
 
@@ -71,14 +71,7 @@ The following table describes the properties available in the NavMesh Obstacle c
 
 ## Additional resources
 
-- [About NavMesh obstacles](AboutObstacles) - Details on how to use NavMesh obstacles.
-- [Create a NavMesh Obstacle](./CreateNavMeshObstacle.md) - Guidance on creating NavMesh obstacles.
-    
-- [Inner Workings of the Navigation System](./NavInnerWorkings.md) - Learn more about how NavMesh Obstacles are used as part of navigation.
-    
-- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/ScriptReference/AI.NavMeshObstacle.html) - Full description of the NavMesh Obstacle scripting API.
-    
-[1]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[2]: https://docs.unity3d.com/Manual/CollidersOverview.html "An invisible shape that is used to handle physical collisions for an object. A collider doesn’t need to be exactly the same shape as the object’s mesh - a rough approximation is often more efficient and indistinguishable in gameplay."
-[3]: https://docs.unity3d.com/Manual/CollidersOverview.html "A collision occurs when the physics engine detects that the colliders of two GameObjects make contact or overlap, when at least one has a Rigidbody component and is in motion."
-[4]: https://docs.unity3d.com/Manual/class-GameObject.html "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more. A GameObject’s functionality is defined by the Components attached to it."
+- [About NavMesh obstacles](./AboutObstacles.md "Details on how to use NavMesh obstacles.")
+- [Create a NavMesh Obstacle](./CreateNavMeshObstacle.md "Guidance on creating NavMesh obstacles.")
+- [Inner Workings of the Navigation System](./NavInnerWorkings.md#two-cases-for-obstacles "Learn more about how NavMesh Obstacles are used as part of navigation.")
+- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshObstacle.html "Full description of the NavMesh Obstacle scripting API.")

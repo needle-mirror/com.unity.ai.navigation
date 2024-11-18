@@ -4,7 +4,7 @@ The NavMesh agent is a [GameObject][1] that is represented by an upright cylinde
 
 ![How the anchor point and base offset work together](./Images/NavMeshAgentOffset.svg)
 
-The height and radius of the cylinder are specified in the [Navigation window](NavigationWindow) and the [NavMesh Agent component](NavMeshAgent) properties of the individual agents.
+The height and radius of the cylinder are specified in the [Navigation window](./NavigationWindow.md) and the [NavMesh Agent component](./NavMeshAgent.md) properties of the individual agents.
 
 - **Navigation window settings** describe how all the NavMesh Agents collide and avoid static world geometry. To keep memory on budget and CPU load at a reasonable level, you can only specify one size in the bake settings.
 - **NavMesh Agent component properties** values describe how the agent collides with moving obstacles and other agents.
@@ -14,7 +14,9 @@ Typically you set the size of the agent with the same values in both places. How
 ## Additional resources
 
 - [Create a NavMesh Agent](./CreateNavMeshAgent.md) 
-- [NavMesh Agent component reference](NavMeshAgent.md)
-- [NavMesh Agent scripting reference](ScriptRef:AI.NavMeshAgent) 
+- [NavMesh Agent component reference](./NavMeshAgent.md)
+- [NavMesh Agent scripting reference](ScriptRef:AI.NavMeshAgent)
+- [Navigation Agent Types](./NavigationWindow.md#agents-tab)
+- [Build a HeightMesh for Accurate Character Placement](./HeightMesh.md)
 
-[1]: https://docs.unity3d.com/Manual/GameObjects.html "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more."
+[1]: ./Glossary.md#gameobject "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more."

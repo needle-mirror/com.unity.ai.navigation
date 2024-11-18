@@ -1,4 +1,4 @@
-# Coupling Animation and Navigation
+# Couple Animation and Navigation
 
 The goal of this document is to guide you to setup navigating humanoid characters to move using the navigation system.
 
@@ -46,7 +46,7 @@ Create a [**NavMesh**][5] for the [**Scene**][6] you’ve placed the character i
 
 Next we need to tell the character where to navigate to. This typically is very specific to the application. Here we choose a click to move behavior — the character moved to the point in the world where the user has clicked on the screen.
 
-```
+``` C#
 // ClickToMove.cs
 using UnityEngine;
 using UnityEngine.AI;
@@ -73,7 +73,7 @@ Pressing play now — and clicking around in the scene — you’ll see the char
 
 To transfer the velocity and state info from the agent to the animation controller we will add another script.
 
-```
+``` C#
 // LocomotionSimpleAgent.cs
 using UnityEngine;
 using UnityEngine.AI;
@@ -145,9 +145,9 @@ To improve the quality of the animated and navigating character we will explore 
 
 ### Looking
 
-Having the character to look and turn towards points of interest is important to convey attention and anticipation. We’ll use the animation systems lookat API. This calls for another script.
+Having the character to look and turn towards points of interest is important to convey attention and anticipation. We’ll use the animation systems `LookAt` API. This calls for another script.
 
-```
+``` C#
 // LookAt.cs
 using UnityEngine;
 using System.Collections;
@@ -185,11 +185,11 @@ public class LookAt : MonoBehaviour {
         Vector3 curDir = lookAtPosition - head.position;
         Vector3 futDir = lookAtTargetPosition - head.position;
 
-        curDir = Vector3.RotateTowards(curDir, futDir, 6.28f*Time.deltaTime, float.PositiveInfinity);
+        curDir = Vector3.RotateTowards(curDir, futDir, 6.28f * Time.deltaTime, float.PositiveInfinity);
         lookAtPosition = head.position + curDir;
 
         float blendTime = lookAtTargetWeight > lookAtWeight ? lookAtHeatTime : lookAtCoolTime;
-        lookAtWeight = Mathf.MoveTowards (lookAtWeight, lookAtTargetWeight, Time.deltaTime/blendTime);
+        lookAtWeight = Mathf.MoveTowards (lookAtWeight, lookAtTargetWeight, Time.deltaTime / blendTime);
         animator.SetLookAtWeight (lookAtWeight, 0.2f, 0.5f, 0.7f, 0.5f);
         animator.SetLookAtPosition (lookAtPosition);
     }
@@ -198,7 +198,7 @@ public class LookAt : MonoBehaviour {
 
 Add the script to the character and assign the head property to the head transform in your characters transform hierarchy. The LookAt script has no notion of navigation control — so to control where to look we go back to the **LocomotionSimpleAgent.cs** script and add a couple of lines to control the looking. Add the end of `Update()` add:
 
-```
+``` C#
         LookAt lookAt = GetComponent<LookAt> ();
         if (lookAt)
             lookAt.lookAtTargetPosition = agent.steeringTarget + transform.forward;
@@ -214,7 +214,7 @@ The character has so far been controlled completely by the position dictated by 
 
 Replace the `OnAnimatorMove()` callback on the **LocomotionSimpleAgent.cs** script replace the line with the following
 
-```
+``` C#
     void OnAnimatorMove ()
     {
         // Update position based on animation movement using navigation surface height
@@ -226,18 +226,18 @@ Replace the `OnAnimatorMove()` callback on the **LocomotionSimpleAgent.cs** scri
 
 When trying this out you may notice the that character can now drift away from the agent position (green wireframe cylinder) . You may need to limit that character animation drift. This can be done either by pulling the agent towards the character — or pull the character towards the agent position. Add the following at the end of the `Update()` method on the script **LocomotionSimpleAgent.cs**.
 
-```
+``` C#
         // Pull character towards agent
         if (worldDeltaPosition.magnitude > agent.radius)
-            transform.position = agent.nextPosition - 0.9f*worldDeltaPosition;
+            transform.position = agent.nextPosition - 0.9f * worldDeltaPosition;
 ```
 
 Or — if you want the agent to follow the character.
 
-```
+``` C#
         // Pull agent towards character
         if (worldDeltaPosition.magnitude > agent.radius)
-            agent.nextPosition = transform.position + 0.9f*worldDeltaPosition;
+            agent.nextPosition = transform.position + 0.9f * worldDeltaPosition;
 ```
 
 What works best very much depends on the specific use-case.
@@ -246,9 +246,14 @@ What works best very much depends on the specific use-case.
 
 We have set up a character that moves using the navigation system and animates accordingly. Tweaking the numbers of blend time, look-at weights etc. can improve the looks — and is a good way to further explore this setup.
 
-[1]: https://docs.unity3d.com/Manual/CreatingAndUsingScripts.html "A piece of code that allows you to create your own Components, trigger game events, modify Component properties over time and respond to user input in any way you like."
-[2]: https://docs.unity3d.com/Manual/class-AnimationClip.html 'Animation data that can be used for animated characters or simple animations. It is a simple “unit” piece of motion, such as (one specific instance of) “Idle”, “Walk” or “Run”.'
-[3]: https://docs.unity3d.com/Manual/AnimatorWindow.html "The window where the Animator Controller is visualized and edited."
-[4]: https://docs.unity3d.com/Manual/AnimationParameters.html "Used to communicate between scripting and the Animator Controller. Some parameters can be set in scripting and used by the controller, while other parameters are based on Custom Curves in Animation Clips and can be sampled using the scripting API."
-[5]: ./Glossary.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
-[6]: https://docs.unity3d.com/Manual/CreatingScenes.html "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
+[1]: ./Glossary.md#scripts "A piece of code that allows you to create your own Components, trigger game events, modify Component properties over time and respond to user input in any way you like."
+
+[2]: ./Glossary.md#animation-clip 'Animation data that can be used for animated characters or simple animations. It is a simple “unit” piece of motion, such as (one specific instance of) “Idle”, “Walk” or “Run”.'
+
+[3]: ./Glossary.md#animator-window "The window where the Animator Controller is visualized and edited."
+
+[4]: ./Glossary.md#animation-parameters "Used to communicate between scripting and the Animator Controller. Some parameters can be set in scripting and used by the controller, while other parameters are based on Custom Curves in Animation Clips and can be sampled using the scripting API."
+
+[5]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+
+[6]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."

@@ -1,6 +1,6 @@
 # NavMesh Link component reference
 
-Use the NavMesh Link component to connect different NavMeshes built for the same [agent type](https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/NavigationWindow.html#agents-tab). The link can be a line from one point to another (no width), or a span (with width). If the link is a span (with width), the Agent uses the nearest location along the entry edge to cross the link. For example, you can use the **NavMesh Link** component to connect a NavMesh that represents a building’s interior to a NavMesh that represents the building’s exterior. You can't overlap separate NavMeshes to create a link between them. 
+Use the NavMesh Link component to connect different NavMeshes built for the same [agent type](./NavigationWindow.md#agents-tab). The link can be a line from one point to another (no width), or a span (with width). If the link is a span (with width), the Agent uses the nearest location along the entry edge to cross the link. For example, you can use the **NavMesh Link** component to connect a NavMesh that represents a building’s interior to a NavMesh that represents the building’s exterior. You can't overlap separate NavMeshes to create a link between them. 
 
 To use the NavMesh Link you can either add it to your scene as a GameObject or add it to an existing GameObject as a component.
 
@@ -9,7 +9,7 @@ To add a NavMesh Link to your scene as a GameObject, do the following:
 
 To add the NavMesh Link component to an existing GameObject, do the following: 
 1. Select the GameObject you want to add the component to.
-1. In the Inspector select **Add Component**, then select **Navigation** &gt; **NavMesh Link**. <br/> The **NavMesh Link** component is displayed in the **Inspector** window.
+2. In the Inspector select **Add Component**, then select **Navigation** &gt; **NavMesh Link**. <br/> The **NavMesh Link** component is displayed in the **Inspector** window.
 
 
 The following table describes the properties available in the NavMesh Link component.
@@ -55,7 +55,7 @@ The following table describes the properties available in the NavMesh Link compo
     </tr>
     <tr>
       <td rowspan="1"><strong>Cost Override</strong></td>
-      <td colspan="2">Choose how to assign the cost to move across the link. <br/> Select <strong>Cost Override</strong> to set the cost value directly in the adjacent number field.<br/> Deselect <strong>Cost Override</strong> for the cost of the Area type to become the cost of moving over the NavMesh link. In this case the adjacent number field is disabled and not used. <br/> Path finding uses the cost in conjunction with the distance between the start and end positions in world space. Refer to [Areas and costs](./AreasAndCosts.md#pathfinding-cost) for more information.</td>
+      <td colspan="2">Choose how to assign the cost to move across the link. <br/> Select <strong>Cost Override</strong> to set the cost value directly in the adjacent number field.<br/> Deselect <strong>Cost Override</strong> for the cost of the Area type to become the cost of moving over the NavMesh link. In this case the adjacent number field is disabled and not used. <br/> Path finding uses the cost in conjunction with the distance between the start and end positions in world space. Refer to <a href="./AreasAndCosts.html#pathfinding-cost">Areas and costs</a> for more information.</td>
     </tr>
     <tr>
       <td rowspan="1"><strong>Auto Update Positions</strong></td>
@@ -67,7 +67,7 @@ The following table describes the properties available in the NavMesh Link compo
     </tr>
     <tr>
       <td rowspan="5"><strong>Area Type</strong></td>
-      <td colspan="2">The area type of the NavMesh Link. The area type allows you to apply a common traversal cost to similar area types and prevent certain characters from accessing the NavMesh Link based on the agent’s Area Mask. For more information about area types and traversal costs, refer to [Areas and Costs](./AreasAndCosts.md)</td>
+      <td colspan="2">The area type of the NavMesh Link. The area type allows you to apply a common traversal cost to similar area types and prevent certain characters from accessing the NavMesh Link based on the agent’s Area Mask. For more information about area types and traversal costs, refer to <a href="./AreasAndCosts.html">Areas and costs</a>.</td>
     </tr>
     <tr>
       <td><strong>Walkable</strong></td>
@@ -83,7 +83,7 @@ The following table describes the properties available in the NavMesh Link compo
     </tr>
     <tr>
       <td><strong>Open Area Settings </strong></td>
-      <td>Open the Areas tab of the [Navigation window](NavigationWindow.md) to define new area types or modify existing ones.</td>
+      <td>Open the <a href="./NavigationWindow.html#areas-tab">Areas tab</a> of the Navigation window to define new area types or modify existing ones.</td>
     </tr>
     <tr>
       <td rowspan="1"><strong>Activated</strong></td>
@@ -94,7 +94,7 @@ The following table describes the properties available in the NavMesh Link compo
 
 To adjust the ends of the link directly from the scene view you can drag the yellow handler gizmos at each end. A yellow cube represents the **Point** position for that end. In the opposite arrangement where the link references an object, a yellow sphere represents the **Transform** position of the referenced object. If you move the yellow sphere, the referenced object moves along to the same position.  
 To adjust the width of the link you can drag the orange dot handler gizmos placed on the sides of the link, at one third of the distance from the start to the end.  
-To display the handles, enable the NavMesh Link gizmo and select the GameObject. For more information on gizmos, refer to [Gizmos menu](https://docs.unity3d.com/Manual/GizmosMenu.html).
+To display the handles, enable the NavMesh Link gizmo and select the GameObject. For more information on gizmos, refer to [Gizmos menu](https://docs.unity3d.com/6000.0/Documentation/Manual/GizmosMenu.html).
 
 ## Additional resources
 

@@ -5,16 +5,16 @@ The AI Navigation overlay allows you to control the display of NavMesh surfaces,
 The Navigation overlay docks to the lower right corner of the Scene view by default.
   
 ## Surfaces
-This section controls the way [NavMesh Surface](NavMeshSurface) instances are displayed. The following table describes the controls available in the Surfaces section of the overlay.
+This section controls the way [NavMesh Surface](./NavMeshSurface.md) instances are displayed. The following table describes the controls available in the Surfaces section of the overlay.
   
 | **Control**             | **Description**           |
 | :---------------------- | :------------------------ |
-| **Show Only Selected**  | Display only the surfaces part of the current scene selection hierarchy.<br/> You can set the opacity of the selected and non-selected surfaces in the Preferences window. For more details, refer to [AI Navigation preferences](NavEditorPreferences.md). |
+| **Show Only Selected**  | Display only the surfaces part of the current scene selection hierarchy.<br/> You can set the opacity of the selected and non-selected surfaces in the Preferences window. For more details, refer to [AI Navigation preferences](./NavEditorPreferences.md). |
 | **Show NavMesh**        | Display navigation meshes for the relevant surfaces. <br/>The colors used to display this mesh are the ones defined for the area types. |
-| **Show HeightMesh**     | Display HeightMeshes (surface precise elevation information) for the relevant surfaces. |
+| **Show HeightMesh**     | Display [**HeightMeshes**](./HeightMesh.md) (surface precise elevation information) for the relevant surfaces. |
 
 ## Agents
-This section controls the displayed information for the currently selected [NavMesh Agents](NavMeshAgent). The following table describes the controls available in the Agents section of the overlay.      
+This section controls the displayed information for the currently selected [NavMesh Agents](./NavMeshAgent.md). The following table describes the controls available in the Agents section of the overlay.      
   
 | **Control**               | **Description**           |
 | :------------------------ | :------------------------ |
@@ -25,12 +25,11 @@ This section controls the displayed information for the currently selected [NavM
 | **Show Avoidance**        | Show the different positions sampled during the collision avoidance process.  |  
 
 ## Obstacles
-This section controls the displayed information for the currently selected [NavMesh Obstacles](NavMeshObstacle.md). The following table describes the controls available in the Obstacles section of the overlay.
+This section controls the displayed information for the currently selected [NavMesh Obstacles](./NavMeshObstacle.md). The following table describes the controls available in the Obstacles section of the overlay.
  
 | **Control**          | **Description**           |
 | :------------------- | :-------------------------| 
 | **Show Carve Hull**  | Display the convex shape that is used to carve the NavMesh. |
 
- 
 ## Additional resources
 - [Overlays](xref:overlays) - How to use and work with overlays.

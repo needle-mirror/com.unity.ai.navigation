@@ -1,7 +1,7 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "unity": "2023.2",
   "unityRelease": "0a18",
   "description": "The AI Navigation package contains high-level components that allow you to use navmeshes to incorporate navigation and pathfinding in your game. With this package installed you can build and use navmeshes at runtime and at edit time, create dynamic obstacles, and use links to allow specific actions (like jumping) as your characters navigate between navmeshes.",
@@ -36,15 +36,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n* NavMesh Modifier was not overriding the area type in a NavMesh built from within an `Awake()` method ([NAVB-39](https://issuetracker.unity3d.com/issues/building-navmesh-with-navmeshsurface-does-not-bake-areas-into-navmeshtriangulation-when-buildnavmesh-is-called-in-awake))"
+    "changelog": "### Fixed\n* NavMesh Link would not update when switching from the **Not Walkable** area type to any other area type in the inspector. (NAVB-87)\n* A few documentation paragraphs and links were not accurate."
   },
   "upmCi": {
-    "footprint": "23ba53d0f49f4eb41874ed129edfc2c53ea54f28"
+    "footprint": "82bfbe4c8337b09e962345392b458f9e24869e44"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "2c565f88d424bed980de32ead5a48791e9db9936"
+    "revision": "110941630e19b3574f9f81fd6fe3c28e867a9321"
   }
 }

@@ -11,13 +11,14 @@ The AI Navigation preferences are located in the [Preferences window](xref:Prefe
   
 | **Control**                     | **Description**                    |
 |:--------------------------------|:-----------------------------------|
-| **Selected Surfaces Opacity**   | Specify the opacity of the displayed meshes (NavMesh and HeightMesh) for [NavMesh Surface](NavMeshSurface) instances that are part of the current selection hierarchy.    |
-| **Unselected Surfaces Opacity** | Specify the opacity of displayed meshes (NavMesh and HeightMesh) for [NavMesh Surface](NavMeshSurface.md) instances that are outside of the current selection hierarchy. |
-| **Height Mesh Color**           | Set the color used to display the HeightMesh.                                           |
+| **Selected Surfaces Opacity**   | Specify the opacity of the displayed meshes (NavMesh and HeightMesh) for [NavMesh Surface](./NavMeshSurface.md) instances that are part of the current selection hierarchy.    |
+| **Unselected Surfaces Opacity** | Specify the opacity of displayed meshes (NavMesh and HeightMesh) for [NavMesh Surface](./NavMeshSurface.md) instances that are outside of the current selection hierarchy. |
+| **Height Mesh Color**           | Set the color used to display the [HeightMesh](./HeightMesh.md).                                           |
 | **Reset to Defaults**           | Set all the NavMesh Visualization Settings parameters to their default value. |
   
- **Note**: The NavMesh is represented in the colors described in the Areas tab of the Navigation window. That color palette cannot be modified.
+> [!Note]
+> The NavMesh is represented in the colors described in the [Areas tab](./NavigationWindow.md#areas-tab) of the Navigation window. That color palette cannot be modified.
 
 ## Additional resources
 - [Preferences window](xref:Preferences) 
-- [AI Navigation overlay](NavigationOverlay.md) 
+- [AI Navigation overlay](./NavigationOverlay.md) 

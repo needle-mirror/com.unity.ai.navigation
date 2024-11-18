@@ -39,6 +39,6 @@ The following table describes the properties available on the Areas tab.
 | **Cost**        | Specify the cost of traveling across this area. Costs are multipliers applied to the distance traveled across an area. A cost of 2 means an area is twice as difficult to cross as an area with a cost of 1. The default value is 1. |
 
 ## Additional resources
-- [About NavMesh agents](AboutAgents.md)
-- [Create a NavMesh agent](CreateNavMeshAgent.md)
-- [Navigation Areas and costs](AreasAndCosts.md) 
+- [About NavMesh agents](./AboutAgents.md)
+- [Create a NavMesh agent](./CreateNavMeshAgent.md)
+- [Navigation Areas and costs](./AreasAndCosts.md) 

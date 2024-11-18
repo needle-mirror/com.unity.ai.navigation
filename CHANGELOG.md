@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] - 2024-11-18
+### Fixed
+* NavMesh Link would not update when switching from the **Not Walkable** area type to any other area type in the inspector. (NAVB-87)
+* A few documentation paragraphs and links were not accurate.
+
 ## [2.0.4] - 2024-08-30
 ### Fixed
 * NavMesh Modifier was not overriding the area type in a NavMesh built from within an `Awake()` method ([NAVB-39](https://issuetracker.unity3d.com/issues/building-navmesh-with-navmeshsurface-does-not-bake-areas-into-navmeshtriangulation-when-buildnavmesh-is-called-in-awake))
