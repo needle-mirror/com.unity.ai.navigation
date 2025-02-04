@@ -22,7 +22,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         const string k_TempFolder = "TempLinkUpgrade";
         static readonly string k_TempFolderPath = Path.Combine(k_ParentFolder, k_TempFolder);
         static readonly string k_TestScenePath = Path.Combine(k_TempFolderPath, k_SceneName);
-        static readonly string k_PrebuiltScenePath = Path.Combine("Packages", "com.unity.ai.navigation", "Tests", "PrebuiltAssets", k_SceneName);
+        static readonly string k_PrebuiltScenePath = Path.Combine("Packages", "com.unity.ai.navigation", "Tests", "PrebuiltAssets~", k_SceneName);
 
         string m_PreviousScenePath;
         bool m_DelayCallHappened;
@@ -39,7 +39,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             var folderGUID = AssetDatabase.CreateFolder(k_ParentFolder, k_TempFolder);
             Assume.That(folderGUID, Is.Not.Empty);
 
-            AssetDatabase.CopyAsset(k_PrebuiltScenePath, k_TestScenePath);
+            File.Copy(k_PrebuiltScenePath, k_TestScenePath);
             AssetDatabase.Refresh();
 
             m_PreviousScenePath = SceneManager.GetActiveScene().path;

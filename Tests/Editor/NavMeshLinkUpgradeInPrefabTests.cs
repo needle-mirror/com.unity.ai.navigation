@@ -24,7 +24,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         const string k_TempFolder = "TempLinkUpgrade";
         static readonly string k_TempFolderPath = Path.Combine(k_ParentFolder, k_TempFolder);
         static readonly string k_TestPrefabPath = Path.Combine(k_TempFolderPath, k_PrefabName);
-        static readonly string k_PrebuiltPrefabPath = Path.Combine("Packages", "com.unity.ai.navigation", "Tests", "PrebuiltAssets", k_PrefabName + "_");
+        static readonly string k_PrebuiltPrefabPath = Path.Combine("Packages", "com.unity.ai.navigation", "Tests", "PrebuiltAssets~", k_PrefabName);
 
         [SerializeField]
         string m_PreviousScenePath;
@@ -40,7 +40,7 @@ namespace Unity.AI.Navigation.Editor.Tests
             var folderGUID = AssetDatabase.CreateFolder(k_ParentFolder, k_TempFolder);
             Assume.That(folderGUID, Is.Not.Empty);
 
-            AssetDatabase.CopyAsset(k_PrebuiltPrefabPath, k_TestPrefabPath);
+            File.Copy(k_PrebuiltPrefabPath, k_TestPrefabPath);
             AssetDatabase.Refresh();
 
             m_LinkPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(k_TestPrefabPath);

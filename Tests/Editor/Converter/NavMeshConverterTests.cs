@@ -13,7 +13,7 @@ using NavMeshBuilder = UnityEditor.AI.NavMeshBuilder;
 namespace Unity.AI.Navigation.Editor.Tests
 {
     [Description("Tests suite related to the systems used to convert editor data from the legacy NavMesh systems to the modern component-based navigation extension")]
-    class ConverterTests
+    class NavMeshConverterTests
     {
         const string k_RootFolder = "Assets";
         const string k_TestFolder = "ConverterTests";

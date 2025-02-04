@@ -1,8 +1,8 @@
 # AI Navigation overlay reference 
   
-The AI Navigation overlay allows you to control the display of NavMesh surfaces, agents, and GameObjects in the Scene view. You can use it to help you debug any issues with AI Navigation and pathfinding.
+The **AI Navigation** overlay allows you to control the display of NavMesh surfaces, agents, and GameObjects in the Scene view. You can use it to help you debug any issues with AI Navigation and pathfinding.
   
-The Navigation overlay docks to the lower right corner of the Scene view by default.
+Use the [Overlay Menu](https://docs.unity3d.com/Manual/display-and-hide-overlay.html) to show or hide the **AI Navigation** overlay. It docks to the lower right corner of the Scene view by default. To [reposition](https://docs.unity3d.com/Manual/position-overlay.html) the overlay, click and drag its handle.
   
 ## Surfaces
 This section controls the way [NavMesh Surface](./NavMeshSurface.md) instances are displayed. The following table describes the controls available in the Surfaces section of the overlay.

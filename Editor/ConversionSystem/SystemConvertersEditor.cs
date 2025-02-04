@@ -81,7 +81,6 @@ namespace Unity.AI.Navigation.Editor.Converter
 
         // This list needs to be as long as the amount of converters
         List<ConverterItems> m_ItemsToConvert = new List<ConverterItems>();
-        //List<List<ConverterItemDescriptor>> m_ItemsToConvert = new List<List<ConverterItemDescriptor>>();
         SerializedObject m_SerializedObject;
 
         List<string> m_ContainerChoices = new List<string>();
@@ -128,9 +127,9 @@ namespace Unity.AI.Navigation.Editor.Converter
 
             // This is the drop down choices.
             m_ConverterContainers = TypeCache.GetTypesDerivedFrom<SystemConverterContainer>();
-            foreach (var continerType in m_ConverterContainers)
+            foreach (var containerType in m_ConverterContainers)
             {
-                var container = (SystemConverterContainer)Activator.CreateInstance(continerType);
+                var container = (SystemConverterContainer)Activator.CreateInstance(containerType);
                 m_Containers.Add(container);
                 m_ContainerChoices.Add(container.name);
             }
@@ -157,10 +156,10 @@ namespace Unity.AI.Navigation.Editor.Converter
             ClearConverterStates();
             var converterList = TypeCache.GetTypesDerivedFrom<SystemConverter>();
 
-            for (int i = 0; i < converterList.Count; ++i)
+            for (var i = 0; i < converterList.Count; ++i)
             {
                 // Iterate over the converters that are used by the current container
-                SystemConverter conv = (SystemConverter)Activator.CreateInstance(converterList[i]);
+                var conv = (SystemConverter)Activator.CreateInstance(converterList[i]);
                 if (conv.container == m_ConverterContainers[m_ContainerChoiceIndex])
                 {
                     m_CoreConvertersList.Add(conv);
@@ -171,13 +170,13 @@ namespace Unity.AI.Navigation.Editor.Converter
             m_CoreConvertersList = m_CoreConvertersList
                 .OrderBy(o => o.priority).ToList();
 
-            for (int i = 0; i < m_CoreConvertersList.Count; i++)
+            for (var i = 0; i < m_CoreConvertersList.Count; i++)
             {
                 // Create a new ConvertState which holds the active state of the converter
                 var converterState = new ConverterState
                 {
                     isEnabled = m_CoreConvertersList[i].isEnabled,
-                    isActive = false,
+                    isActive = true,
                     isInitialized = false,
                     items = new List<ConverterItemState>(),
                     index = i,
@@ -186,7 +185,7 @@ namespace Unity.AI.Navigation.Editor.Converter
 
                 // This just creates empty entries in the m_ItemsToConvert.
                 // This list need to have the same amount of entries as the converters
-                List<ConverterItemDescriptor> converterItemInfos = new List<ConverterItemDescriptor>();
+                var converterItemInfos = new List<ConverterItemDescriptor>();
                 //m_ItemsToConvert.Add(converterItemInfos);
                 m_ItemsToConvert.Add(new ConverterItems { itemDescriptors = converterItemInfos });
             }
@@ -200,8 +199,6 @@ namespace Unity.AI.Navigation.Editor.Converter
                 m_SerializedObject = new SerializedObject(this);
                 converterEditorAsset.CloneTree(rootVisualElement);
 
-                rootVisualElement.Q<DropdownField>("conversionsDropDown").choices = m_ContainerChoices;
-                rootVisualElement.Q<DropdownField>("conversionsDropDown").index = m_ContainerChoiceIndex;
                 RecreateUI();
 
                 var button = rootVisualElement.Q<Button>("convertButton");
@@ -216,13 +213,6 @@ namespace Unity.AI.Navigation.Editor.Converter
         void RecreateUI()
         {
             m_SerializedObject.Update();
-            // This is temp now to get the information filled in
-            rootVisualElement.Q<DropdownField>("conversionsDropDown").RegisterCallback<ChangeEvent<string>>((evt) =>
-            {
-                m_ContainerChoiceIndex = rootVisualElement.Q<DropdownField>("conversionsDropDown").index;
-                GetConverters();
-                RecreateUI();
-            });
 
             var currentContainer = m_Containers[m_ContainerChoiceIndex];
             rootVisualElement.Q<Label>("conversionName").text = currentContainer.name;
@@ -243,7 +233,6 @@ namespace Unity.AI.Navigation.Editor.Converter
                 item.SetEnabled(conv.isEnabled);
                 item.Q<Label>("converterName").text = conv.name;
                 item.Q<Label>("converterInfo").text = conv.info;
-                item.Q<VisualElement>("converterTopVisualElement").tooltip = conv.info;
 
                 // setup the images
                 item.Q<Image>("pendingImage").image = EditorStyles.iconPending;
@@ -299,19 +288,16 @@ namespace Unity.AI.Navigation.Editor.Converter
                     // Adding index here to userData so it can be retrieved later
                     element.userData = index;
 
-                    Status status = (Status)property.FindPropertyRelative("status").enumValueIndex;
-                    string info = property.FindPropertyRelative("message").stringValue;
+                    var status = (Status)property.FindPropertyRelative("status").enumValueIndex;
+                    var info = property.FindPropertyRelative("message").stringValue;
 
                     // Update the amount of things to convert
                     child.Q<Label>("converterStats").text = $"{m_ItemsToConvert[id].itemDescriptors.Count} items";
 
-                    ConverterItemDescriptor convItemDesc = m_ItemsToConvert[id].itemDescriptors[index];
+                    var convItemDesc = m_ItemsToConvert[id].itemDescriptors[index];
 
                     element.Q<Label>("converterItemName").text = convItemDesc.name;
                     element.Q<Label>("converterItemPath").text = convItemDesc.info;
-
-                    element.Q<Image>("converterItemHelpIcon").image = EditorStyles.iconHelp;
-                    element.Q<Image>("converterItemHelpIcon").tooltip = convItemDesc.helpLink;
 
                     // Changing the icon here depending on the status.
                     Texture2D icon = null;
@@ -494,8 +480,8 @@ namespace Unity.AI.Navigation.Editor.Converter
                 ""baseScore"": 9999
                 }");
 
-                
-                
+
+
                 // Import the search index
                 AssetDatabase.ImportAsset(indexPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.DontDownloadFromCacheServer);
 
@@ -524,22 +510,19 @@ namespace Unity.AI.Navigation.Editor.Converter
             {
                 EditorUtility.DisplayProgressBar($"Initializing converters", $"Initializing converters...", -1f);
 
-                int convertersToConvert = 0;
-                for (int i = 0; i < m_ConverterStates.Count; ++i)
+                var convertersToInitialize = 0;
+                for (var i = 0; i < m_ConverterStates.Count; ++i)
                 {
-                    if (m_ConverterStates[i].requiresInitialization)
+                    if (m_ConverterStates[i].isEnabled)
                     {
-                        convertersToConvert++;
                         GetAndSetData(i, onConverterDataCollectionComplete);
+                        convertersToInitialize++;
                     }
                 }
 
-                // If we did not kick off any converter intialization
-                // We can complete everything immediately
-                if (convertersToConvert == 0)
-                {
+                // If we don't have any converters to initialize, call the complete callback directly.
+                if (convertersToInitialize == 0)
                     onConverterDataCollectionComplete?.Invoke();
-                }
             }
 
             void DeleteSearchIndex(SearchContext context, string indexPath)
@@ -580,86 +563,123 @@ namespace Unity.AI.Navigation.Editor.Converter
                 isActive ? DropdownMenuAction.AlwaysEnabled : DropdownMenuAction.AlwaysDisabled);
         }
 
-        void UpdateInfo(int stateIndex, RunItemContext ctx)
-        {
-            if (ctx.didFail)
-            {
-                m_ConverterStates[stateIndex].items[ctx.item.index].message = ctx.info;
-                m_ConverterStates[stateIndex].items[ctx.item.index].status = Status.Error;
-                m_ConverterStates[stateIndex].errors++;
-            }
-            else
-            {
-                m_ConverterStates[stateIndex].items[ctx.item.index].status = Status.Success;
-                m_ConverterStates[stateIndex].success++;
-            }
-
-            m_ConverterStates[stateIndex].pending--;
-
-            // Making sure that this is set here so that if user is clicking Convert again it will not run again.
-            ctx.hasConverted = true;
-
-            VisualElement child = m_ScrollView[stateIndex];
-            child.Q<ListView>("converterItems").Rebuild();
-        }
-
         void Convert(ClickEvent evt)
         {
-            List<ConverterState> activeConverterStates = new List<ConverterState>();
+            var activeConverterStates = new List<ConverterState>();
             // Get the names of the converters
             // Get the amount of them
             // Make the string "name x/y"
 
             // Getting all the active converters to use in the cancelable progressbar
-            foreach (ConverterState state in m_ConverterStates)
+            foreach (var state in m_ConverterStates)
             {
                 if (state.isActive && state.isInitialized)
-                {
                     activeConverterStates.Add(state);
-                }
             }
 
-            int currentCount = 0;
-            int activeConvertersCount = activeConverterStates.Count;
-            foreach (ConverterState activeConverterState in activeConverterStates)
+            var converterCount = 0;
+            var activeConvertersCount = activeConverterStates.Count;
+            foreach (var activeConverterState in activeConverterStates)
             {
-                currentCount++;
-                var index = activeConverterState.index;
-                m_CoreConvertersList[index].OnPreRun();
-                var converterName = m_CoreConvertersList[index].name;
-                var itemCount = m_ItemsToConvert[index].itemDescriptors.Count;
-                string progressTitle = $"{converterName}           Converter : {currentCount}/{activeConvertersCount}";
-                for (var j = 0; j < itemCount; j++)
+                if (activeConverterState.items.Count == 0)
+                    continue;
+                var hasItemsToConvert = false;
+                foreach (var item in activeConverterState.items)
                 {
-                    if (activeConverterState.items[j].isActive)
+                    if (item.isActive && !item.hasConverted)
                     {
-                        if (EditorUtility.DisplayCancelableProgressBar(progressTitle,
-                            string.Format("({0} of {1}) {2}", j, itemCount, m_ItemsToConvert[index].itemDescriptors[j].info),
-                            (float)j / (float)itemCount))
-                            break;
-                        ConvertIndex(index, j);
+                        hasItemsToConvert = true;
+                        break;
                     }
                 }
-                m_CoreConvertersList[index].OnPostRun();
+                if (!hasItemsToConvert)
+                    continue;
+
+                var converterIndex = activeConverterState.index;
+                m_CoreConvertersList[converterIndex].OnPreRun();
+
+                var converterName = m_CoreConvertersList[converterIndex].name;
+                var progressTitle = $"{converterName}           Converter : {converterCount++}/{activeConvertersCount}";
+                BatchConvert(activeConverterState, progressTitle);
+
+                m_CoreConvertersList[converterIndex].OnPostRun();
                 AssetDatabase.SaveAssets();
                 EditorUtility.ClearProgressBar();
             }
         }
 
-        void ConvertIndex(int coreConverterIndex, int index)
+        void BatchConvert(ConverterState converterState, string progressBarTile)
         {
-            if (!m_ConverterStates[coreConverterIndex].items[index].hasConverted)
+            var converterIndex = converterState.index;
+            var itemsFound = converterState.items;
+            var itemsToConvert = new List<ConverterItemInfo>(itemsFound.Count);
+            for (var i = 0; i < itemsFound.Count; ++i)
             {
-                m_ConverterStates[coreConverterIndex].items[index].hasConverted = true;
+                if (itemsFound[i].isActive && !itemsFound[i].hasConverted)
+                    itemsToConvert.Add(new ConverterItemInfo()
+                    {
+                        index = i,
+                        descriptor = m_ItemsToConvert[converterIndex].itemDescriptors[i]
+                    });
+            }
+
+            // Since this is a batched process, we don't have progress to show, so we stick it to 50%.
+            EditorUtility.DisplayProgressBar(progressBarTile, $"Processing {itemsToConvert.Count} items.", 0.5f);
+
+            var ctx = new RunItemContext(itemsToConvert.ToArray());
+            m_CoreConvertersList[converterIndex].OnRun(ref ctx);
+            UpdateInfo(converterIndex, ctx);
+        }
+
+        void ConvertIndex(int converterIndex, int index)
+        {
+            if (!m_ConverterStates[converterIndex].items[index].hasConverted)
+            {
+                m_ConverterStates[converterIndex].items[index].hasConverted = true;
                 var item = new ConverterItemInfo()
                 {
                     index = index,
-                    descriptor = m_ItemsToConvert[coreConverterIndex].itemDescriptors[index],
+                    descriptor = m_ItemsToConvert[converterIndex].itemDescriptors[index],
                 };
-                var ctx = new RunItemContext(item);
-                m_CoreConvertersList[coreConverterIndex].OnRun(ref ctx);
-                UpdateInfo(coreConverterIndex, ctx);
+                var ctx = new RunItemContext(new[] { item });
+                m_CoreConvertersList[converterIndex].OnRun(ref ctx);
+                UpdateInfo(converterIndex, ctx);
             }
+        }
+
+        void UpdateInfo(int converterIndex, RunItemContext ctx)
+        {
+            // Reset converter stats, so that they don't contain old data from previous runs.
+            m_ConverterStates[converterIndex].warnings = 0;
+            m_ConverterStates[converterIndex].errors = 0;
+            m_ConverterStates[converterIndex].success = 0;
+
+            var items = ctx.items;
+            for (var i = 0; i < items.Length; ++i)
+            {
+                var itemIndex = items[i].index;
+                if (ctx.didFail[i])
+                {
+                    m_ConverterStates[converterIndex].items[itemIndex].message = ctx.info[i];
+                    m_ConverterStates[converterIndex].items[itemIndex].status = Status.Error;
+                    m_ConverterStates[converterIndex].errors++;
+                }
+                else
+                {
+                    m_ConverterStates[converterIndex].items[itemIndex].status = Status.Success;
+                    m_ConverterStates[converterIndex].success++;
+                    m_ConverterStates[converterIndex].items[itemIndex].hasConverted = true;
+                }
+
+                // If the item was converted, we deselect it in the conversion list.
+                m_ConverterStates[converterIndex].items[itemIndex].isActive = false;
+            }
+
+            if (m_ConverterStates[converterIndex].pending > 0)
+                m_ConverterStates[converterIndex].pending--;
+
+            var child = m_ScrollView[converterIndex];
+            child.Q<ListView>("converterItems").Rebuild();
         }
     }
 }

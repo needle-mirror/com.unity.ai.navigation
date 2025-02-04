@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.6] - 2025-02-04
+### Added
+* New **OffMesh Link Converter** tool in the **Window** > **AI** > **Navigation Updater** window to help you automatically replace **OffMesh Links** with **NavMesh Links** in the scenes and prefabs of your project.
+
+### Fixed
+* Fixed a regression that caused controls in the navigation scene view overlay popup to display on top of one another when foldouts were open. (Requires Unity 6000.0.22f1 or newer)
+* The AI Navigation overlay was rarely needed upon the initial installation of the package. Now it is hidden by default and you can enable it through the [Overlay Menu](https://docs.unity3d.com/Manual/display-and-hide-overlay.html).
+* Fixed a regression that caused the Editor to allocate unnecessary memory on some platforms, when the project contained package test files.
+
 ## [2.0.5] - 2024-11-18
 ### Fixed
 * NavMesh Link would not update when switching from the **Not Walkable** area type to any other area type in the inspector. (NAVB-87)

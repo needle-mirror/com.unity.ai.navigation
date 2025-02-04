@@ -10,7 +10,7 @@ namespace Unity.AI.Navigation.Updater
     {
         public override string name => "NavMesh Scene Converter";
         public override string info => "Reassigns the legacy baked NavMesh to a NavMeshSurface on a game object named 'Navigation'.\nAdds a NavMeshModifier component to each game object marked as Navigation Static.";
-        public override Type container => typeof(BuiltInToNavMeshSurfaceConverterContainer);
+        public override Type container => typeof(NavigationConverterContainer);
 
         List<string> m_AssetsToConvert = new List<string>();
 
@@ -27,7 +27,6 @@ namespace Unity.AI.Navigation.Updater
                         name = Path.GetFileNameWithoutExtension(path),
                         info = path,
                         warningMessage = String.Empty,
-                        helpLink = String.Empty
                     };
 
                     m_AssetsToConvert.Add(path);
@@ -38,12 +37,19 @@ namespace Unity.AI.Navigation.Updater
             callback.Invoke();
         }
 
-
         public override void OnRun(ref RunItemContext context)
         {
-            bool success = NavMeshUpdaterUtility.ConvertScene(context.item.descriptor.info);
-
-            context.hasConverted = success;
+            var items = context.items;
+            for (var i = 0; i < items.Length; ++i)
+            {
+                var success = NavMeshUpdaterUtility.ConvertScene(items[i].descriptor.info);
+                if (!success)
+                {
+                    var index = items[i].index;
+                    context.didFail[index] = true;
+                    context.info[index] = "Failed to convert scene.";
+                }
+            }
         }
     }
 }
