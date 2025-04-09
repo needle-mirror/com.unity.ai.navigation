@@ -1,8 +1,8 @@
 # NavMesh Modifier Volume component reference
 
-Use the NavMesh Modifier Volume component to change the area type of any [NavMeshes][1] within a defined region. The available properties allow you to define the affected region and specify the change in area type that you want. However, the modifier volume only affects the NavMeshes that are being newly built for the selected agent types. It has no effect on NavMeshes that already exist in the scene or in that volume and no effect on NavMeshes that get built for unaffected agent types. 
+Use the NavMesh Modifier Volume component to change the area type of any [NavMeshes][1] within a defined region. The available properties allow you to define the affected region and specify the change in area type that you want. However, the modifier volume only affects the NavMeshes that are being newly built for the selected agent types. It has no effect on NavMeshes that already exist in the scene or in that volume and no effect on NavMeshes that get built for unaffected agent types.
 
-You need to add the NavMesh Modifier Volume component to a [GameObject][2]. Though you can add the NavMesh Modifier Volume component to any GameObject in your scene, you typically add it to the GameObject that's associated with the NavMesh you want to affect. 
+You need to add the NavMesh Modifier Volume component to a [GameObject][2]. Though you can add the NavMesh Modifier Volume component to any GameObject in your scene, you typically add it to the GameObject that's associated with the NavMesh you want to affect.
 
 To add the NavMesh Modifier Volume component to a GameObject, do the following:
 1. Select the GameObject you want to use.

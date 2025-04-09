@@ -35,9 +35,9 @@ namespace Unity.AI.Navigation.Editor
             using (new SettingsWindow.GUIScope())
             {
                 EditorGUILayout.LabelField(Styles.NavMeshVisualizationSettingsLabel, EditorStyles.boldLabel);
-                
+
                 EditorGUI.BeginChangeCheck();
-                
+
                 // Visualization settings
                 VisualizationSettings.selectedSurfacesOpacity = EditorGUILayout.Slider(Styles.SelectedSurfacesOpacityLabel, VisualizationSettings.selectedSurfacesOpacity, 0, 1);
                 VisualizationSettings.unselectedSurfacesOpacity = EditorGUILayout.Slider(Styles.UnselectedSurfacesOpacityLabel, VisualizationSettings.unselectedSurfacesOpacity, 0, 1);

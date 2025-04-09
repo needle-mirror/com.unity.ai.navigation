@@ -36,7 +36,7 @@ A Unity window that displays information about the currently selected GameObject
 ## Mesh
 The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons. [More info](https://docs.unity3d.com/6000.0/Documentation/Manual/mesh-introduction.html)
 
-## NavMesh 
+## NavMesh
 A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation. [More info](./CreateNavMesh.md)
 
 ## Prefab
@@ -60,7 +60,7 @@ A piece of code that allows you to create your own Components, trigger game even
 ## Terrain
 The landscape in your scene. A Terrain GameObject adds a large flat plane to your scene and you can use the Terrain’s Inspector window to create a detailed landscape. [More info](https://docs.unity3d.com/6000.0/Documentation/Manual/terrain-UsingTerrains.html)
 
-## Unity unit 
+## Unity unit
 The unit size used in Unity projects. By default, 1 Unity unit is 1 meter. To use a different scale, set the Scale Factor in the Import Settings when importing assets. [More info](https://docs.unity3d.com/6000.0/Documentation/Manual/ImportingModelFiles.html#model)
 
 ## Voxel

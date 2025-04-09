@@ -3,7 +3,7 @@
 > [!Important]
 > The OffMesh Link component is deprecated and no longer supported. Use the [NavMesh Link component](./NavMeshLink.md) instead.
 
-Use OffMesh Link components to incorporate navigation shortcuts, which can't be represented using a walkable surface, into your scene. For example, with OffMesh links, an agent can jump over a ditch or a fence, or open a door then walk through it. 
+Use OffMesh Link components to incorporate navigation shortcuts, which can't be represented using a walkable surface, into your scene. For example, with OffMesh links, an agent can jump over a ditch or a fence, or open a door then walk through it.
 
 OffMesh Links only apply to the Humanoid agent type, so if the NavMeshes in your scene use a different agent type, the OffMesh Link won't create a link between them.
 
@@ -65,4 +65,4 @@ The following table describes the properties available in the OffMesh Link compo
 
 - [NavMesh Link component reference](./NavMeshLink.md)
 - [Create Off-Mesh Links (deprecated)](./CreateOffMeshLink.md)
-- [Off-Mesh Link (deprecated) scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.OffMeshLink.html) 
+- [Off-Mesh Link (deprecated) scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.OffMeshLink.html)

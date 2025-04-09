@@ -2,7 +2,7 @@
 
 Use the NavMesh Surface component to define and build a [NavMesh](./Glossary.md#NavMesh) for a specific type of [NavMesh Agent](./NavMeshAgent.md) in your scene. Use the available properties to specify the type of NavMesh Agent that can use the NavMesh, the area type to assign to the generated NavMesh, and the geometry to use when you bake the NavMesh.
 
-To use the **NavMesh Surface** component, apply it to the [GameObject](./Glossary.md#gameobject) on which you want to build the NavMesh. 
+To use the **NavMesh Surface** component, apply it to the [GameObject](./Glossary.md#gameobject) on which you want to build the NavMesh.
 
 To apply the NavMesh Surface component to a GameObject, do the following:
 
@@ -13,7 +13,7 @@ In the NavMesh Surface component, you can click **Bake** to generate the NavMesh
  A [**Scene**](./Glossary.md#scene) can contain multiple NavMesh surfaces. You can add the NavMesh Surface component to any GameObject in your scene. This is useful for when you want to use the GameObject parenting [hierarchy][1] to define which GameObjects contribute to the NavMesh. Only the NavMesh Surface components that are enabled and part of active GameObjects load their NavMesh data into the navigation system. You can unload NavMesh data from the scene by disabling either the **NavMesh Surface** that contains it or the GameObject that the NavMesh Surface is attached to.
 
 <a id="navmesh-surface-main-settings"></a>
-The following table describes the properties available in the NavMesh Surface component. Use the main settings for the NavMesh Surface component to filter the input geometry on a broad scale. Use the [NavMesh Modifier](./NavMeshModifier.md) component to adjust how Unity treats input geometry on a per-GameObject basis. 
+The following table describes the properties available in the NavMesh Surface component. Use the main settings for the NavMesh Surface component to filter the input geometry on a broad scale. Use the [NavMesh Modifier](./NavMeshModifier.md) component to adjust how Unity treats input geometry on a per-GameObject basis.
 
 <table>
   <thead>

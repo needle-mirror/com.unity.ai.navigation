@@ -32,10 +32,10 @@ namespace Unity.AI.Navigation
 
         [SerializeField]
         bool m_GenerateLinks;
-        
+
         [SerializeField]
         bool m_IgnoreFromBuild;
-        
+
         [SerializeField]
         bool m_ApplyToChildren = true;
 
@@ -53,16 +53,16 @@ namespace Unity.AI.Navigation
         /// <remarks> The range of useful values is from 0 to 31. Higher values always take precedence over lower values in the case when the surfaces of more GameObjects intersect each other to produce a NavMesh in the same region. A value of 1 has the highest priority over all the other types and it means "not walkable". Consequently, the surface of a GameObject with an <c>area</c> of 1 produces a hole in the NavMesh. This property has the same meaning as <see cref="NavMeshBuildSource.area"/>.</remarks>
         /// <seealso href="https://docs.unity3d.com/Manual/nav-AreasAndCosts.html"/>
         public int area { get { return m_Area; } set { m_Area = value; } }
-        
+
         /// <summary> Gets or sets whether the default links generation condition for the GameObject and its children should be overridden. </summary>
         public bool overrideGenerateLinks { get { return m_OverrideGenerateLinks; } set { m_OverrideGenerateLinks = value; } }
-        
+
         /// <summary> Gets or sets whether this object is included in the link generation process. </summary>
         public bool generateLinks { get { return m_GenerateLinks; } set { m_GenerateLinks = value; } }
-        
+
         /// <summary> Gets or sets whether the NavMesh building process ignores this GameObject and its children. </summary>
         public bool ignoreFromBuild { get { return m_IgnoreFromBuild; } set { m_IgnoreFromBuild = value; } }
-        
+
         /// <summary> Gets or sets whether this GameObject's children also use the modifier settings. </summary>
         public bool applyToChildren { get { return m_ApplyToChildren; } set { m_ApplyToChildren = value; } }
 

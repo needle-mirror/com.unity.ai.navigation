@@ -5,7 +5,7 @@ The NavMesh Agent component allows you to create characters (agents) that avoid 
 To use the NavMesh Agent component, add it to a GameObject:
 1. Select the GameObject that represents your agent.
 2. In the Inspector, click **Add Component**.
-3. Select **Navigation** &gt; **NavMesh Agent**. 
+3. Select **Navigation** &gt; **NavMesh Agent**.
    <br/>The NavMesh Agent component is displayed in the Inspector window.
 
 You can use this component to create NavMesh agents. For more details, see [Create a NavMesh Agent](./CreateNavMeshAgent.md). For more information about NavMesh agents, see [About NavMesh agents](./AboutAgents.md).
@@ -17,16 +17,16 @@ The following tables describe the properties available in the NavMesh agent comp
 | **Agent type**  | Select the type of agent you want to create. This allows the agent to move along any NavMesh created for the selected agent type. |
 | **Base offset** | Specify the offset of the collision cylinder in relation to the transform pivot point. |
 
-## Steering 
+## Steering
 | Property              | Description             |
 |:----------------------|:------------------------|
-| **Speed**             | Set the maximum speed (in Unity units per second) at which the agent can move along a path. | 
+| **Speed**             | Set the maximum speed (in Unity units per second) at which the agent can move along a path. |
 | **Angular Speed**     | Set the maximum rotation speed (in degrees per second) of the agent. |
-| **Acceleration**      | Set the maximum acceleration (in Unity units per second squared). | 
+| **Acceleration**      | Set the maximum acceleration (in Unity units per second squared). |
 | **Stopping Distance** | Specify how close the agent can get to its destination. The agent stops when it arrives this close to the destination location. |
 | **Auto Braking**      | Specify if the agent slows down as it approaches its destination. When enabled, the agent slows down as it approaches the destination. Disable this if you want the agent to move smoothly between multiple points (for example, if the agent is a guard on patrol). |
 
-## Obstacle Avoidance 
+## Obstacle Avoidance
 | Property     | Description             |
 |:-------------|:------------------------|
 | **Radius**   | Specify the distance from the agent's center that is used to calculate [collisions][2] between the agent and other GameObjects. |
@@ -34,7 +34,7 @@ The following tables describe the properties available in the NavMesh agent comp
 | **Quality**  | Select the obstacle avoidance quality. If you have a high number of agents, you can reduce the obstacle avoidance quality to reduce performance costs. If you set obstacle avoidance quality to none, then collisions resolve, but other agents and obstacles are not actively avoided. |
 | **Priority** | Specify how agents behave as they avoid each other. Agents avoid other agents of higher priority and ignore other agents of lower priority. The value should be in the range 0–99 where lower numbers indicate higher priority. |
 
-## Path Finding 
+## Path Finding
 | Property                       | Description             |
 |:-------------------------------|:------------------------|
 | **Auto Traverse OffMesh Link** | Specify whether or not the agent automatically traverses NavMesh links or OffMesh links (deprecated). When enabled, the agent automatically traverses NavMesh links. Disable **Auto Traverse OffMesh Link** if you want to use animation or a specific way to traverse NavMesh links. |
@@ -43,10 +43,10 @@ The following tables describe the properties available in the NavMesh agent comp
 
 ## Additional resources
 
-- [Create a NavMesh Agent](./CreateNavMeshAgent.md) 
+- [Create a NavMesh Agent](./CreateNavMeshAgent.md)
 - [About NavMesh agents](./AboutAgents.md)
-- [Inner Workings of the Navigation System](./NavInnerWorkings.md#moving-the-agent) 
-- [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.html) 
+- [Inner Workings of the Navigation System](./NavInnerWorkings.md#moving-the-agent)
+- [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.html)
 
 [1]: ./Glossary.md#NavMesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 

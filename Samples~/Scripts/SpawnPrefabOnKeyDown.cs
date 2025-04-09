@@ -10,10 +10,10 @@ namespace Unity.AI.Navigation.Samples
     {
         [SerializeField]
         GameObject prefab;
-        
+
         [SerializeField]
         KeyCode keyCode;
-        
+
         [SerializeField]
         Transform spawnedPrefabsHolder;
 

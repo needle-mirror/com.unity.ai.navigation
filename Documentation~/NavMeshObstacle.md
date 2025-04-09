@@ -2,7 +2,7 @@
 
 The NavMesh Obstacle component allows you to define obstacles that [NavMesh Agents](./AboutAgents.md) should avoid as they navigate the world (for example, barrels or crates controlled by the physics system). It contains properties that allow you to define the size, shape, and behavior of the obstacle.
 
-To use the NavMesh component you need to add it to a game object as follows: 
+To use the NavMesh component you need to add it to a game object as follows:
 1. Select the GameObject you want to use as an obstacle.
 2. In the Inspector select **Add Component**, then select **Navigation** &gt; **NavMesh Obstacle**. <br/> The NavMesh Obstacle component is displayed in the Inspector window.
 
@@ -65,7 +65,7 @@ The following table describes the properties available in the NavMesh Obstacle c
     <tr>
       <td><strong>Carve Only Stationary</strong></td>
       <td> Specify when the obstacle is carved. <br/> This property is available only when <strong>Carve</strong> is selected.</td>
-    </tr>    
+    </tr>
   </tbody>
 </table>
 

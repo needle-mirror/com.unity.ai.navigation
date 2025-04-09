@@ -26,6 +26,6 @@ The following table describes the main topics of the AI Navigation package docum
     - [A Deeper Look at Enemies](https://learn.unity.com/tutorial/3d-game-kit-walkthrough?uv=2020.3&projectId=5c514897edbc2a001fd5bdd0#5c7f8528edbc2a002053b753)
     - [Decorating in 3D Game Kit](https://learn.unity.com/tutorial/quick-start?uv=2020.3&projectId=5c514897edbc2a001fd5bdd0#5c7f8528edbc2a002053b746)
 - [Unity Discussions](https://discussions.unity.com/tag/navigation) - Navigation topics on the Unity forums
-- [Unity Knowledge Base](https://support.unity3d.com/hc/en-us) 
+- [Unity Knowledge Base](https://support.unity3d.com/hc/en-us)
 
 [1]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."

@@ -93,7 +93,7 @@ public class LocomotionSimpleAgent : MonoBehaviour {
         // Don’t update position automatically
         agent.updatePosition = false;
     }
-    
+
     void Update ()
     {
         Vector3 worldDeltaPosition = agent.nextPosition - transform.position;

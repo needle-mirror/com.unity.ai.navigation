@@ -2,7 +2,7 @@
 
 Use the NavMesh Modifier component to adjust the behavior of a [GameObject][1] when the [NavMesh][2] is baked at runtime. The NavMesh Modifier component affects the NavMesh during the generation process only. This means the NavMesh is updated to reflect any changes to NavMesh Modifier components when you bake the NavMesh. Use the available properties to specify changes in behavior and any limits to those changes.
 
-To use the NavMesh Modifier component, add it to a GameObject as follows: 
+To use the NavMesh Modifier component, add it to a GameObject as follows:
 1. Select the GameObject whose effect on the NavMesh you want to modify.
 2. In the Inspector, select **Add Component**, then select **Navigation** &gt; **NavMesh Modifier**. <br/> The NavMesh Modifier component is displayed in the Inspector window.
 
@@ -11,7 +11,7 @@ The NavMesh Modifier can also affect the NavMesh generation process hierarchical
 To apply the NavMesh Modifier hierarchically, select the **Apply To Children** property.
 
 > [!Note]
-> The NavMesh Modifier component replaces the legacy Navigation Static setting which you could enable from the Objects tab of the Navigation window and the Static flags dropdown on the GameObject. The NavMesh Modifier component is available for baking at runtime, whereas the Navigation Static flags were available in the Editor only. 
+> The NavMesh Modifier component replaces the legacy Navigation Static setting which you could enable from the Objects tab of the Navigation window and the Static flags dropdown on the GameObject. The NavMesh Modifier component is available for baking at runtime, whereas the Navigation Static flags were available in the Editor only.
 
 The following table describes the properties available in the NavMesh Modifier component.
 

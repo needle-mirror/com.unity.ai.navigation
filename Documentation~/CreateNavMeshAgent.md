@@ -20,14 +20,14 @@ The **NavMesh Agent** component handles both the pathfinding and the movement co
     // MoveTo.cs
     using UnityEngine;
     using UnityEngine.AI;
-    
+
     public class MoveTo : MonoBehaviour {
-       
+
        public Transform goal;
-       
+
        void Start () {
           NavMeshAgent agent = GetComponent<NavMeshAgent>();
-          agent.destination = goal.position; 
+          agent.destination = goal.position;
        }
     }
 ```
@@ -56,6 +56,6 @@ To sum it up, in your script, you will need to get a reference to the NavMesh Ag
 
 [2]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
 
-[3]: ./Glossary.md#scripts "A piece of code that allows you to create your own Components, trigger game events, modify Component properties over time and respond to user input in any way you like." 
+[3]: ./Glossary.md#scripts "A piece of code that allows you to create your own Components, trigger game events, modify Component properties over time and respond to user input in any way you like."
 
 [4]: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-destination.html "Script reference for the NavMeshAgent destination property."

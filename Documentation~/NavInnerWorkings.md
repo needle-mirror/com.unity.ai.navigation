@@ -74,14 +74,14 @@ The connections between the NavMesh polygons are described using links inside th
 
 You can annotate these actions with the **NavMesh Link** component, which tells the pathfinder that a route exists through the specified link. Your code can later access this link and perform the special action as the agent follows the path.
 
-## About Voxels 
-  
-The NavMesh bake process uses voxelization to build the NavMesh from arbitrary level geometry. The algorithm first [rasterizes](./Glossary.md#rasterization) the scene into voxels, then it extracts the walkable surfaces, then finally, turns the walkable surfaces into a navigation mesh. Voxels are the cells in a regular 3D grid where the scene geometry overlaps with that grid. The grid cells have a width and a length of [**Voxel Size**](./NavMeshSurface.md#advanced-settings) and a height that is half of that width.   
+## About Voxels
 
-To increase the accuracy of the resulting NavMesh shape, reduce the **Voxel Size** so that the 3D grid can rasterize finer details from the scene geometry. The time it takes to process the scene geometry is proportional to the number of voxels that the geometry occupies. When the NavMesh Surface uses a small voxel size, it generally creates the NavMesh more slowly than when it uses a larger voxel size. If you want to create the NavMesh faster, and you can no longer reduce the number of [scene objects](./NavMeshSurface.md#object-collection) to process, you can increase the voxel size. With that modification, the resulting NavMesh matches the scene geometry with lower accuracy, both at the edges around obstacles and in the elevation relative to the ground. 
-  
+The NavMesh bake process uses voxelization to build the NavMesh from arbitrary level geometry. The algorithm first [rasterizes](./Glossary.md#rasterization) the scene into voxels, then it extracts the walkable surfaces, then finally, turns the walkable surfaces into a navigation mesh. Voxels are the cells in a regular 3D grid where the scene geometry overlaps with that grid. The grid cells have a width and a length of [**Voxel Size**](./NavMeshSurface.md#advanced-settings) and a height that is half of that width.
+
+To increase the accuracy of the resulting NavMesh shape, reduce the **Voxel Size** so that the 3D grid can rasterize finer details from the scene geometry. The time it takes to process the scene geometry is proportional to the number of voxels that the geometry occupies. When the NavMesh Surface uses a small voxel size, it generally creates the NavMesh more slowly than when it uses a larger voxel size. If you want to create the NavMesh faster, and you can no longer reduce the number of [scene objects](./NavMeshSurface.md#object-collection) to process, you can increase the voxel size. With that modification, the resulting NavMesh matches the scene geometry with lower accuracy, both at the edges around obstacles and in the elevation relative to the ground.
+
 To extend the NavMesh Surface through narrow passages, such as doors, and to maintain a quick baking time, choose the voxel size such that 3 voxels fit one Agent radius (6 per diameter). The **NavMesh Surface** uses this size by default. For big open areas, using 1 or 2 voxels per radius speeds up baking. Tight indoor spots are better suited to smaller voxels, for example 4 to 6 voxels per radius. More than 8 voxels per radius does not usually provide much additional benefit.
- 
+
 [1]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
 
 [2]: ./Glossary.md#collision "A collision occurs when the physics engine detects that the colliders of two GameObjects make contact or overlap, when at least one has a Rigidbody component and is in motion."

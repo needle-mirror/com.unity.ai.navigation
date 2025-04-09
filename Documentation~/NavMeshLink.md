@@ -1,13 +1,13 @@
 # NavMesh Link component reference
 
-Use the NavMesh Link component to connect different NavMeshes built for the same [agent type](./NavigationWindow.md#agents-tab). The link can be a line from one point to another (no width), or a span (with width). If the link is a span (with width), the Agent uses the nearest location along the entry edge to cross the link. For example, you can use the **NavMesh Link** component to connect a NavMesh that represents a building’s interior to a NavMesh that represents the building’s exterior. You can't overlap separate NavMeshes to create a link between them. 
+Use the NavMesh Link component to connect different NavMeshes built for the same [agent type](./NavigationWindow.md#agents-tab). The link can be a line from one point to another (no width), or a span (with width). If the link is a span (with width), the Agent uses the nearest location along the entry edge to cross the link. For example, you can use the **NavMesh Link** component to connect a NavMesh that represents a building’s interior to a NavMesh that represents the building’s exterior. You can't overlap separate NavMeshes to create a link between them.
 
 To use the NavMesh Link you can either add it to your scene as a GameObject or add it to an existing GameObject as a component.
 
 To add a NavMesh Link to your scene as a GameObject, do the following:
 - From the main menu go to **GameObject** > **AI** > **NavMesh Link**.<br/> The **NavMesh Link** component is displayed in the **Inspector** window.
 
-To add the NavMesh Link component to an existing GameObject, do the following: 
+To add the NavMesh Link component to an existing GameObject, do the following:
 1. Select the GameObject you want to add the component to.
 2. In the Inspector select **Add Component**, then select **Navigation** &gt; **NavMesh Link**. <br/> The **NavMesh Link** component is displayed in the **Inspector** window.
 
@@ -92,8 +92,8 @@ The following table describes the properties available in the NavMesh Link compo
   </tbody>
 </table>
 
-To adjust the ends of the link directly from the scene view you can drag the yellow handler gizmos at each end. A yellow cube represents the **Point** position for that end. In the opposite arrangement where the link references an object, a yellow sphere represents the **Transform** position of the referenced object. If you move the yellow sphere, the referenced object moves along to the same position.  
-To adjust the width of the link you can drag the orange dot handler gizmos placed on the sides of the link, at one third of the distance from the start to the end.  
+To adjust the ends of the link directly from the scene view you can drag the yellow handler gizmos at each end. A yellow cube represents the **Point** position for that end. In the opposite arrangement where the link references an object, a yellow sphere represents the **Transform** position of the referenced object. If you move the yellow sphere, the referenced object moves along to the same position.
+To adjust the width of the link you can drag the orange dot handler gizmos placed on the sides of the link, at one third of the distance from the start to the end.
 To display the handles, enable the NavMesh Link gizmo and select the GameObject. For more information on gizmos, refer to [Gizmos menu](https://docs.unity3d.com/6000.0/Documentation/Manual/GizmosMenu.html).
 
 ## Additional resources

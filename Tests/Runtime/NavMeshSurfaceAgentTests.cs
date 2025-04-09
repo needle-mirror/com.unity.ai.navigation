@@ -64,10 +64,10 @@ namespace Unity.AI.Navigation.Tests
         {
             m_Surface.agentTypeID = 1234;
             m_Surface.BuildNavMesh();
-    
+
             m_Agent = new GameObject("Agent").AddComponent<NavMeshAgent>();
             Assert.IsFalse(m_Agent.isOnNavMesh);
-    
+
             m_Agent.agentTypeID = 1234;
             Assert.IsTrue(m_Agent.isOnNavMesh);
         }

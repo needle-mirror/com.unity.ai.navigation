@@ -249,7 +249,7 @@ namespace Unity.AI.Navigation.Editor
             // Add padding to guarantee a minimum separation between labels and checkboxes
             toggle.labelElement.style.paddingRight = 20;
 
-            // Look for the checkbox container and make it align the checkbox to the right (so that all checkboxes are justified) 
+            // Look for the checkbox container and make it align the checkbox to the right (so that all checkboxes are justified)
             foreach (VisualElement child in toggle.Children())
             {
                 if (child != toggle.labelElement)
@@ -323,7 +323,7 @@ namespace Unity.AI.Navigation.Editor
         {
             if (m_VisualizationDisabledHelpBox == null)
                 return;
-            
+
             if (enabled)
             {
                 if (m_VisualizationDisabledHelpBox.visible)

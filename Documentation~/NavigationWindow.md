@@ -6,7 +6,7 @@ To get to the Navigation window, in the main menu go to **Window** &gt; **AI** &
 
 ## Agents tab
 The Agents tab contains properties that allow you to define the type of agents that you use in your scenes.
-  
+
 | **Property**        | **Description**           |
 | :------------------ | :------------------------ |
 | **Agent Types**     | Select an agent type to modify. <br/> Click the "+" icon to add an agent type. <br/> Click the "-" icon to remove the currently selected agent type. |
@@ -25,14 +25,14 @@ The following table describes the properties that define the limits of this agen
 | **Jump Distance**   | Specify the maximum distance of jump-across links for this agent type. |
 
 ## Areas tab
-The Areas tab contains properties that allow you to specify how difficult it is to walk across the different area types used in your scenes. There are 29 custom area types, and 3 built-in area types: 
+The Areas tab contains properties that allow you to specify how difficult it is to walk across the different area types used in your scenes. There are 29 custom area types, and 3 built-in area types:
 
 - **Walkable** is a generic area type which specifies that the area can be walked on.
 - **Not Walkable** is a generic area type which prevents navigation. It is useful for cases where you want to mark a certain object to be an obstacle, but you don't want to put a NavMesh on top of it.
 - **Jump** is an area type that is assigned to all auto-generated links that connect NavMeshes.
 
 The following table describes the properties available on the Areas tab.
-  
+
 | **Property**    | **Description**           |
 | :-------------- | :------------------------ |
 | **Name**        | Specify a name for the area type. |
@@ -41,4 +41,4 @@ The following table describes the properties available on the Areas tab.
 ## Additional resources
 - [About NavMesh agents](./AboutAgents.md)
 - [Create a NavMesh agent](./CreateNavMeshAgent.md)
-- [Navigation Areas and costs](./AreasAndCosts.md) 
+- [Navigation Areas and costs](./AreasAndCosts.md)

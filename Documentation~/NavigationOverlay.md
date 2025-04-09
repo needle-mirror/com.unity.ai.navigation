@@ -1,12 +1,12 @@
-# AI Navigation overlay reference 
-  
+# AI Navigation overlay reference
+
 The **AI Navigation** overlay allows you to control the display of NavMesh surfaces, agents, and GameObjects in the Scene view. You can use it to help you debug any issues with AI Navigation and pathfinding.
-  
+
 Use the [Overlay Menu](https://docs.unity3d.com/Manual/display-and-hide-overlay.html) to show or hide the **AI Navigation** overlay. It docks to the lower right corner of the Scene view by default. To [reposition](https://docs.unity3d.com/Manual/position-overlay.html) the overlay, click and drag its handle.
-  
+
 ## Surfaces
 This section controls the way [NavMesh Surface](./NavMeshSurface.md) instances are displayed. The following table describes the controls available in the Surfaces section of the overlay.
-  
+
 | **Control**             | **Description**           |
 | :---------------------- | :------------------------ |
 | **Show Only Selected**  | Display only the surfaces part of the current scene selection hierarchy.<br/> You can set the opacity of the selected and non-selected surfaces in the Preferences window. For more details, refer to [AI Navigation preferences](./NavEditorPreferences.md). |
@@ -14,21 +14,21 @@ This section controls the way [NavMesh Surface](./NavMeshSurface.md) instances a
 | **Show HeightMesh**     | Display [**HeightMeshes**](./HeightMesh.md) (surface precise elevation information) for the relevant surfaces. |
 
 ## Agents
-This section controls the displayed information for the currently selected [NavMesh Agents](./NavMeshAgent.md). The following table describes the controls available in the Agents section of the overlay.      
-  
+This section controls the displayed information for the currently selected [NavMesh Agents](./NavMeshAgent.md). The following table describes the controls available in the Agents section of the overlay.
+
 | **Control**               | **Description**           |
 | :------------------------ | :------------------------ |
 | **Show Path Polygons**    | Display the NavMesh polygons part of the agent's path in a darker color. |
 | **Show Path Query Nodes** | Display the path nodes explored during the pathfinding query in yellow. |
 | **Show Neighbors**        | Display the collision avoidance neighbors (dynamic obstacles) relative to the agent.  |
 | **Show Walls**            | Display the collision avoidance walls (static obstacles) for an agent.   |
-| **Show Avoidance**        | Show the different positions sampled during the collision avoidance process.  |  
+| **Show Avoidance**        | Show the different positions sampled during the collision avoidance process.  |
 
 ## Obstacles
 This section controls the displayed information for the currently selected [NavMesh Obstacles](./NavMeshObstacle.md). The following table describes the controls available in the Obstacles section of the overlay.
- 
+
 | **Control**          | **Description**           |
-| :------------------- | :-------------------------| 
+| :------------------- | :-------------------------|
 | **Show Carve Hull**  | Display the convex shape that is used to carve the NavMesh. |
 
 ## Additional resources

@@ -67,7 +67,7 @@ namespace Unity.AI.Navigation
 #if UNITY_EDITOR
         int m_LastArea;
 #endif
-        
+
         /// <summary> Gets or sets the type of agent that can use the link. </summary>
         public int agentTypeID
         {
@@ -478,7 +478,7 @@ namespace Unity.AI.Navigation
             {
                 AddTracking(this);
             }
-            
+
             m_LastArea = m_Area;
         }
         void Reset()

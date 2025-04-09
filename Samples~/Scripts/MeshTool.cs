@@ -5,24 +5,24 @@ using UnityEngine.AI;
 namespace Unity.AI.Navigation.Samples
 {
     /// <summary>
-    /// Manipulation tool for displacing the vertices in a list of meshes 
+    /// Manipulation tool for displacing the vertices in a list of meshes
     /// </summary>
     [DefaultExecutionOrder(-101)]
     public class MeshTool : MonoBehaviour
     {
         NavMeshSurface m_Surface;
-        
+
         public enum ExtrudeMethod
         {
             Vertical,
             MeshNormal
         }
-    
+
         public List<MeshFilter> m_Filters = new List<MeshFilter>();
         public float m_Radius = 1.5f;
         public float m_Power = 2.0f;
         public ExtrudeMethod m_Method = ExtrudeMethod.Vertical;
-    
+
         RaycastHit m_HitInfo = new RaycastHit();
         AsyncOperation m_LastNavMeshUpdate;
 
@@ -38,7 +38,7 @@ namespace Unity.AI.Navigation.Samples
                 m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
             }
         }
-    
+
         void Update()
         {
             var ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
@@ -55,7 +55,7 @@ namespace Unity.AI.Navigation.Samples
                         if (m_LastNavMeshUpdate.isDone)
                             m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
                     }
-                        
+
                 }
                 else if (Input.GetMouseButton(1) || (Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift)))
                 {
@@ -65,36 +65,36 @@ namespace Unity.AI.Navigation.Samples
                         if (m_LastNavMeshUpdate.isDone)
                             m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
                     }
-                } 
+                }
                 else if(Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Space))
                 {
                     if (m_Surface != null)
                     {
                         if (!m_LastNavMeshUpdate.isDone)
                             NavMeshBuilder.Cancel(m_Surface.navMeshData);
-                        
+
                         m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
                     }
                 }
             }
         }
-    
+
         void ModifyMesh(Vector3 displacement, Vector3 center)
         {
             foreach (var filter in m_Filters)
             {
                 Mesh mesh = filter.mesh;
                 Vector3[] vertices = mesh.vertices;
-    
+
                 for (int i = 0; i < vertices.Length; ++i)
                 {
                     Vector3 v = filter.transform.TransformPoint(vertices[i]);
                     vertices[i] = vertices[i] + displacement * Gaussian(v, center, m_Radius);
                 }
-    
+
                 mesh.vertices = vertices;
                 mesh.RecalculateBounds();
-    
+
                 var col = filter.GetComponent<MeshCollider>();
                 if (col != null)
                 {
@@ -105,7 +105,7 @@ namespace Unity.AI.Navigation.Samples
                 }
             }
         }
-    
+
         static float Gaussian(Vector3 pos, Vector3 mean, float dev)
         {
             float x = pos.x - mean.x;

@@ -30,11 +30,11 @@ To convert your project do the following:
 2. In the **Navigation Updater** window, select which kind of data to convert.
 2. In the **Navigation Updater** window, verify that **NavMesh Scene Converter** is selected.
 4. Select the data you want to convert.
-5. Click **Convert Assets** to complete the conversion. 
+5. Click **Convert Assets** to complete the conversion.
 
-## Create new agent types 
+## Create new agent types
 
-If the NavMeshes in different scenes are baked with different agent settings then you need to create new agent types to match those settings. 
+If the NavMeshes in different scenes are baked with different agent settings then you need to create new agent types to match those settings.
 
 To create the agent types do the following:
 
@@ -43,7 +43,7 @@ To create the agent types do the following:
 3. Create new entries and specify the relevant settings.
 
 ### Assign new agent types
-When you have created the new agent types you then need to assign them as follows: 
+When you have created the new agent types you then need to assign them as follows:
 
 - Assign the newly created agent types to their respective **NavMesh Surfaces** in the Navigation GameObject created for that scene.
 - Assign the agent types to the **NavMesh Agents** intended to use that NavMesh.
@@ -72,7 +72,7 @@ To convert **OffMesh Link** components to **NavMesh Link** components do the fol
 2. In the **Navigation Updater** window, verify that **OffMesh Link Converter** is checked.
 3. Select **Initialize Converters** to detect and display the prefabs and scenes that are eligible for conversion.
 4. Deselect any items you do not want to convert.
-5. Select **Convert Assets** to complete the conversion. 
+5. Select **Convert Assets** to complete the conversion.
 
 Do note that the upgrade utility will not replace `OffMeshLink` with `NavMeshLink` in scripts. Refer to the following section for information on how to perform this upgrade manually.
 

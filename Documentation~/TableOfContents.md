@@ -29,5 +29,5 @@
     * [NavMesh Obstacle component](./NavMeshObstacle.md)
     * [NavMesh Surface component](./NavMeshSurface.md)
     * [OffMesh Link component (deprecated)](./OffMeshLink.md)
-* [Navigation Samples](./Samples.md) 
+* [Navigation Samples](./Samples.md)
 * [Glossary](./Glossary.md)

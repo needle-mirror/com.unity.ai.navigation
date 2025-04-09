@@ -10,6 +10,6 @@ The main updates in this release include:
 ## Updated
 
 * The `NavMeshLink.costModifier` property is now a float.
-* The `OffMeshLink` component has been deprecated. You can no longer add it to GameObjects from the **Add Component** menu. Instead, you can now use a `NavMeshLink` component just as you would have used an `OffMeshLink` component in previous versions.  
+* The `OffMeshLink` component has been deprecated. You can no longer add it to GameObjects from the **Add Component** menu. Instead, you can now use a `NavMeshLink` component just as you would have used an `OffMeshLink` component in previous versions.
 
 For a full list of changes and updates in this version, see the AI Navigation package changelog.

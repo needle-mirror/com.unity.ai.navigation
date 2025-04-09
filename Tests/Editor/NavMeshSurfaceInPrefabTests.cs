@@ -246,6 +246,8 @@ namespace Unity.AI.Navigation.Editor.Tests
             Assume.That(prefabStage, Is.Not.Null);
             Assume.That(prefabStage.prefabContentsRoot, Is.Not.Null);
 
+            prefabStage.prefabContentsRoot.name = "\"Invalid/File?Name<>\\\\:*|\\\"Example\"";
+
             var prefabSurface = prefabStage.prefabContentsRoot.GetComponent<NavMeshSurface>();
             var initialPrefabNavMeshData = prefabSurface.navMeshData;
             yield return TestUtility.BakeNavMeshAsync(prefabSurface, k_RedArea);
@@ -648,7 +650,7 @@ namespace Unity.AI.Navigation.Editor.Tests
 
             yield return TestUtility.BakeNavMeshAsync(prefabSurface, k_OrangeArea);
 
-            // Assert.IsNull would return a wrong result here (e.g. Expected: null  But was: <null>) 
+            // Assert.IsNull would return a wrong result here (e.g. Expected: null  But was: <null>)
             Assert.IsTrue(unsavedRebakedNavMeshData == null,"An unsaved NavMeshData should not exist after a re-bake.");
             Assert.IsTrue(prefabSurface.navMeshData != null, "NavMeshSurface must have NavMeshData after baking.");
 
