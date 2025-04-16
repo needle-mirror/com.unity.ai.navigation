@@ -495,8 +495,8 @@ namespace Unity.AI.Navigation.Editor.Converter
                 ""baseScore"": 9999
                 }");
 
-                
-                
+
+
                 // Import the search index
                 AssetDatabase.ImportAsset(indexPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.DontDownloadFromCacheServer);
 

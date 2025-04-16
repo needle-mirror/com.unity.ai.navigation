@@ -16,6 +16,6 @@ The following table describes the main topics of the AI Navigation package docum
 
 ## Additional resources
 - [Navigation tutorial](http://unity3d.com/learn/tutorials/topics/navigation)
-- [Unity Knowledge Base](https://support.unity3d.com/hc/en-us) 
+- [Unity Knowledge Base](https://support.unity3d.com/hc/en-us)
 
 [1]: https://docs.unity3d.com/Manual/CreatingScenes.html "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."

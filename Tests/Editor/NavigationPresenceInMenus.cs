@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -23,7 +23,9 @@ namespace Unity.AI.Navigation.Editor.Tests
         {
             yield return "Component/Navigation/Nav Mesh Agent";
             yield return "Component/Navigation/Nav Mesh Obstacle";
+#if !UNITY_2023_3_OR_NEWER
             yield return "Component/Navigation/Off Mesh Link";
+#endif
             yield return "Component/Navigation/NavMeshSurface";
             yield return "Component/Navigation/NavMeshModifierVolume";
             yield return "Component/Navigation/NavMeshModifier";

@@ -13,8 +13,8 @@ Typically you set the size of the agent with the same values in both places. How
 
 ## Additional resources
 
-- [Create a NavMesh Agent](./CreateNavMeshAgent.md) 
+- [Create a NavMesh Agent](./CreateNavMeshAgent.md)
 - [NavMesh Agent component reference](NavMeshAgent.md)
-- [NavMesh Agent scripting reference](ScriptRef:AI.NavMeshAgent) 
+- [NavMesh Agent scripting reference](ScriptRef:AI.NavMeshAgent)
 
 [1]: https://docs.unity3d.com/Manual/GameObjects.html "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more."

@@ -19,9 +19,9 @@ When **Carve** is enabled, the obstacle carves a hole in the NavMesh when statio
 Unity treats the NavMesh Obstacle as moving when it has moved more than the distance set by the **Carve** > **Move Threshold**. When the NavMesh Obstacle moves, the carved hole also moves. However, to reduce CPU overhead, the hole is only recalculated when necessary. The result of this calculation is available in the next frame update. The recalculation logic has two options:
 
 - Only carve when the NavMesh Obstacle is stationary
-    
+
 - Carve when the NavMesh Obstacle has moved
-    
+
 
 ### Only carve when the NavMesh Obstacle is stationary
 
@@ -38,7 +38,7 @@ To enable this mode, untick the NavMesh Obstacle component’s **Carve Only Stat
 ## Additional Resources
 
 1. [Creating a NavMesh Obstacle](./CreateNavMeshObstacle.md) - Guidance on creating NavMesh Obstacles.
-    
+
 2. [Inner Workings of the Navigation System](./NavInnerWorkings.md) - Learn more about how NavMesh Obstacles are used as part of navigation.
-    
+
 3. [NavMesh Obstacle scripting reference](https://docs.unity3d.com/ScriptReference/AI.NavMeshObstacle.html) - Full description of the NavMesh Obstacle scripting API.

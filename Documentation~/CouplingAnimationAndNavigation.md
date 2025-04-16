@@ -6,9 +6,9 @@ We’ll be using Unity’s built-in systems for animation and navigation along w
 
 It’s assumed you’re familiar with the basics of Unity and the Mecanim animation system.
 
-An example project is available — so you don’t have add [**scripts**][1] or set up animations and animation controller from scratch:
+An example project is available — so you don’t have to add [**scripts**][1] or set up animations and animation controller from scratch:
 
-- [NavigationAnimation\_53.zip](https://docs.unity3d.com/uploads/Examples/NavigationAnimation_53.zip) _Works with Unity 5.3+_
+- [NavigationAnimation\_53.zip](https://docs.unity3d.com/2021.3/Documentation/uploads/Examples/NavigationAnimation_53.zip) _Works with Unity 5.3+_
 
 ## Creating the Animation Controller
 
@@ -93,7 +93,7 @@ public class LocomotionSimpleAgent : MonoBehaviour {
         // Don’t update position automatically
         agent.updatePosition = false;
     }
-    
+
     void Update ()
     {
         Vector3 worldDeltaPosition = agent.nextPosition - transform.position;

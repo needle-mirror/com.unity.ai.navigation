@@ -9,10 +9,13 @@ namespace Unity.AI.Navigation.Editor
     public static class NavMeshComponentsGUIUtility
     {
         internal const string k_PackageEditorResourcesFolder = "Packages/com.unity.ai.navigation/EditorResources/";
-        
-        /// <summary> Displays a GUI element for selecting the area type used by a <see cref="NavMeshSurface"/>, <see cref="NavMeshLink"/>, <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/>. </summary>
-        /// <param name="labelName"></param>
-        /// <param name="areaProperty"></param>
+
+        /// <summary> Displays a GUI element for selecting the area type used by a <see cref="NavMeshSurface"/>, <see cref="NavMeshLink"/>, <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/>.</summary>
+        /// <remarks> The dropdown menu lists all of the area types defined in the <a href="../manual/NavigationWindow.html#areas-tab">Areas tab</a> of the Navigation window. </remarks>
+        /// <param name="labelName">The label for the field.</param>
+        /// <param name="areaProperty">The serialized property that this GUI element displays and modifies. It represents a NavMesh <see cref="NavMeshModifier.area">area type</see> and it needs to store values of type <see cref="SerializedPropertyType.Integer"/>.</param>
+        /// <seealso cref="NavMeshSurface.defaultArea">NavMeshSurface.defaultArea</seealso>
+        /// <seealso cref="NavMeshBuildSource.area">NavMeshBuildSource.area</seealso>
         public static void AreaPopup(string labelName, SerializedProperty areaProperty)
         {
             var areaIndex = -1;
@@ -44,8 +47,13 @@ namespace Unity.AI.Navigation.Editor
         }
 
         /// <summary> Displays a GUI element for selecting the agent type used by a <see cref="NavMeshSurface"/> or <see cref="NavMeshLink"/>. </summary>
-        /// <param name="labelName"></param>
-        /// <param name="agentTypeID"></param>
+        /// <remarks> The dropdown menu lists all of the agent types defined in the <a href="../manual/NavigationWindow.html#agents-tab">Agents tab</a> of the Navigation window. </remarks>
+        /// <param name="labelName">The label for the field.</param>
+        /// <param name="agentTypeID">The serialized property that this GUI element displays and modifies. It stores an <see cref="SerializedPropertyType.Integer"/> value that represents a NavMesh <see cref="NavMeshSurface.agentTypeID">agent type ID</see>.<br/>
+        /// The selected item is displayed as the <a href="https://docs.unity3d.com/ScriptReference/AI.NavMesh.GetSettingsNameFromID.html">name</a> that corresponds to the stored ID.</param>
+        /// <seealso href="https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent-agentTypeID.html">NavMeshAgent.agentTypeID</seealso>
+        /// <seealso href="https://docs.unity3d.com/ScriptReference/AI.NavMeshBuildSettings-agentTypeID.html">NavMeshBuildSettings.agentTypeID</seealso>
+        /// <seealso href="https://docs.unity3d.com/ScriptReference/AI.NavMesh.GetSettingsNameFromID.html">NavMesh.GetSettingsNameFromID</seealso>
         public static void AgentTypePopup(string labelName, SerializedProperty agentTypeID)
         {
             var index = -1;
@@ -93,9 +101,13 @@ namespace Unity.AI.Navigation.Editor
         // It is used to describe which agents modifiers apply to.
         // There is a special case of "None" which is an empty array.
         // There is a special case of "All" which is an array of length 1, and value of -1.
-        /// <summary> Displays a GUI element for selecting multiple agent types for which a <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/> can influence the NavMesh. </summary>
-        /// <param name="labelName"></param>
-        /// <param name="agentMask"></param>
+        /// <summary> Displays a GUI element for selecting multiple agent types for which a <see cref="NavMeshModifier"/> or <see cref="NavMeshModifierVolume"/> can influence the NavMesh.</summary>
+        /// <remarks> The dropdown menu lists all of the agent types defined in the <a href="../manual/NavigationWindow.html#agents-tab">Agents tab</a> of the Navigation window. </remarks>
+        /// <param name="labelName">The label for the field.</param>
+        /// <param name="agentMask">The serialized property that holds the <a href="https://docs.unity3d.com/ScriptReference/SerializedProperty-isArray.html">array</a> of NavMesh <see cref="NavMeshSurface.agentTypeID">agent type</see> values that are selected from the items defined in the <a href="../manual/NavigationWindow.html#agents-tab">Agents tab</a> of the Navigation window. The items are stored as <see cref="SerializedPropertyType.Integer"/> <see cref="NavMeshBuildSettings.agentTypeID">ID values</see> and are displayed as their corresponding <a href="https://docs.unity3d.com/ScriptReference/AI.NavMesh.GetSettingsNameFromID.html">names</a>.</param>
+        /// <seealso href="https://docs.unity3d.com/ScriptReference/AI.NavMesh.GetSettingsByIndex.html">NavMesh.GetSettingsByIndex</seealso>
+        /// <seealso href="Unity.AI.Navigation.NavMeshModifier.AffectsAgentType.html">NavMeshModifier.AffectsAgentType</seealso>
+        /// <seealso href="Unity.AI.Navigation.NavMeshModifierVolume.AffectsAgentType.html">NavMeshModifierVolume.AffectsAgentType</seealso>
         public static void AgentMaskPopup(string labelName, SerializedProperty agentMask)
         {
             // Contents of the dropdown box.
@@ -141,10 +153,10 @@ namespace Unity.AI.Navigation.Editor
             EditorGUI.EndProperty();
         }
 
-        /// <summary> Creates a new GameObject as a child of another one and selects it immediately. </summary>
-        /// <param name="suggestedName"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
+        /// <summary> Creates and selects a new GameObject as a child of another GameObject. </summary>
+        /// <param name="suggestedName">The name given to the created child GameObject. If necessary, this method <a href="https://docs.unity3d.com/ScriptReference/GameObjectUtility.GetUniqueNameForSibling.html">modifies</a> the name in order to distinguish it from the other children of the same parent object.</param>
+        /// <param name="parent">The GameObject to which the created GameObject is attached as a child object.</param>
+        /// <returns>A new GameObject that is a child of the specified parent GameObject.</returns>
         public static GameObject CreateAndSelectGameObject(string suggestedName, GameObject parent)
         {
             var parentTransform = parent != null ? parent.transform : null;

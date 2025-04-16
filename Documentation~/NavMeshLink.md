@@ -12,7 +12,7 @@ To use the NavMesh Link component, navigate to **GameObject > AI > NavMesh Link*
 
 ## Parameters
 | **Property**                  | **Description**          |
-|:------------------------------|:-------------------------| 
+|:------------------------------|:-------------------------|
 | **Agent Type**                | Specify the Agent type that can use the link.|
 | **Start Point**               | Specify the start point of the link, relative to the GameObject. Defined by XYZ coordinates. |
 | **End Point**                 | Specify the end point of the link, relative to the GameObject. Defined by XYZ coordinates. |
@@ -36,7 +36,7 @@ Note that when connecting NavMesh Surfaces:
 
 * Both the NavMesh Surfaces and the NavMesh Link must have same Agent type.
 
-* The NavMesh Link’s start and end point must only be on one NavMesh Surface - be careful if you have multiple NavMeshes at the same location. 
+* The NavMesh Link’s start and end point must only be on one NavMesh Surface - be careful if you have multiple NavMeshes at the same location.
 
 * If you are loading a second NavMesh Surface and you have unconnected NavMesh Links in the first Scene, check that they do not connect to any unwanted NavMesh Surfaces.
 

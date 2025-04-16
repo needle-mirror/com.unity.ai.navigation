@@ -4,7 +4,7 @@ namespace Unity.AI.Navigation.Samples
 {
     /// <summary>
     /// Enables a behaviour when a rigidbody settles movement
-    /// otherwise disables the behaviour 
+    /// otherwise disables the behaviour
     /// </summary>
     public class EnableIffSleeping : MonoBehaviour
     {

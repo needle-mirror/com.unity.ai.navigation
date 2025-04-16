@@ -252,7 +252,7 @@ namespace Unity.AI.Navigation.Editor
                     allowChangeCost = true;
                     break;
             }
-            
+
             GetAreaListRects(rect, out Rect stripeRect, out Rect labelRect, out Rect nameRect, out Rect costRect);
 
             bool oldEnabled = GUI.enabled;

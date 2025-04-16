@@ -19,10 +19,10 @@ namespace Unity.AI.Navigation
     public enum CollectObjects
     {
         /// <summary> Use all the active objects. </summary>
-        [InspectorName("All Game Objects")] 
+        [InspectorName("All Game Objects")]
         All = 0,
         /// <summary> Use all the active objects that overlap the bounding volume. </summary>
-        [InspectorName("Volume")] 
+        [InspectorName("Volume")]
         Volume = 1,
         /// <summary> Use all the active objects that are children of this GameObject. </summary>
         /// <remarks> This includes the current GameObject and all the children of the children that are active.</remarks>
@@ -85,9 +85,9 @@ namespace Unity.AI.Navigation
 
         [SerializeField]
         float m_VoxelSize;
-        
+
         [SerializeField]
-        float m_MinRegionArea = 2;        
+        float m_MinRegionArea = 2;
 
         [FormerlySerializedAs("m_BakedNavMeshData")]
         [SerializeField]
@@ -142,7 +142,7 @@ namespace Unity.AI.Navigation
         /// <summary> Gets or sets the width of the square voxels that the NavMesh building process uses for sampling the scene geometry. </summary>
         /// <remarks> This value is in world units. Together with <see cref="tileSize"/> it determines the real size of the individual sections that comprise the NavMesh. </remarks>
         public float voxelSize { get { return m_VoxelSize; } set { m_VoxelSize = value; } }
-        
+
         /// <summary> Gets or sets the minimum acceptable surface area of any continuous portion of the NavMesh. </summary>
         /// <remarks> This parameter is used only at the time when the NavMesh is getting built. It allows you to cull away any isolated NavMesh regions that are smaller than this value and that do not straddle or touch a tile boundary. </remarks>
         public float minRegionArea { get { return m_MinRegionArea; } set { m_MinRegionArea = value; } }
@@ -173,12 +173,12 @@ namespace Unity.AI.Navigation
         {
             var settings = NavMesh.GetSettingsByID(m_AgentTypeID);
             var agentRadius = settings.agentTypeID != -1 ? settings.agentRadius : 0f;
-            
+
             var bounds = new Bounds(center, size);
             bounds.Expand(new Vector3(agentRadius, 0, agentRadius));
             return bounds;
         }
-        
+
         void OnEnable()
         {
             Register(this);
@@ -423,7 +423,7 @@ namespace Unity.AI.Navigation
                 else if (m_CollectObjects == CollectObjects.MarkedWithModifier)
                 {
                     UnityEditor.AI.NavMeshBuilder.CollectSourcesInStage(
-                        null, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups, true, gameObject.scene, sources);                    
+                        null, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups, true, gameObject.scene, sources);
                 }
 #else
                 if (m_CollectObjects == CollectObjects.All)
@@ -631,7 +631,7 @@ namespace Unity.AI.Navigation
                     m_TileSize = kMinTileSize;
                 if (m_TileSize > kMaxTileSize)
                     m_TileSize = kMaxTileSize;
-                
+
                 if (m_MinRegionArea < 0)
                     m_MinRegionArea = 0;
             }

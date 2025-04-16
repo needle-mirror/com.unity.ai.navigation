@@ -15,7 +15,7 @@ namespace Unity.AI.Navigation.Samples
 
         NavMeshSurface m_Surface;
         Vector3 m_VolumeSize;
-        
+
         void Awake()
         {
             m_Surface = GetComponent<NavMeshSurface>();
@@ -37,7 +37,7 @@ namespace Unity.AI.Navigation.Samples
         {
             var updatedCenter = QuantizedCenter();
             var updateNavMesh = false;
-            
+
             if (m_Surface.center != updatedCenter)
             {
                 m_Surface.center = updatedCenter;
@@ -53,7 +53,7 @@ namespace Unity.AI.Navigation.Samples
             if (updateNavMesh)
                 m_Surface.UpdateNavMesh(m_Surface.navMeshData);
         }
-    
+
         static Vector3 Quantize(Vector3 v, Vector3 quant)
         {
             float x = quant.x * Mathf.Floor(v.x / quant.x);

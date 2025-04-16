@@ -91,12 +91,9 @@ namespace Unity.AI.Navigation.Editor
             GUILayout.Space(EditorGUIUtility.labelWidth);
             if (GUILayout.Button("Swap"))
             {
-                foreach (NavMeshLink navLink in targets)
-                {
-                    var tmp = navLink.startPoint;
-                    navLink.startPoint = navLink.endPoint;
-                    navLink.endPoint = tmp;
-                }
+                Undo.RecordObjects(targets, L10n.Tr("Swap NavMeshLink start and end"));
+                foreach (NavMeshLink nml in targets)
+                    ReverseDirection(nml);
                 SceneView.RepaintAll();
             }
             if (GUILayout.Button("Align Transform"))
@@ -122,6 +119,11 @@ namespace Unity.AI.Navigation.Editor
             serializedObject.ApplyModifiedProperties();
 
             EditorGUILayout.Space();
+        }
+
+        internal static void ReverseDirection(NavMeshLink navLink)
+        {
+            (navLink.startPoint, navLink.endPoint) = (navLink.endPoint, navLink.startPoint);
         }
 
         static Vector3 CalcLinkRight(NavMeshLink navLink)

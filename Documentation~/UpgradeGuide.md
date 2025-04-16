@@ -28,11 +28,11 @@ To convert your project do the following:
 1. In the NavMesh Updater window, select which kind of data to convert.
 1. Click **Initialize Converters** to detect and display the types of data you selected.
 1. Select the data you want to convert.
-1. Click **Convert Assets** to complete the conversion. 
+1. Click **Convert Assets** to complete the conversion.
 
-## Create new agent types 
+## Create new agent types
 
-If the NavMeshes in different scenes are baked with different agent settings then you need to create new agent types to match those settings. 
+If the NavMeshes in different scenes are baked with different agent settings then you need to create new agent types to match those settings.
 
 To create the agent types do the following:
 
@@ -41,7 +41,7 @@ To create the agent types do the following:
 1. Create new entries and specify the relevant settings.
 
 ### Assign new agent types
-When you have created the new agent types you then need to assign them as follows: 
+When you have created the new agent types you then need to assign them as follows:
 
 - Assign the newly created agent types to their respective NavMeshSurfaces in the Navigation created for that scene.
 - Assign the agent types to the NavMeshAgents intended to use that NavMesh.

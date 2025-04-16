@@ -23,13 +23,13 @@ Note that some of these samples require that the `Packages/manifest.json` file o
 "com.unity.modules.physics": "1.0.0",
 "com.unity.modules.terrain": "1.0.0",
 "com.unity.modules.terrainphysics": "1.0.0"
-```  
-    
+```
+
 # Introduction to NavMesh
-    
+
 The Navigation package allows you to set up pathfinding AI in your Unity project. Two fundamental concepts of pathfinding are (1) agents and (2) world representation.
 
-1. An agent is a game entity that travels autonomously between two points in a scene. In Unity, a GameObject can be turned into a navigation agent by adding a `NavMeshAgent` component to it. 
+1. An agent is a game entity that travels autonomously between two points in a scene. In Unity, a GameObject can be turned into a navigation agent by adding a `NavMeshAgent` component to it.
 
 2. World representation is what allows the pathfinding program of an agent to understand the traversable surfaces of a world. It is a simplification of a 3D world. In Unity, a traversable surface is represented as a mesh of polygons which we refer to as NavMesh.
 
@@ -39,7 +39,7 @@ Whenever there are modifications done to the scene's geometry that can impact th
 
 In order for an agent to move, it must know its destination. In Unity, the destination of a `NavMeshAgent` can be set through code with the `destination` property or the `SetDestination()` method. You can find an example of this in the `ClickToMove` script.
 
-For more information, refer to the [AI Navigation package manual](https://docs.unity3d.com/Packages/com.unity.ai.navigation@latest). 
+For more information, refer to the [AI Navigation package manual](https://docs.unity3d.com/Packages/com.unity.ai.navigation@latest).
 
 # Agent Types
 
@@ -54,6 +54,6 @@ The following agent types are created and used by the samples:
 
     2.  Name: Ogre for Navigation Sample
         Radius: 1.0
-        Height: 2.0 
+        Height: 2.0
         Step Height: 0.4
         Max Slope: 36

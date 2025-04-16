@@ -41,7 +41,7 @@ namespace Unity.AI.Navigation.Editor
 #if NAVMESHCOMPONENTS_SHOW_NAVMESHDATA_REF
         SerializedProperty m_NavMeshData;
 #endif
-        
+
         class Styles
         {
             internal readonly GUIContent m_LayerMask = new GUIContent("Include Layers");
@@ -129,7 +129,7 @@ namespace Unity.AI.Navigation.Editor
 #if UNITY_2022_2_OR_NEWER
             EditorGUILayout.PropertyField(m_GenerateLinks, s_Styles.m_GenerateLinks);
 #endif
-            
+
             EditorGUILayout.PropertyField(m_UseGeometry);
 
             m_CollectObjects.isExpanded = EditorGUILayout.Foldout(m_CollectObjects.isExpanded, "Object Collection");
@@ -137,7 +137,7 @@ namespace Unity.AI.Navigation.Editor
             if (m_CollectObjects.isExpanded)
             {
                 EditorGUI.indentLevel++;
-                
+
                 EditorGUILayout.PropertyField(m_CollectObjects);
                 if ((CollectObjects)m_CollectObjects.enumValueIndex == CollectObjects.Volume)
                 {
@@ -157,7 +157,7 @@ namespace Unity.AI.Navigation.Editor
                 }
 
                 EditorGUILayout.PropertyField(m_LayerMask, s_Styles.m_LayerMask);
-                
+
                 EditorGUI.indentLevel--;
             }
 
@@ -294,7 +294,7 @@ namespace Unity.AI.Navigation.Editor
                     {
                         NavMeshAssetManager.instance.ClearSurfaces(targets);
                         SceneView.RepaintAll();
-                    }    
+                    }
                 }
 
                 if (GUILayout.Button("Bake"))
@@ -303,7 +303,7 @@ namespace Unity.AI.Navigation.Editor
                 }
 
                 GUILayout.EndHorizontal();
-                
+
                 // Inform when selected target is being baked
                 var bakeOperations = NavMeshAssetManager.instance.GetBakeOperations();
                 bool bakeInProgress = bakeOperations.Any(b =>
@@ -313,14 +313,14 @@ namespace Unity.AI.Navigation.Editor
 
                     return b.bakeOperation != null;
                 });
-                
+
                 if (bakeInProgress)
                 {
                     GUILayout.BeginVertical(EditorStyles.helpBox);
-                    
+
                     if (GUILayout.Button("NavMesh baking is in progress.", EditorStyles.linkLabel))
                         Progress.ShowDetails(false);
-                    
+
                     GUILayout.EndHorizontal();
                 }
             }

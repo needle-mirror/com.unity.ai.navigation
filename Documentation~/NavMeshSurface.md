@@ -1,6 +1,6 @@
 # NavMesh Surface
 
-The NavMesh Surface component represents the walkable area for a specific [NavMesh Agent](https://docs.unity3d.com/Manual/class-NavMeshAgent.html) type, and defines a part of the Scene where a NavMesh should be built. 
+The NavMesh Surface component represents the walkable area for a specific [NavMesh Agent](https://docs.unity3d.com/Manual/class-NavMeshAgent.html) type, and defines a part of the Scene where a NavMesh should be built.
 
 To use the NavMesh Surface component, navigate to **GameObject > AI > NavMesh Surface**. This creates an empty GameObject with a NavMesh Surface component attached to it. A Scene can contain multiple NavMesh Surfaces.
 
@@ -19,7 +19,7 @@ You can add the NavMesh Surface component to any GameObject. This is useful for 
 | **Clear**           | |
 | **Bake**            | Bake a NavMesh with the current settings. |
 
-Use the main settings for the NavMesh Surface component to filter the input geometry on a broad scale. Fine tune how Unity treats input geometry on a per-GameObject basis, using the [NavMesh Modifier](NavMeshModifier.md) component. 
+Use the main settings for the NavMesh Surface component to filter the input geometry on a broad scale. Fine tune how Unity treats input geometry on a per-GameObject basis, using the [NavMesh Modifier](NavMeshModifier.md) component.
 
 The baking process automatically excludes GameObjects that have a NavMesh Agent or NavMesh Obstacle. They are dynamic users of the NavMesh, and so do not contribute to NavMesh building.
 

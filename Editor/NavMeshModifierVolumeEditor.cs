@@ -66,7 +66,7 @@ namespace Unity.AI.Navigation.Editor
 
             serializedObject.ApplyModifiedProperties();
         }
-        
+
 #if !UNITY_2022_2_OR_NEWER
         [DrawGizmo(GizmoType.Selected | GizmoType.Active)]
 #else

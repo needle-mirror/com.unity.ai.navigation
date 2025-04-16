@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.6] - 2025-04-16
+### Changed
+* The minimum supported editor version is Unity 2022.3 LTS. Compatibility with Unity 2022.2 is no longer guaranteed going forward.
+
+### Fixed
+* Swapping the start and end points of a NavMeshLink via the Inspector now supports undo and redo.
+* Baking NavMeshSurface no longer fails when the game object name has invalid file name characters.
+
 ## [1.1.5] - 2023-09-28
 ### Fixed
 * Long warning popping up when user starts playmode while editing a prefab that contains NavMesh components ([NAVB-47](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-47))
@@ -30,7 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * The Dungeon scene included in the package samples now uses tile prefabs that contain a `NavMeshSurface` component instead of the `NavMeshPrefabInstance` script.
 * The Drop Plank scene included in the package samples now has a `NavMeshSurface` component and the `NavMeshSurfaceUpdater` script on the geometry, as well as the `DynamicNavMeshObject` script on the Plank prefab for dynamically updating the `NavMesh` when new Planks are instantiated.
 * The offset when instantiating Planks in the Drop Plank scene has been reduced.
-* The Sliding Window Infinite and the Sliding Window Terrain scenes included in the package samples now use the `NavMeshSurfaceVolumeUpdater` script instead of the `LocalNavMeshBuilder` and `NavMeshSourceTag` scripts for dynamically updating the `NavMesh`. 
+* The Sliding Window Infinite and the Sliding Window Terrain scenes included in the package samples now use the `NavMeshSurfaceVolumeUpdater` script instead of the `LocalNavMeshBuilder` and `NavMeshSourceTag` scripts for dynamically updating the `NavMesh`.
 * The Modify Mesh scene included in the package samples now uses a `NavMeshSurface` component on the Mesh Tool for dynamically updating the `NavMesh` instead of the `LocalNavMeshBuilder` and `NavMeshSourceTag` scripts. The `MeshTool` script now uses the `Update()` method of `NavMeshSurface` for updating the `NavMesh` whenever the mesh is modified.
 
 ### Fixed

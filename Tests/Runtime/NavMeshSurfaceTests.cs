@@ -96,13 +96,13 @@ namespace Unity.AI.Navigation.Tests
         }
 
         [Test]
+#if !NMC_CAN_ACCESS_PHYSICS
+        [Ignore("This test requires the com.unity.modules.physics package in order to run. Make sure to reference it in the project.")]
+#endif
         public void CanBuildRenderMeshesAndIgnoreColliders()
         {
 #if NMC_CAN_ACCESS_PHYSICS
             plane.GetComponent<Collider>().enabled = false;
-#else
-        Assert.Inconclusive("This test requires the com.unity.modules.physics package in order to run. Make sure to reference it in the project.");
-#endif
             surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
             surface.BuildNavMesh();
             Assert.IsFalse(HasNavMeshAtOrigin());
@@ -110,6 +110,7 @@ namespace Unity.AI.Navigation.Tests
             surface.useGeometry = NavMeshCollectGeometry.RenderMeshes;
             surface.BuildNavMesh();
             Assert.IsTrue(HasNavMeshAtOrigin());
+#endif
         }
 
         [Test]

@@ -64,7 +64,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         [Test]
         public void Converter_AfterConversion_NavMeshSurfaceIsPresent()
         {
-            var surface = Object.FindAnyObjectByType<NavMeshSurface>();
+            var surface = Object.FindObjectOfType<NavMeshSurface>();
             Assert.IsNotNull(surface, "Unable to find a NavMesh surface, it should have been created by the conversion");
         }
 
@@ -78,7 +78,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         [Test]
         public void Converter_AfterConversion_NoNavigationStaticGameObjects()
         {
-            var gameObjects = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+            var gameObjects = Object.FindObjectsOfType<GameObject>();
             foreach (var gameObject in gameObjects)
             {
 #pragma warning disable 618
@@ -90,7 +90,7 @@ namespace Unity.AI.Navigation.Editor.Tests
         [Test]
         public void Converter_AfterConversion_HeightMeshIsPresent()
         {
-            var surface = Object.FindAnyObjectByType<NavMeshSurface>();
+            var surface = Object.FindObjectOfType<NavMeshSurface>();
             Assume.That(surface, Is.Not.Null, "Unable to find a NavMesh surface, it should have been created by the conversion");
             Assert.IsTrue(surface.buildHeightMesh, "A scene NavMesh built with HeightMesh should be converted to a surface with the buildHeightMesh option enabled");
         }

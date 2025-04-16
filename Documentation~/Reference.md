@@ -1,4 +1,4 @@
-# Navigation user interface 
+# Navigation user interface
 
 The Navigation user interface consists of the Navigation window, AI Navigation overlay, AI Navigation Editor Preferences and several components for building a NavMesh. The NavMesh building components provide you with additional controls that allow you to generate and use NavMeshes at runtime and in the Unity Editor.
 

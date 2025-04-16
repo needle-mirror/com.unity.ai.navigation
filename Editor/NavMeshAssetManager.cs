@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEditor;
 #if !UNITY_2021_2_OR_NEWER
 using UnityEditor.Experimental.SceneManagement;
@@ -11,7 +12,7 @@ using UnityEngine.AI;
 namespace Unity.AI.Navigation.Editor
 {
     /// <summary>
-    /// Manages assets and baking operation of the navmesh 
+    /// Manages assets and baking operation of the NavMesh
     /// </summary>
     public class NavMeshAssetManager : ScriptableSingleton<NavMeshAssetManager>
     {
@@ -69,7 +70,8 @@ namespace Unity.AI.Navigation.Editor
         {
             var targetPath = GetAndEnsureTargetPath(surface);
 
-            var combinedAssetPath = Path.Combine(targetPath, "NavMesh-" + surface.name + ".asset");
+            var uniqueIdentifier = SanitizeAssetName(surface.name);
+            var combinedAssetPath = Path.Combine(targetPath, "NavMesh-" + uniqueIdentifier + ".asset");
             combinedAssetPath = AssetDatabase.GenerateUniqueAssetPath(combinedAssetPath);
             AssetDatabase.CreateAsset(surface.navMeshData, combinedAssetPath);
         }
@@ -135,7 +137,7 @@ namespace Unity.AI.Navigation.Editor
                     NavMeshBuilder.Cancel(oper.bakeData);
                     return true;
                 });
-                    
+
                 m_BakeOperations.Add(oper);
             }
         }
@@ -174,7 +176,7 @@ namespace Unity.AI.Navigation.Editor
 
                     Progress.Finish(oper.progressReportId);
                 }
-                
+
                 Progress.Report(oper.progressReportId, oper.bakeOperation.progress);
             }
             m_BakeOperations.RemoveAll(o => o.bakeOperation == null || o.bakeOperation.isDone);
@@ -366,6 +368,21 @@ namespace Unity.AI.Navigation.Editor
                 PrefabStage.prefabSaving -= DeleteStoredNavMeshDataAssetsForOwnedSurfaces;
                 PrefabStage.prefabStageClosing -= ForgetUnsavedNavMeshDataChanges;
             }
+        }
+
+        private static readonly HashSet<char> forbiddenCharacters = new HashSet<char> { '/', '?', '<', '>', '\\', ':', '*', '|', '"' };
+
+        static string SanitizeAssetName(string assetName)
+        {
+            StringBuilder result = new StringBuilder(assetName);
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                if (forbiddenCharacters.Contains(result[i]))
+                    result[i] = '_';
+            }
+
+            return result.ToString();
         }
     }
 }

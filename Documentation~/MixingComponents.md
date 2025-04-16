@@ -12,7 +12,7 @@ You can use [**NavMesh**][1] Agent, NavMesh Obstacle, and Off [**Mesh**][2] Link
         - Turn on kinematic (Is Kinematic) - this is important!
         - Kinematic means that the rigid body is controlled by something else than the physics simulation
 - If both NavMesh Agent and Rigidbody (non-kinematic) are active at the same time, you have race condition
-    - Both components may try to move the agent at the same which leads to undefined behavior
+    - Both components may try to move the agent at the same time which leads to undefined behavior
 - You can use a NavMesh Agent to move e.g. a player character, without physics
     - Set players agent’s avoidance priority to a small number (high priority), to allow the player to brush through crowds
     - Move the player agent using [NavMeshAgent.velocity](https://docs.unity3d.com/ScriptReference/AI.NavMeshAgent-velocity.html), so that other agents can predict the player movement to avoid the player.
@@ -50,7 +50,7 @@ You can use [**NavMesh**][1] Agent, NavMesh Obstacle, and Off [**Mesh**][2] Link
 - If a game object has a Rigidbody and a NavMesh Obstacle attached, the obstacle’s velocity is obtained from the Rigidbody automatically
     - This allows NavMesh Agents to predict and avoid the moving obstacle
 
-[1]: ./Glossary.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[1]: ./BuildingNavMesh.md "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 [2]: https://docs.unity3d.com/Manual/mesh-introduction.html "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
 [3]: https://docs.unity3d.com/Manual/CollidersOverview.html "An invisible shape that is used to handle physical collisions for an object. A collider doesn’t need to be exactly the same shape as the object’s mesh - a rough approximation is often more efficient and indistinguishable in gameplay."
 [4]: https://docs.unity3d.com/Manual/class-Rigidbody.html "A component that allows a GameObject to be affected by simulated gravity and other forces."
