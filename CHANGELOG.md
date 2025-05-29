@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.8] - 2025-05-29
+ 
+### Fixed
+* Samples will now use appropriate material colors in projects using HDRP or URP. Install the **com.unity.shadergraph** package to show the materials correctly for built-in render pipeline projects.
+
 ## [2.0.7] - 2025-04-09
 ### Changed
 * The minimum supported editor version is Unity 6 LTS. Compatibility with Unity 2023.2 is no longer guaranteed going forward.

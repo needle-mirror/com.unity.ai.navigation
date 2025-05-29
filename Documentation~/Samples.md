@@ -17,3 +17,5 @@ The following sample scenes are included with the AI Navigation package:
 7. **Dungeon**: Demonstrates a controllable agent that can walk through a maze generated from pre-baked tiles that connect to each other at runtime. The link traversal animation can be modified with some presets (teleport, normal speed, parabola, curve).
 
 8. **Height Mesh**: Demonstrates two agents walking down stairs. The environment on the left uses `NavMeshSurface` with a Height Mesh which allows the agent to snap to each step in the stairs as it goes down. The environment on the right uses a `NavMeshSurface` with no Height Mesh; the agent simply slides down the stairs.
+
+Install ```com.unity.shadergraph``` when you import the samples into a project that uses the Built-in Render Pipeline.

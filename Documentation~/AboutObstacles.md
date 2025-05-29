@@ -1,6 +1,6 @@
 # About NavMesh Obstacles
 
-![](./Images/NavMeshObstacleCarving.svg)
+![On the left, carving isn't turned on, and the agent tries to steer around the obstacle. When carving is turned on, the agent plans a route around the blocked location.](./Images/NavMeshObstacleCarving.svg)
 
 NavMesh Obstacles can affect the NavMesh Agent’s navigation during the game in two ways:
 
@@ -12,7 +12,7 @@ When **Carve** is not enabled, the default behavior of the NavMesh Obstacle is s
 
 When **Carve** is enabled, the obstacle carves a hole in the NavMesh when stationary. When moving, the obstacle is an obstruction. When a hole is carved into the NavMesh, the pathfinder is able to navigate the NavMesh Agent around locations cluttered with obstacles, or find another route if the current path gets blocked by an obstacle. It’s good practice to turn on carving for NavMesh Obstacles that generally block navigation but can be moved by the player or other game events like explosions (for example, crates or barrels).
 
-![](./Images/NavMeshObstacleTrap.svg)
+![An agent trying to navigate a cluttered environment with carving disabled](./Images/NavMeshObstacleTrap.svg)
 
 ## Logic for moving NavMesh Obstacles
 

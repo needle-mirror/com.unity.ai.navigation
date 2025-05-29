@@ -22,15 +22,15 @@ For blending control we add two float parameters **velx** and **vely**, and assi
 
 Here we’ll be placing 7 run animations — each with a different velocity. In addition to the forwards (+ left/right) and backwards (+ left/right) we also use an [**animation clip**][2] for running on the spot. The latter is highlighted in the center of the 2D blend map below. The reason for having an animation running on the spot is two-fold, firstly it preserves the style of running when blended with the other animations. Secondly the animation prevents foot-sliding when blending.
 
-![](./Images/NavAnimBlend2d.png)
+![A 2D blend tree with seven run animations, including an animation for running on the spot.](./Images/NavAnimBlend2d.png)
 
-Then we add the idle animation clip in it’s own node (**Idle**). We now have two discrete animation states that we couple with 2 transitions.
+Then we add the idle animation clip in its own node (**Idle**). We now have two discrete animation states that we couple with 2 transitions.
 
-![](./Images/NavAnimStates.png)
+![The idle animation clip has its own node, with a transition to and from moving animations.](./Images/NavAnimStates.png)
 
 To control the switch between the moving and idle states we add a boolean control parameter **move**. Then disable the **Has Exit Time** property on the transitions. This allows the transition to trigger at any time during the animation. Transition time should be set to around 0.10 second to get a responsive transition.
 
-![](./Images/NavAnimTransition.png)
+![The transition from the idle state to moving, without an exit time, and with a move condition.](./Images/NavAnimTransition.png)
 
 Now place the new created animation controller on the character you want to move.
 

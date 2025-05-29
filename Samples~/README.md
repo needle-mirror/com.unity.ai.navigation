@@ -25,6 +25,8 @@ Note that some of these samples require that the `Packages/manifest.json` file o
 "com.unity.modules.terrainphysics": "1.0.0"
 ```
 
+If the samples are being imported into a project that uses the Built-In Render Pipeline, you’ll also need to install ```com.unity.shadergraph```.
+
 # Introduction to NavMesh
 
 The Navigation package allows you to set up pathfinding AI in your Unity project. Two fundamental concepts of pathfinding are (1) agents and (2) world representation.

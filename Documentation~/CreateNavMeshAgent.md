@@ -2,7 +2,7 @@
 
 Once you have a [**NavMesh**][1] baked for your level it is time to create a character which can navigate the [**Scene**][2]. We’re going to build our prototype agent from a cylinder and set it in motion. This is done using a NavMesh Agent component and a simple script.
 
-![](./Images/NavMeshAgentSetup.svg)
+![The agent is a cylinder mesh, with a Nav Mesh Agent component.](./Images/NavMeshAgentSetup.svg)
 
 First let’s create the character:
 

@@ -4,7 +4,7 @@ NavMesh Obstacle components can be used to describe obstacles the agents should 
 
 We’re going to add a crate to block the pathway at the top of the level.
 
-![](./Images/NavMeshObstacleSetup.svg)
+![A crate in the middle of the floor, showing the area carved around it.](./Images/NavMeshObstacleSetup.svg)
 
 1. First create a **cube** to depict the crate: **Game Object > 3D Object > Cube**.
 2. Move the cube to the platform at the top, the default size of the cube is good for a crate so leave it as it is.

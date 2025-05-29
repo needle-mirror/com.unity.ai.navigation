@@ -4,7 +4,7 @@ When you want to intelligently move characters in your game (or agents as they a
 
 ## Walkable Areas
 
-![](./Images/NavMeshUnderstandingAreas.svg)
+![An agent, described as a cylinder, on a NavMesh walkable area in a room.](./Images/NavMeshUnderstandingAreas.svg)
 
 The navigation system needs its own data to represent the walkable areas in a game scene. The walkable areas define the places in the scene where the agent can stand and move. In Unity the agents are described as cylinders. The walkable area is built automatically from the geometry in the scene by testing the locations where the agent can stand. Then the locations are connected to a surface laying on top of the scene geometry. This surface is called the navigation [mesh][3] (NavMesh for short).
 
@@ -12,25 +12,25 @@ The [NavMesh][4] stores this surface as convex polygons. Convex polygons are a u
 
 ## Finding Paths
 
-![](./Images/NavMeshUnderstandingPath.svg)
+![A sequence of polygons maps the path from a start location to a destination location.](./Images/NavMeshUnderstandingPath.svg)
 
 To find a path between two locations in the scene, we first need to map the start and destination locations to their nearest polygons. Then we start searching from the start location, visiting all the neighbors until we reach the destination polygon. Tracing the visited polygons allows us to find the sequence of polygons which will lead from the start to the destination. A common algorithm to find the path is A\* (pronounced “A star”), which is what Unity uses.
 
 ## Following the Path
 
-![](./Images/NavMeshUnderstandingCorridor.svg)
+![A single agent following a corridor from the start location to a destination location.](./Images/NavMeshUnderstandingCorridor.svg)
 
 The sequence of polygons which describe the path from the start to the destination polygon is called a corridor. The agent will reach the destination by always steering towards the next visible corner of the corridor. If you have a simple game where only one agent moves in the scene, it is fine to find all the corners of the corridor in one swoop and animate the character to move along the line segments connecting the corners.
 
 When dealing with multiple agents moving at the same time, they will need to deviate from the original path when avoiding each other. Trying to correct such deviations using a path consisting of line segments soon becomes very difficult and error prone.
 
-![](./Images/NavMeshUnderstandingMove.svg)
+![Two agents rely on the connectivity of the polygons to avoid each other.](./Images/NavMeshUnderstandingMove.svg)
 
 Since the agent movement in each frame is quite small, we can use the connectivity of the polygons to fix up the corridor in case we need to take a little detour. Then we quickly find the next visible corner to steer towards.
 
 ## Avoiding Obstacles
 
-![](./Images/NavMeshUnderstandingAvoid.svg)
+![An agent with two arrows: the red arrow leads to other agents, which causes a collision. The blue arrow changes the velocity to avoid collision.](./Images/NavMeshUnderstandingAvoid.svg)
 
 The steering logic takes the position of the next corner and based on that figures out a desired direction and speed (or velocity) needed to reach the destination. Using the desired velocity to move the agent can lead to collision with other agents.
 
@@ -46,7 +46,7 @@ Once the agent has been moved using either method, the simulated agent location 
 
 ## Global and Local
 
-![](./Images/NavMeshUnderstandingLoop.svg)
+![Global navigation with three steps: Map Locations, Find Path, and Corridor. Local navigation with four steps: Steering, Obstacle Avoidance, Move, and Update Corridor.](./Images/NavMeshUnderstandingLoop.svg)
 
 One of the most important things to understand about navigation is the difference between global and local navigation.
 
@@ -62,13 +62,13 @@ When an obstacle is moving, it is best handled using local obstacles avoidance. 
 
 Changing the NavMesh is called carving. The process detects which parts of the obstacle touches the NavMesh and carves holes into the NavMesh. This is a computationally expensive operation, which is yet another compelling reason, why moving obstacles should be handled using collision avoidance.
 
-![](./Images/NavMeshUnderstandingCarve.svg)
+![On the top, carving a NavMesh to avoid collision. On the bottom, using collision avoidance to reduce computational costs.](./Images/NavMeshUnderstandingCarve.svg)
 
 You can use local collision avoidance to steer around sparsely scattered obstacles too. Since the algorithm is local, it only considers the next immediate collisions, and cannot steer around traps or handle cases where an obstacle blocks a path. Use carving to solve these cases.
 
 ## About shortcuts between positions on NavMeshes
 
-![](./Images/NavMeshUnderstandingOffmesh.svg)
+![An off-mesh link allows an agent to navigate across the divide in the floor.](./Images/NavMeshUnderstandingOffmesh.svg)
 
 The connections between the NavMesh polygons are described using links inside the pathfinding system. Sometimes it is necessary to let the agent navigate across places which are not walkable, for example, jumping over a fence, or traversing through a closed door. These cases need to know the location of the action.
 

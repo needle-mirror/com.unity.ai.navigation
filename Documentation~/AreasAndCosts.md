@@ -2,7 +2,7 @@
 
 The **Navigation Area** defines how difficult it is to walk across a specific area. This is important for finding the path with the lowest total cost. In addition, each [NavMesh Agent](./NavMeshAgent.md) has an **Area Mask** which you can use to specify which areas the agent can move on.
 
-![](./Images/NavMeshAreaType.svg)
+![A scene with a door that only some agents can traverse, and a water area that is more expensive to walk through.](./Images/NavMeshAreaType.svg)
 
 In the example above the area types are used for two common use cases:
 
@@ -37,7 +37,7 @@ The _cost_ per _area type_ can be set globally in the _Areas_ tab, or you can ov
 
 ## Area Types
 
-![](./Images/NavMeshAreaTypeList.png)
+![A table of areas, each showing their cost.](./Images/NavMeshAreaTypeList.png)
 
 The area types are specified in the _Navigation Window_’s _Areas_ tab. There are 29 custom types, and 3 built-in types: _Walkable_, _Not Walkable_, and _Jump_.
 
@@ -49,7 +49,7 @@ If several objects of different area types are overlapping, the resulting NavMes
 
 ## Area Mask
 
-![](./Images/NavMeshAreaMask.svg)
+![The Area Mask dropdown list, with four selected options: Walkable, Not Walkable, Jump, and Water.](./Images/NavMeshAreaMask.svg)
 
 Each agent has an _Area Mask_ which describes which areas it can use when navigating. The area mask can be set in the agent properties, or the bitmask can be manipulated using a script at runtime.
 

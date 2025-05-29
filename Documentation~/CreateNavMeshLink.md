@@ -22,7 +22,7 @@ The NavMesh bake process can detect and create common jump-across and drop-down 
 
 ## How to troubleshoot a link that does not work
 
-![](./Images/OffMeshLinkDebug.svg)
+![On the left, a correctly set up link with two rings. On the right, one ring is missing and the link appears faded.](./Images/OffMeshLinkDebug.svg)
 
 If the agent does not traverse a NavMesh Link make sure that both end points are connected correctly to the NavMesh. To check the state of the connection make sure to enable the **Show NavMesh** debug visualization in the [AI Navigation overlay](./NavigationOverlay.md). When the link has no width, a properly connected end point shows a circle around the access point in the scene view. If the link has width, the link shows a dark segment on the edge that connects properly to the NavMesh, or a gray line if the edge does not connect to the NavMesh. If both ends connect to the NavMesh, the wide link shows an additional solid transparent rectangle that fills the space between the link edges. The NavMesh link also shows an arc line between the ends, with an arrow at each end where the agent can exit the link. The arc line is colored black if at least one end is connected, or it is colored gray if none of the ends is connected to the NavMesh.
 

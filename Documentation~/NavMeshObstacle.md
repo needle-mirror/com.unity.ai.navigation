@@ -10,64 +10,22 @@ You can use this component to create NavMesh obstacles. For more information, se
 
 The following table describes the properties available in the NavMesh Obstacle component.
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="1"><strong>Property</strong></th>
-      <th colspan="2"><strong>Description</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td rowspan="3"><strong>Shape</strong></td>
-      <td colspan="2">Specify the shape of the obstacle geometry. Choose whichever one best fits the shape of the object. </td>
-    </tr>
-    <tr>
-      <td><strong>Box</strong></td>
-      <td>Select a cube-shaped geometry for the obstacle.</td>
-    </tr>
-    <tr>
-      <td><strong>Capsule</strong></td>
-      <td>Select a 3D oval-shaped geometry for the obstacle.</td>
-    </tr>
-    <tr>
-      <td><strong>Center</strong></td>
-      <td colspan="2"> Specify the center of the box relative to the transform position.</td>
-    </tr>
-    <tr>
-      <td><strong>Size</strong></td>
-      <td colspan="2"> Specify the size of the box. <br/> This property is visible only when <strong>Shape</strong> is set to <strong>Box</strong>. </td>
-    </tr>
-    <tr>
-      <td><strong> Center </strong></td>
-      <td colspan="2"> Specify the center of the capsule relative to the transform position.</td>
-    </tr>
-    <tr>
-      <td><strong> Radius </strong></td>
-      <td colspan="2"> Specify the radius of the capsule.  <br/> This property is visible only when <strong>Shape</strong> is set to <strong>Capsule</strong>. </td>
-    </tr>
-    <tr>
-      <td><strong> Height </strong></td>
-      <td colspan="2"> Specify the height of the capsule.  <br/> This property is visible only when <strong>Shape</strong> is set to <strong>Capsule</strong>. </td>
-    </tr>
-    <tr>
-      <td rowspan="4"><strong>Carve</strong></td>
-      <td colspan="2">Allow the NavMesh Obstacle to create a hole in the NavMesh. <br/> When selected, the NavMesh obstacle carves a hole in the NavMesh. <br/> When deselected, the NavMesh obstacle does not carve a hole in the NavMesh. </td>
-    </tr>
-    <tr>
-      <td><strong>Move Threshold</strong></td>
-      <td> Set the threshold distance for updating a moving carved hole. Unity treats the NavMesh obstacle as moving when it has moved more than the distance set by the Move Threshold.  <br/> This property is available only when <strong>Carve</strong> is selected.</td>
-    </tr>
-    <tr>
-      <td><strong>Time To Stationary</strong></td>
-      <td> Specify the time (in seconds) to wait until the obstacle is treated as stationary. <br/> This property is available only when <strong>Carve</strong> is selected.</td>
-    </tr>
-    <tr>
-      <td><strong>Carve Only Stationary</strong></td>
-      <td> Specify when the obstacle is carved. <br/> This property is available only when <strong>Carve</strong> is selected.</td>
-    </tr>
-  </tbody>
-</table>
+| Property | Description |
+| --- | --- |
+| **Shape** | Specify the shape of the obstacle geometry. Choose whichever one best fits the shape of the object. |
+| **Shape** > **Box** | Select a cube-shaped geometry for the obstacle. |
+| **Shape** > **Capsule** | Select a 3D oval-shaped geometry for the obstacle. |
+| **Center** | Specify the center of the box relative to the transform position. |
+| **Size** | Specify the size of the box. This property is visible only when Shape is set to Box. |
+| **Center** | Specify the center of the capsule relative to the transform position. |
+| **Radius** | Specify the radius of the capsule. This property is visible only when Shape is set to Capsule. |
+| **Height** | Specify the height of the capsule. This property is visible only when Shape is set to Capsule. |
+| **Carve** | Allow the NavMesh Obstacle to create a hole in the NavMesh. When selected, the NavMesh obstacle carves a hole in the NavMesh. When deselected, the NavMesh obstacle does not carve a hole in the NavMesh. |
+| **Carve** > **Move Threshold** | Set the threshold distance for updating a moving carved hole. Unity treats the NavMesh obstacle as moving when it has moved more than the distance set by the Move Threshold. This property is available only when Carve is selected. |
+| **Carve** > **Time To Stationary** | Specify the time (in seconds) to wait until the obstacle is treated as stationary. This property is available only when Carve is selected. |
+| **Carve** > **Carve Only Stationary** | Specify when the obstacle is carved. This property is available only when Carve is selected. |
+
+
 
 ## Additional resources
 
