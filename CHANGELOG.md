@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.7] - 2025-06-26
+### Fixed
+* NavMesh Modifier was not overriding the area type in a NavMesh built from within an `Awake()` method ([NAVB-39](https://issuetracker.unity3d.com/issues/building-navmesh-with-navmeshsurface-does-not-bake-areas-into-navmeshtriangulation-when-buildnavmesh-is-called-in-awake))
+
 ## [1.1.6] - 2025-04-16
 ### Changed
 * The minimum supported editor version is Unity 2022.3 LTS. Compatibility with Unity 2022.2 is no longer guaranteed going forward.

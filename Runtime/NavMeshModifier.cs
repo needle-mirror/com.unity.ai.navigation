@@ -16,6 +16,7 @@ namespace Unity.AI.Navigation
     /// any other NavMeshModifier in the parent hierarchy.</remarks>
 #endif
     [ExecuteAlways]
+    [DefaultExecutionOrder(-103)]
     [AddComponentMenu("Navigation/NavMeshModifier", 32)]
     [HelpURL(HelpUrls.Manual + "NavMeshModifier.html")]
     public class NavMeshModifier : MonoBehaviour

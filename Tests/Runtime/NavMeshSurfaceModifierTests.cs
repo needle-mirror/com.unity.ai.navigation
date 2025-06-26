@@ -2,35 +2,37 @@
 
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Unity.AI.Navigation.Tests
 {
     [TestFixture]
     class NavMeshSurfaceModifierTests
     {
-        NavMeshSurface surface;
-        NavMeshModifier modifier;
+        NavMeshSurface m_Surface;
+        NavMeshModifier m_Modifier;
+        NavMeshSurfaceBuildFromAwake m_BuildOnAwake;
 
         [SetUp]
         public void CreatePlaneWithModifier()
         {
             var plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            surface = plane.AddComponent<NavMeshSurface>();
-            modifier = plane.AddComponent<NavMeshModifier>();
+            m_Surface = plane.AddComponent<NavMeshSurface>();
+            m_Modifier = plane.AddComponent<NavMeshModifier>();
         }
 
         [TearDown]
         public void DestroyPlaneWithModifier()
         {
-            GameObject.DestroyImmediate(modifier.gameObject);
+            Object.DestroyImmediate(m_Modifier.gameObject);
         }
 
         [Test]
         public void ModifierIgnoreAffectsSelf()
         {
-            modifier.ignoreFromBuild = true;
+            m_Modifier.ignoreFromBuild = true;
 
-            surface.BuildNavMesh();
+            m_Surface.BuildNavMesh();
 
             Assert.IsFalse(NavMeshSurfaceTests.HasNavMeshAtOrigin());
         }
@@ -38,75 +40,93 @@ namespace Unity.AI.Navigation.Tests
         [Test]
         public void ModifierIgnoreAffectsChild()
         {
-            modifier.ignoreFromBuild = true;
-            modifier.GetComponent<MeshRenderer>().enabled = false;
+            m_Modifier.ignoreFromBuild = true;
+            m_Modifier.GetComponent<MeshRenderer>().enabled = false;
 
             var childPlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            childPlane.transform.SetParent(modifier.transform);
+            childPlane.transform.SetParent(m_Modifier.transform);
 
-            surface.BuildNavMesh();
+            m_Surface.BuildNavMesh();
 
             Assert.IsFalse(NavMeshSurfaceTests.HasNavMeshAtOrigin());
-            GameObject.DestroyImmediate(childPlane);
+            Object.DestroyImmediate(childPlane);
         }
 
         [Test]
         public void ModifierIgnoreDoesNotAffectSibling()
         {
-            modifier.ignoreFromBuild = true;
-            modifier.GetComponent<MeshRenderer>().enabled = false;
+            m_Modifier.ignoreFromBuild = true;
+            m_Modifier.GetComponent<MeshRenderer>().enabled = false;
 
             var siblingPlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
 
-            surface.BuildNavMesh();
+            m_Surface.BuildNavMesh();
 
             Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin());
-            GameObject.DestroyImmediate(siblingPlane);
+            Object.DestroyImmediate(siblingPlane);
         }
 
         [Test]
         public void ModifierOverrideAreaAffectsSelf()
         {
-            modifier.area = 4;
-            modifier.overrideArea = true;
+            m_Modifier.area = 4;
+            m_Modifier.overrideArea = true;
 
-            surface.BuildNavMesh();
+            m_Surface.BuildNavMesh();
 
             var expectedAreaMask = 1 << 4;
             Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
+        }
+
+        [Test]
+        public void Modifier_WhenSurfaceBuiltOnAwake_OverridesArea()
+        {
+            m_Modifier.gameObject.SetActive(false);
+            m_BuildOnAwake = m_Modifier.gameObject.AddComponent<NavMeshSurfaceBuildFromAwake>();
+            m_BuildOnAwake.surface = m_Surface;
+            m_Modifier.area = 4;
+            m_Modifier.overrideArea = true;
+
+            // Enable the components to build the NavMesh on Awake
+            m_Modifier.gameObject.SetActive(true);
+
+            NavMesh.SamplePosition(Vector3.zero, out var hit, 0.1f, NavMesh.AllAreas);
+            Assume.That(hit.hit, Is.True, "There should be a NavMesh at position (0,0,0).");
+            Assert.That(hit.mask, Is.EqualTo(1 << m_Modifier.area),
+                "The NavMesh should have the Modifier area mask at position (0,0,0).");
         }
 
         [Test]
         public void ModifierOverrideAreaAffectsChild()
         {
-            modifier.area = 4;
-            modifier.overrideArea = true;
-            modifier.GetComponent<MeshRenderer>().enabled = false;
+            m_Modifier.area = 4;
+            m_Modifier.overrideArea = true;
+            m_Modifier.GetComponent<MeshRenderer>().enabled = false;
 
             var childPlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            childPlane.transform.SetParent(modifier.transform);
+            childPlane.transform.SetParent(m_Modifier.transform);
 
-            surface.BuildNavMesh();
+            m_Surface.BuildNavMesh();
 
             var expectedAreaMask = 1 << 4;
             Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
-            GameObject.DestroyImmediate(childPlane);
+            Object.DestroyImmediate(childPlane);
         }
 
         [Test]
         public void ModifierOverrideAreaDoesNotAffectSibling()
         {
-            modifier.area = 4;
-            modifier.overrideArea = true;
-            modifier.GetComponent<MeshRenderer>().enabled = false;
+            m_Modifier.area = 4;
+            m_Modifier.overrideArea = true;
+            m_Modifier.GetComponent<MeshRenderer>().enabled = false;
 
             var siblingPlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
 
-            surface.BuildNavMesh();
+            m_Surface.BuildNavMesh();
 
             var expectedAreaMask = 1;
             Assert.IsTrue(NavMeshSurfaceTests.HasNavMeshAtOrigin(expectedAreaMask));
-            GameObject.DestroyImmediate(siblingPlane);
+            Object.DestroyImmediate(siblingPlane);
         }
     }
 }
