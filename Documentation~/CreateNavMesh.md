@@ -25,4 +25,4 @@ To permanently remove a NavMesh from your project, do one of the following:
 - [Navigation Areas and Costs](./AreasAndCosts.md)
 - [Build a HeightMesh for Accurate Character Placement](./HeightMesh.md)
 
-[1]: ./Glossary.md#NavMesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."

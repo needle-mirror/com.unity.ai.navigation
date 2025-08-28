@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -66,29 +67,56 @@ namespace Unity.AI.Navigation
         /// <summary> Gets or sets whether this GameObject's children also use the modifier settings. </summary>
         public bool applyToChildren { get { return m_ApplyToChildren; } set { m_ApplyToChildren = value; } }
 
-        static readonly List<NavMeshModifier> s_NavMeshModifiers = new List<NavMeshModifier>();
+        static bool s_RebuildNavMeshModifiers = true;
+        static List<NavMeshModifier> s_NavMeshModifiers = new List<NavMeshModifier>();
+        static readonly HashSet<NavMeshModifier> s_NavMeshModifiersSet = new HashSet<NavMeshModifier>();
 
-        /// <summary> Gets the list of all the <see cref="NavMeshModifier"/> components that are currently active in the scene. </summary>
+        /// <summary> Gets the list of all the <see cref="NavMeshModifier"/> components that are currently active in the scene. Copies the returned list from
+        /// an internal container and updates it whenever a NavMeshModifier is enabled or disabled. </summary>
         public static List<NavMeshModifier> activeModifiers
         {
-            get { return s_NavMeshModifiers; }
+            get
+            {
+                if (s_RebuildNavMeshModifiers)
+                {
+                    s_NavMeshModifiers = s_NavMeshModifiersSet.ToList();
+                    s_RebuildNavMeshModifiers = false;
+                }
+                return s_NavMeshModifiers;
+            }
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void ClearNavMeshModifiers()
         {
             s_NavMeshModifiers.Clear();
+            s_NavMeshModifiersSet.Clear();
         }
 
         void OnEnable()
         {
-            if (!s_NavMeshModifiers.Contains(this))
-                s_NavMeshModifiers.Add(this);
+            RegisterModifier();
         }
 
         void OnDisable()
         {
-            s_NavMeshModifiers.Remove(this);
+            UnregisterModifier();
+        }
+
+        void RegisterModifier()
+        {
+            if (s_NavMeshModifiersSet.Add(this))
+            {
+                s_RebuildNavMeshModifiers = true;
+            }
+        }
+
+        void UnregisterModifier()
+        {
+            if (s_NavMeshModifiersSet.Remove(this))
+            {
+                s_RebuildNavMeshModifiers = true;
+            }
         }
 
         /// <summary> Verifies whether this modifier can affect in any way the generation of a NavMesh for a given agent type. </summary>

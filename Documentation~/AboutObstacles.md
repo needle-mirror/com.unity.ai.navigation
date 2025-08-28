@@ -45,4 +45,4 @@ To enable this mode, clear the NavMesh Obstacle component’s **Carve Only Stati
 
 [2]: ./Glossary.md#collision "A collision occurs when the physics engine detects that the colliders of two GameObjects make contact or overlap, and at least one has a Rigidbody component and is in motion."
 
-[3]: ./Glossary.md#GameObject "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more."
+[3]: ./Glossary.md#gameobject "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more."

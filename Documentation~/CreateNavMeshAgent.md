@@ -52,7 +52,7 @@ To sum it up, in your script, you will need to get a reference to the NavMesh Ag
 - [NavMesh Agent component reference](./NavMeshAgent.md "Full description of all the NavMeshAgent properties.")
 - [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.html "Full description of the NavMeshAgent scripting API.")
 
-[1]: ./Glossary.md#NavMesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 
 [2]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."
 

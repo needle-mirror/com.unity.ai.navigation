@@ -12,10 +12,11 @@ namespace Unity.AI.Navigation.Updater
         public override string info => "Creates NavMesh Link components that match and replace existing OffMesh Link components. \n" +
             "Ensure the selected scene or prefab files are writable prior to running the Converter.";
         public override Type container => typeof(NavigationConverterContainer);
+        public override int priority => 20;
 
         public override void OnInitialize(InitializeConverterContext context, Action callback)
         {
-            var objectsToConvert = OffMeshLinkUpdaterUtility.FindObjectsToConvert();
+            var objectsToConvert = OffMeshLinkUpdaterUtility.FindObjectsToConvert(new[] { "Assets" });
             foreach (var guid in objectsToConvert)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);

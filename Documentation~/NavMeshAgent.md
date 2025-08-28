@@ -48,6 +48,6 @@ The following tables describe the properties available in the NavMesh agent comp
 - [Inner Workings of the Navigation System](./NavInnerWorkings.md#moving-the-agent)
 - [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.html)
 
-[1]: ./Glossary.md#NavMesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 
 [2]: ./Glossary.md#collision "A collision occurs when the physics engine detects that the colliders of two game objects make contact or overlap, and at least one has a Rigidbody component and is in motion."

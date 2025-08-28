@@ -8,3 +8,4 @@ The following topics describe a set of techniques, and include code samples, to 
 | [Move an Agent to a Position Clicked by the Mouse](./NavMoveToClickPoint.md) | Use a mouse click to set the destination for a NavMesh agent. |
 | [Make an Agent Patrol Between a Set of Points](./NavAgentPatrol.md) | Set patrol points for a NavMesh agent. |
 | [Couple Animation and Navigation](./CouplingAnimationAndNavigation.md) | Integrate animation into your navigation. |
+| [Control Agent Speed for corners](./ControlAgentSpeedForCornering.md) | Gain finer control over an agent's movement. |

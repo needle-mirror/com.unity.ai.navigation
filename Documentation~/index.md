@@ -14,18 +14,20 @@ The following table describes the main topics of the AI Navigation package docum
 | [**Samples**](./Samples.md)                         | Learn about the sample projects included with this package. |
 | [**Glossary**](./Glossary.md)                       | View AI Navigation terminology definitions. |
 
-## Additional resources
-- [A guide on using the new AI Navigation package in Unity 2022 LTS and above](https://discussions.unity.com/t/a-guide-on-using-the-new-ai-navigation-package-in-unity-2022-lts-and-above)
-- [Navigation tutorials](http://unity3d.com/learn/tutorials/topics/navigation)
-    - [Getting Started with AI Pathfinding](https://learn.unity.com/project/beginner-ai-pathfinding)
-    - [Navigation Meshes](https://learn.unity.com/project/navigation-meshes)
-    - [Working with NavMesh Agents](https://learn.unity.com/tutorial/working-with-navmesh-agents)
-- [3D Game Kit](https://assetstore.unity.com/packages/templates/tutorials/unity-learn-3d-game-kit-115747) and [3D Game Kit Lite](https://assetstore.unity.com/packages/templates/tutorials/3d-game-kit-lite-135162) - Sample projects that include navigation
-- [The Explorer: 3D Game Kit](https://learn.unity.com/project/3d-game-kit?uv=2020.3) - Tutorial about the sample project
-    - [Enemies in the 3D Game Kit](https://learn.unity.com/tutorial/quick-start?uv=2020.3&projectId=5c514897edbc2a001fd5bdd0#5c7f8528edbc2a002053b746)
-    - [A Deeper Look at Enemies](https://learn.unity.com/tutorial/3d-game-kit-walkthrough?uv=2020.3&projectId=5c514897edbc2a001fd5bdd0#5c7f8528edbc2a002053b753)
-    - [Decorating in 3D Game Kit](https://learn.unity.com/tutorial/quick-start?uv=2020.3&projectId=5c514897edbc2a001fd5bdd0#5c7f8528edbc2a002053b746)
-- [Unity Discussions](https://discussions.unity.com/tag/navigation) - Navigation topics on the Unity forums
-- [Unity Knowledge Base](https://support.unity3d.com/hc/en-us)
+ ## Additional resources and examples
+
+<div class="res-examples">
+
+* [!INCLUDE [resources-community-icon.md](includes/resources-community-icon.md)] [A guide on using the new AI Navigation package in Unity 2022 LTS and above](https://discussions.unity.com/t/a-guide-on-using-the-new-ai-navigation-package-in-unity-2022-lts-and-above)
+* [!INCLUDE [resources-video-icon.md](includes/resources-video-icon.md)] [AI Navigation 2.0 tutorials](https://www.youtube.com/playlist?list=PLX2vGYjWbI0SsXFD1Gjo-8kFEpzk5k4Kh)
+* [!INCLUDE [resources-sample-project-icon.md](includes/resources-sample-project-icon.md)] [3D Game Kit](https://assetstore.unity.com/packages/templates/tutorials/unity-learn-3d-game-kit-115747) 
+* [!INCLUDE [resources-sample-project-icon.md](includes/resources-sample-project-icon.md)] [3D Game Kit Lite](https://assetstore.unity.com/packages/templates/tutorials/3d-game-kit-lite-135162) 
+* [!INCLUDE [resources-sample-project-icon.md](includes/resources-sample-project-icon.md)] [The Explorer: 3D Game Kit](https://learn.unity.com/project/3d-game-kit?uv=2020.3) - Tutorial about the sample project
+* [!INCLUDE [resources-community-icon.md](includes/resources-community-icon.md)] [Join the Navigation conversation on Unity Discussions](https://discussions.unity.com/tag/navigation) 
+* [Unity Knowledge Base](https://support.unity3d.com/hc/en-us)
+
+</div>
+
+<div class="clear"></div>  
 
 [1]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."

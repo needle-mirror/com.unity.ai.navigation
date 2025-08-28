@@ -27,9 +27,11 @@ The updater can also convert **OffMesh Link** components to **NavMesh Link** com
 To convert your project do the following:
 
 1. In the main menu go to **Window** > **AI** > **Navigation Updater**.
-2. In the **Navigation Updater** window, select which kind of data to convert.
-2. In the **Navigation Updater** window, verify that **NavMesh Scene Converter** is selected.
-4. Select the data you want to convert.
+2. In the **Navigation Updater** window, select which kind of data to convert. 
+    * To move NavMeshes from the internals of scenes to their own **NavMesh Surface** component, select **NavMesh Scene Converter**. 
+    * To replace **OffMesh Link** components with matching **NavMesh Link** components, select **OffMesh Link Converter**.
+3. Click **Initialize Converters** to detect and display the scenes and prefabs that are eligible for conversion.
+4. Select the assets you want to convert and verify that their category is also selected.
 5. Click **Convert Assets** to complete the conversion.
 
 ## Create new agent types

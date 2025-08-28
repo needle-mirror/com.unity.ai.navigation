@@ -28,7 +28,7 @@ A navmesh that contains additional data that is used to more accurately determin
 Unity uses the concept of parent-child hierarchies, or parenting, to group GameObjects. An object can contain other GameObjects that inherit its properties. [More info](https://docs.unity3d.com/6000.0/Documentation/Manual/Hierarchy.html)
 
 ## Input Geometry
-The geometry to consider when baking the navmesh. [More info](./NavMeshSurface.md#Object-Collection)
+The geometry to consider when baking the navmesh. [More info](./NavMeshSurface.md#object-collection)
 
 ## Inspector
 A Unity window that displays information about the currently selected GameObject, asset or project settings, allowing you to inspect and edit the values. [More info](https://docs.unity3d.com/6000.0/Documentation/Manual/UsingTheInspector.html)
@@ -64,4 +64,4 @@ The landscape in your scene. A Terrain GameObject adds a large flat plane to you
 The unit size used in Unity projects. By default, 1 Unity unit is 1 meter. To use a different scale, set the Scale Factor in the Import Settings when importing assets. [More info](https://docs.unity3d.com/6000.0/Documentation/Manual/ImportingModelFiles.html#model)
 
 ## Voxel
-A 3D pixel. [More info](./NavInnerWorkings.md#About-Voxels)
+A 3D pixel. [More info](./NavInnerWorkings.md#about-voxels)

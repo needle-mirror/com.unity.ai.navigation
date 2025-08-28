@@ -29,4 +29,4 @@ To build a **HeightMesh** when you bake the **NavMesh**:
 - [NavMesh Surface component reference](./NavMeshSurface.md#advanced-settings "Use for specifying the settings for NavMesh baking.")
 - [Sample 8 - Heightmesh](./Samples.md "An example of a NavMesh Agent that aligns precisely to the steps of a staircase.")
 
-[1]: ./Glossary.md#NavMesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
+[1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."

@@ -18,4 +18,6 @@ The following sample scenes are included with the AI Navigation package:
 
 8. **Height Mesh**: Demonstrates two agents walking down stairs. The environment on the left uses `NavMeshSurface` with a Height Mesh which allows the agent to snap to each step in the stairs as it goes down. The environment on the right uses a `NavMeshSurface` with no Height Mesh; the agent simply slides down the stairs.
 
+9. **Cornering Speed Control**: Demonstrates how to control an agent's speed based on the sharpness of the upcoming turn in the path.
+
 Install ```com.unity.shadergraph``` when you import the samples into a project that uses the Built-in Render Pipeline.

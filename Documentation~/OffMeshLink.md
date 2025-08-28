@@ -17,10 +17,7 @@ The following table describes the properties available in the OffMesh Link compo
 | **Bidirectional** | Control the direction NavMesh Agents move across the link. When you select this checkbox, NavMesh Agents can move across the link in both directions (from the start to the end, and from the end to the start).<br/>When you clear this checkbox, NavMesh Agents can only move across the link in one direction (from the start to the end). |
 | **Activated** | Allow the link to be used in pathfinding. |
 | **Auto Update Positions** | Reconnect the OffMesh link to the NavMesh if you move the end points. If disabled, the link stays at its start location even if the end points move. |
-| **Navigation Area** | Specify the area type of the OffMesh Link. Use the area type to apply a common traversal cost to similar area types and prevent certain characters from crossing the link based on the agent’s Area Mask. |
-| **Navigation Area** > **Walkable** | Make the link walkable for the affected agent types. This is the default option. |
-| **Navigation Area** > **Not Walkable** | Prevent the affected agent types from crossing the link. |
-| **Navigation Area** > **Jump** | Change the area type of the link to Jump. |
+| **Navigation Area** | Specify the area type of the OffMesh Link. Use the area type to apply a common traversal cost to similar area types and prevent certain characters from crossing the link based on the agent’s Area Mask.  <br/>Available built-in options:  <ul><li>**Walkable**: Make the link walkable for the affected agent types. This is the default option.</li> <li>**Not Walkable**: Prevent the affected agent types from crossing the link.</li> <li>**Jump**: Change the area type of the link to Jump.</li></ul> |
 
 
 ## Additional resources

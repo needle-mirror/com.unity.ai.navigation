@@ -4,8 +4,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.9] - 2025-08-28
+### Added
+* New sample scene **9_agent_cornering_control** to demonstrate controlling an agent's velocity in order to better navigate tight corners. ([UUM-59747](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-59747))
+
+### Fixed
+* Fixed samples not correctly configuring navigation agent types when imported into a project.
+* Foldouts in **AI Navigation** overlay collapse when toggling settings. ([NAVB-144](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-144))
+* Fixed poor performance when enabling/disabling increasing numbers of NavMeshModifiers. ([NAVB-96](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-96))
+* A small white square was displayed in the scene on top of the gizmo icons for NavMesh Link, NavMesh Modifier Volume and NavMesh Surface. ([NAVB-154](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-154))
+* **Navigation Updater** no longer attempts to process scenes and prefabs from the read-only **Packages** folder. ([NAVB-146](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-146))
+
 ## [2.0.8] - 2025-05-29
- 
 ### Fixed
 * Samples will now use appropriate material colors in projects using HDRP or URP. Install the **com.unity.shadergraph** package to show the materials correctly for built-in render pipeline projects.
 

@@ -12,18 +12,13 @@ The following table describes the properties available in the NavMesh Obstacle c
 
 | Property | Description |
 | --- | --- |
-| **Shape** | Specify the shape of the obstacle geometry. Choose whichever one best fits the shape of the object. |
-| **Shape** > **Box** | Select a cube-shaped geometry for the obstacle. |
-| **Shape** > **Capsule** | Select a 3D oval-shaped geometry for the obstacle. |
+| **Shape** | Specify the shape of the obstacle geometry. Choose whichever one best fits the shape of the object.<br/>Available options:<ul><li>**Box**: Select a cube-shaped geometry for the obstacle.</li><li>**Capsule**: Select a 3D oval-shaped geometry for the obstacle.</li></ul> |
 | **Center** | Specify the center of the box relative to the transform position. |
 | **Size** | Specify the size of the box. This property is visible only when Shape is set to Box. |
 | **Center** | Specify the center of the capsule relative to the transform position. |
 | **Radius** | Specify the radius of the capsule. This property is visible only when Shape is set to Capsule. |
 | **Height** | Specify the height of the capsule. This property is visible only when Shape is set to Capsule. |
-| **Carve** | Allow the NavMesh Obstacle to create a hole in the NavMesh. When selected, the NavMesh obstacle carves a hole in the NavMesh. When deselected, the NavMesh obstacle does not carve a hole in the NavMesh. |
-| **Carve** > **Move Threshold** | Set the threshold distance for updating a moving carved hole. Unity treats the NavMesh obstacle as moving when it has moved more than the distance set by the Move Threshold. This property is available only when Carve is selected. |
-| **Carve** > **Time To Stationary** | Specify the time (in seconds) to wait until the obstacle is treated as stationary. This property is available only when Carve is selected. |
-| **Carve** > **Carve Only Stationary** | Specify when the obstacle is carved. This property is available only when Carve is selected. |
+| **Carve** | Allow the NavMesh Obstacle to create a hole in the NavMesh. When selected, the NavMesh obstacle carves a hole in the NavMesh and the following properties are available:<ul><li>**Move Threshold**: Set the threshold distance for updating a moving carved hole. Unity treats the NavMesh obstacle as moving when it has moved more than the distance set by the Move Threshold.</li><li>**Time To Stationary**: Specify the time (in seconds) to wait until the obstacle is treated as stationary.</li><li>**Carve Only Stationary**: Specify when the obstacle is carved.</li></ul>When deselected, the NavMesh obstacle does not carve a hole in the NavMesh. |
 
 
 

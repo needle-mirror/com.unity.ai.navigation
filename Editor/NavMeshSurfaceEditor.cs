@@ -338,8 +338,6 @@ namespace Unity.AI.Navigation.Editor
 
             Gizmos.matrix = oldMatrix;
             Gizmos.color = oldColor;
-
-            Gizmos.DrawIcon(navSurface.transform.position, "NavMeshSurface Icon", true);
         }
 
         void OnSceneGUI()

@@ -11,6 +11,7 @@ namespace Unity.AI.Navigation.Updater
         public override string name => "NavMesh Scene Converter";
         public override string info => "Reassigns the legacy baked NavMesh to a NavMeshSurface on a game object named 'Navigation'.\nAdds a NavMeshModifier component to each game object marked as Navigation Static.";
         public override Type container => typeof(NavigationConverterContainer);
+        public override int priority => 10;
 
         List<string> m_AssetsToConvert = new List<string>();
 

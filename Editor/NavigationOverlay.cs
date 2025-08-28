@@ -219,6 +219,9 @@ namespace Unity.AI.Navigation.Editor
 
             foldout.RegisterValueChangedCallback(evt =>
             {
+                if (evt.target != foldout)
+                    return;
+
                 EditorPrefs.SetBool(prefName, evt.newValue);
 #if OVERLAY_REFRESH_API
                 var sceneView = EditorWindow.GetWindow<SceneView>();

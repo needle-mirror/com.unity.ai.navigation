@@ -12,7 +12,7 @@ using UnityEngine.Assertions;
 namespace Unity.AI.Navigation.Editor.Converter
 {
     // Status for each row item to say in which state they are in.
-    // This will make sure they are showing the correct icon
+    // This will make sure they are showing the correct icon.
     [Serializable]
     enum Status
     {
@@ -22,7 +22,7 @@ namespace Unity.AI.Navigation.Editor.Converter
         Success
     }
 
-    // This is the serialized class that stores the state of each item in the list of items to convert
+    // This is the serialized class that stores the state of each item in the list of items to convert.
     [Serializable]
     class ConverterItemState
     {
@@ -37,13 +37,13 @@ namespace Unity.AI.Navigation.Editor.Converter
         internal bool hasConverted = false;
     }
 
-    // Each converter uses the active bool
-    // Each converter has a list of active items/assets
-    // We do this so that we can use the binding system of the UI Elements
+    // Each converter uses the active bool.
+    // Each converter has a list of active items/assets.
+    // We do this so that we can use the binding system of the UI Elements.
     [Serializable]
     class ConverterState
     {
-        // This is the enabled state of the whole converter
+        // This is the enabled state of the whole converter.
         public bool isEnabled;
         public bool isActive;
         public bool isLoading; // to name
@@ -79,7 +79,7 @@ namespace Unity.AI.Navigation.Editor.Converter
 
         private bool convertButtonActive = false;
 
-        // This list needs to be as long as the amount of converters
+        // This list needs to be as long as the amount of converters.
         List<ConverterItems> m_ItemsToConvert = new List<ConverterItems>();
         SerializedObject m_SerializedObject;
 
@@ -87,25 +87,25 @@ namespace Unity.AI.Navigation.Editor.Converter
         List<SystemConverterContainer> m_Containers = new List<SystemConverterContainer>();
         int m_ContainerChoiceIndex = 0;
 
-        // This is a list of Converter States which holds a list of which converter items/assets are active
+        // This is a list of Converter States which holds a list of which converter items/assets are active.
         // There is one for each Converter.
         [SerializeField] List<ConverterState> m_ConverterStates = new List<ConverterState>();
 
         TypeCache.TypeCollection m_ConverterContainers;
 
-        // Name of the index file
+        // Name of the index file.
         string m_ConverterIndex = "SystemConverterIndex";
 
         public void DontSaveToLayout(EditorWindow wnd)
         {
-            // Making sure that the window is not saved in layouts.
+            // Make sure that the window is not saved in layouts.
             Assembly assembly = typeof(EditorWindow).Assembly;
             var editorWindowType = typeof(EditorWindow);
             var hostViewType = assembly.GetType("UnityEditor.HostView");
             var containerWindowType = assembly.GetType("UnityEditor.ContainerWindow");
             var parentViewField = editorWindowType.GetField("m_Parent", BindingFlags.Instance | BindingFlags.NonPublic);
             var parentViewValue = parentViewField.GetValue(wnd);
-            // window should not be saved to layout
+            // Window should not be saved to layout.
             var containerWindowProperty =
                 hostViewType.GetProperty("window", BindingFlags.Instance | BindingFlags.Public);
             var parentContainerWindowValue = containerWindowProperty.GetValue(parentViewValue);
@@ -125,7 +125,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 return;
             m_CoreConvertersList = new List<SystemConverter>();
 
-            // This is the drop down choices.
+            // These are the dropdown choices.
             m_ConverterContainers = TypeCache.GetTypesDerivedFrom<SystemConverterContainer>();
             foreach (var containerType in m_ConverterContainers)
             {
@@ -158,7 +158,7 @@ namespace Unity.AI.Navigation.Editor.Converter
 
             for (var i = 0; i < converterList.Count; ++i)
             {
-                // Iterate over the converters that are used by the current container
+                // Iterate over the converters that are used by the current container.
                 var conv = (SystemConverter)Activator.CreateInstance(converterList[i]);
                 if (conv.container == m_ConverterContainers[m_ContainerChoiceIndex])
                 {
@@ -166,13 +166,13 @@ namespace Unity.AI.Navigation.Editor.Converter
                 }
             }
 
-            // this need to be sorted by Priority property
+            // This needs to be sorted by Priority property.
             m_CoreConvertersList = m_CoreConvertersList
                 .OrderBy(o => o.priority).ToList();
 
             for (var i = 0; i < m_CoreConvertersList.Count; i++)
             {
-                // Create a new ConvertState which holds the active state of the converter
+                // Create a new ConvertState which holds the active state of the converter.
                 var converterState = new ConverterState
                 {
                     isEnabled = m_CoreConvertersList[i].isEnabled,
@@ -184,7 +184,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 m_ConverterStates.Add(converterState);
 
                 // This just creates empty entries in the m_ItemsToConvert.
-                // This list need to have the same amount of entries as the converters
+                // This list need to have the same amount of entries as the converters.
                 var converterItemInfos = new List<ConverterItemDescriptor>();
                 //m_ItemsToConvert.Add(converterItemInfos);
                 m_ItemsToConvert.Add(new ConverterItems { itemDescriptors = converterItemInfos });
@@ -220,13 +220,13 @@ namespace Unity.AI.Navigation.Editor.Converter
 
             rootVisualElement.Q<Image>("converterContainerHelpIcon").image = EditorStyles.iconHelp;
 
-            // Getting the scrollview where the converters should be added
+            // Get the ScrollView where the converters should be added.
             m_ScrollView = rootVisualElement.Q<ScrollView>("convertersScrollView");
             m_ScrollView.Clear();
             for (int i = 0; i < m_CoreConvertersList.Count; ++i)
             {
-                // Making an item using the converterListAsset as a template.
-                // Then adding the information needed for each converter
+                // Make an item using the converterListAsset as a template.
+                // Then add the information needed for each converter.
                 VisualElement item = new VisualElement();
                 converterListAsset.CloneTree(item);
                 var conv = m_CoreConvertersList[i];
@@ -234,7 +234,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 item.Q<Label>("converterName").text = conv.name;
                 item.Q<Label>("converterInfo").text = conv.info;
 
-                // setup the images
+                // Set up the images.
                 item.Q<Image>("pendingImage").image = EditorStyles.iconPending;
                 item.Q<Image>("pendingImage").tooltip = "Pending";
                 var pendingLabel = item.Q<Label>("pendingLabel");
@@ -270,7 +270,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 listView.makeItem = () =>
                 {
                     var convertItem = converterItem.CloneTree();
-                    // Adding the contextual menu for each item
+                    // Add the contextual menu for each item.
                     convertItem.AddManipulator(new ContextualMenuManipulator(evt => AddToContextMenu(evt, id)));
                     return convertItem;
                 };
@@ -280,18 +280,18 @@ namespace Unity.AI.Navigation.Editor.Converter
                     m_SerializedObject.Update();
                     var property = m_SerializedObject.FindProperty($"{listView.bindingPath}.Array.data[{index}]");
 
-                    // ListView doesn't bind the child elements for us properly, so we do that for it
+                    // ListView doesn't bind the child elements for us properly, so we do that for it.
                     // In the UXML our root is a BindableElement, as we can't bind otherwise.
                     var bindable = (BindableElement)element;
                     bindable.BindProperty(property);
 
-                    // Adding index here to userData so it can be retrieved later
+                    // Add index here to userData so it can be retrieved later.
                     element.userData = index;
 
                     var status = (Status)property.FindPropertyRelative("status").enumValueIndex;
                     var info = property.FindPropertyRelative("message").stringValue;
 
-                    // Update the amount of things to convert
+                    // Update the amount of things to convert.
                     child.Q<Label>("converterStats").text = $"{m_ItemsToConvert[id].itemDescriptors.Count} items";
 
                     var convItemDesc = m_ItemsToConvert[id].itemDescriptors[index];
@@ -299,7 +299,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                     element.Q<Label>("converterItemName").text = convItemDesc.name;
                     element.Q<Label>("converterItemPath").text = convItemDesc.info;
 
-                    // Changing the icon here depending on the status.
+                    // Change the icon here depending on the status.
                     Texture2D icon = null;
 
                     switch (status)
@@ -341,10 +341,10 @@ namespace Unity.AI.Navigation.Editor.Converter
 
         void GetAndSetData(int i, Action onAllConvertersCompleted = null)
         {
-            // This need to be in Init method
-            // Need to get the assets that this converter is converting.
-            // Need to return Name, Path, Initial info, Help link.
-            // New empty list of ConverterItemInfos
+            // This needs to be in the Init method.
+            // It needs to get the assets that this converter is converting.
+            // It needs to return Name, Path, Initial info, Help link.
+            // New empty list of ConverterItemInfos.
             List<ConverterItemDescriptor> converterItemInfos = new List<ConverterItemDescriptor>();
             var initCtx = new InitializeConverterContext { items = converterItemInfos };
 
@@ -352,24 +352,24 @@ namespace Unity.AI.Navigation.Editor.Converter
 
             m_ConverterStates[i].isLoading = true;
 
-            // This should also go to the init method
-            // This will fill out the converter item infos list
+            // This should also go to the Init method.
+            // This will fill out the converter item infos list.
             int id = i;
             conv.OnInitialize(initCtx, OnConverterCompleteDataCollection);
 
             void OnConverterCompleteDataCollection()
             {
-                // Set the item infos list to to the right index
+                // Set the item infos list to the correct index.
                 m_ItemsToConvert[id] = new ConverterItems { itemDescriptors = converterItemInfos };
                 m_ConverterStates[id].items = new List<ConverterItemState>(converterItemInfos.Count);
 
-                // Default all the entries to true
+                // Default all the entries to true.
                 for (var j = 0; j < converterItemInfos.Count; j++)
                 {
                     string message = string.Empty;
                     Status status;
                     bool active = true;
-                    // If this data hasn't been filled in from the init phase then we can assume that there are no issues / warnings
+                    // If this data hasn't been filled in from the init phase then we can assume that there are no issues / warnings.
                     if (string.IsNullOrEmpty(converterItemInfos[j].warningMessage))
                     {
                         status = Status.Pending;
@@ -394,7 +394,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 m_ConverterStates[id].isLoading = false;
                 m_ConverterStates[id].isInitialized = true;
 
-                // Making sure that the pending amount is set to the amount of items needs converting
+                // Make sure that the pending amount is set to the amount of items needs converting.
                 m_ConverterStates[id].pending = m_ConverterStates[id].items.Count;
 
                 EditorUtility.SetDirty(this);
@@ -402,7 +402,7 @@ namespace Unity.AI.Navigation.Editor.Converter
 
                 CheckAllConvertersCompleted();
                 convertButtonActive = true;
-                // Make sure that the Convert Button is turned back on
+                // Make sure that the Convert Button is turned back on.
                 var button = rootVisualElement.Q<Button>("convertButton");
                 button.SetEnabled(convertButtonActive);
             }
@@ -416,7 +416,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 {
                     var converter = m_ConverterStates[j];
 
-                    // Skip inactive converters
+                    // Skip inactive converters.
                     if (!converter.isActiveAndEnabled)
                         continue;
 
@@ -430,11 +430,11 @@ namespace Unity.AI.Navigation.Editor.Converter
 
                 Assert.IsFalse(sum == 0);
 
-                // Show our progress so far
+                // Show our progress so far.
                 EditorUtility.ClearProgressBar();
                 EditorUtility.DisplayProgressBar($"Initializing converters", $"Initializing converters ({convertersInitialized}/{sum})...", (float)convertersInitialized / sum);
 
-                // If all converters are initialized call the complete callback
+                // If all converters are initialized call the complete callback.
                 if (convertersToInitialize == 0)
                 {
                     onAllConvertersCompleted?.Invoke();
@@ -444,12 +444,12 @@ namespace Unity.AI.Navigation.Editor.Converter
 
         void InitializeAllActiveConverters(ClickEvent evt)
         {
-            // If we use search index, go async
+            // If we use search index, go async.
             if (ShouldCreateSearchIndex())
             {
                 CreateSearchIndex(m_ConverterIndex);
             }
-            // Otherwise do everything directly
+            // Otherwise do everything directly.
             else
             {
                 ConverterCollectData(() => { EditorUtility.ClearProgressBar(); });
@@ -457,7 +457,7 @@ namespace Unity.AI.Navigation.Editor.Converter
 
             void CreateSearchIndex(string name)
             {
-                // Create <guid>.index in the project
+                // Create <guid>.index in the project.
                 var title = $"Building {name} search index";
                 EditorUtility.DisplayProgressBar(title, "Creating search index...", -1f);
 
@@ -465,7 +465,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 Type assetdatabase = typeof(AssetDatabase);
                 var indexPath = (string)assetdatabase.GetMethod("GetUniquePathNameAtSelectedPath", BindingFlags.NonPublic | BindingFlags.Static).Invoke(assetdatabase, new object[] { $"Assets/{name}.index" });
 
-                // Write search index manifest
+                // Write search index manifest.
                 System.IO.File.WriteAllText(indexPath,
 @"{
                 ""roots"": [""Assets""],
@@ -482,12 +482,12 @@ namespace Unity.AI.Navigation.Editor.Converter
 
 
 
-                // Import the search index
+                // Import the search index.
                 AssetDatabase.ImportAsset(indexPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.DontDownloadFromCacheServer);
 
                 EditorApplication.delayCall += () =>
                 {
-                    // Create dummy request to ensure indexing has finished
+                    // Create dummy request to ensure indexing has finished.
                     var context = SearchService.CreateContext("asset", $"p: a=\"{name}\"");
                     SearchService.Request(context, (_, items) =>
                     {
@@ -513,7 +513,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 var convertersToInitialize = 0;
                 for (var i = 0; i < m_ConverterStates.Count; ++i)
                 {
-                    if (m_ConverterStates[i].isEnabled)
+                    if (m_ConverterStates[i].isActiveAndEnabled)
                     {
                         GetAndSetData(i, onConverterDataCollectionComplete);
                         convertersToInitialize++;
@@ -554,7 +554,7 @@ namespace Unity.AI.Navigation.Editor.Converter
         void AddToContextMenu(ContextualMenuPopulateEvent evt, int coreConverterIndex)
         {
             var ve = (VisualElement)evt.target;
-            // Checking if this context menu should be enabled or not
+            // Check if this context menu should be enabled or not.
             var isActive = m_ConverterStates[coreConverterIndex].items[(int)ve.userData].isActive &&
                 !m_ConverterStates[coreConverterIndex].items[(int)ve.userData].hasConverted;
 
@@ -566,11 +566,11 @@ namespace Unity.AI.Navigation.Editor.Converter
         void Convert(ClickEvent evt)
         {
             var activeConverterStates = new List<ConverterState>();
-            // Get the names of the converters
-            // Get the amount of them
-            // Make the string "name x/y"
+            // Get the names of the converters.
+            // Get the amount of them.
+            // Make the string "name x/y".
 
-            // Getting all the active converters to use in the cancelable progressbar
+            // Get all the active converters to use in the cancelable progressbar.
             foreach (var state in m_ConverterStates)
             {
                 if (state.isActive && state.isInitialized)

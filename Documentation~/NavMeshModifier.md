@@ -17,17 +17,11 @@ The following table describes the properties available in the NavMesh Modifier c
 
 | Property | Description |
 | --- | --- |
-| **Mode** | Specify whether to consider or ignore the affected GameObject(s). |
-| **Mode** > **Add or Modify Object** | Consider the affected GameObject(s) when building the NavMesh. |
-| **Mode** > **Remove Object** | Ignore the affected object(s) when building the NavMesh for the specified agent type. |
-| **Affected Agents** | Specify which agents the NavMesh Modifier affects. For example, you can choose to have certain obstacles be ignored by specific agents. |
-| **Affected Agents** > **All** | Modify the behavior of all agents. |
-| **Affected Agents** > **None** | Exclude all agents from the modified behavior. |
+| **Mode** | Specify whether to consider or ignore the affected GameObject(s). <br/>Available options: <ul><li>**Add or Modify Object**: Consider the affected GameObject(s) when building the NavMesh.</li><li>**Remove Object**: Ignore the affected object(s) when building the NavMesh for the specified agent type.</li></ul> |
+| **Affected Agents** | Specify which agents the NavMesh Modifier affects. For example, you can choose to have certain obstacles be ignored by specific agents. <br/>Available options: <ul><li>**All**: Modify the behavior of all agents.</li><li>**None**: Exclude all agents from the modified behavior.</li></ul> |
 | **Apply to Children** | Apply the configuration to the child hierarchy of the GameObject. To override this component's influence further down the hierarchy, add another NavMesh Modifier component. |
-| **Override Area** | Change the [area type](AreasAndCosts) for the affected GameObject(s). If you want to change the area type, select the checkbox then select the new area type in the Area Type dropdown. If you do not want to change the area type, clear the checkbox. |
-| **Override Area**  > **Area Type** | Select the new area type you want to apply from the dropdown. |
-| **Override Generate Links** | Force the NavMesh bake process to either include or ignore the affected GameObject(s) when you generate links. |
-| **Override Generate Links** > **Generate Links** | Specify whether or not to include the affected GameObject(s) when you generate links. To include the GameObject(s) when you generate links in the NavMesh bake process, select this checkbox. To ignore the GameObject(s) when you generate links in the NavMesh bake process, clear this checkbox. |
+| **Override Area** | Change the [area type](AreasAndCosts.md) for the affected GameObject(s). To do this, select this checkbox and then select the new area type from the **Area Type** dropdown that appears. |
+| **Override Generate Links** | Force the NavMesh bake process to either include or ignore the affected GameObject(s) when you generate links. To do this, select this checkbox and then select or clear the **Generate Links** checkbox that appears. |
 
 
 ## Additional resources

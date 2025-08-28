@@ -1,6 +1,6 @@
 # NavMesh Surface component reference
 
-Use the NavMesh Surface component to define and build a [NavMesh](./Glossary.md#NavMesh) for a specific type of [NavMesh Agent](./NavMeshAgent.md) in your scene. Use the available properties to specify the type of NavMesh Agent that can use the NavMesh, the area type to assign to the generated NavMesh, and the geometry to use when you bake the NavMesh.
+Use the NavMesh Surface component to define and build a [NavMesh](./Glossary.md#navmesh) for a specific type of [NavMesh Agent](./NavMeshAgent.md) in your scene. Use the available properties to specify the type of NavMesh Agent that can use the NavMesh, the area type to assign to the generated NavMesh, and the geometry to use when you bake the NavMesh.
 
 To use the **NavMesh Surface** component, apply it to the [GameObject](./Glossary.md#gameobject) on which you want to build the NavMesh.
 
@@ -18,14 +18,9 @@ The following table describes the properties available in the NavMesh Surface co
 | Property | Description |
 |---|---|
 | **Agent Type** | Select the type of [NavMesh Agent](NavMeshAgent) that can use the NavMesh. |
-| **Default Area** | Specify the area type to assign to the generated NavMesh. The area types define how difficult it is for agents to move across the NavMesh. The available options include all of the area types defined on the Areas tab of the Navigation window. There are 29 custom area types and 3 built-in area types: |
-| **Default Area**  > **Walkable** | Make the NavMesh walkable for the assigned Agent type. (This is the default option.) |
-| **Default Area** > **Not Walkable** | Prevent the specified Agent type from crossing this surface unless there is a GameObject that [overrides the area type](NavMeshModifier). |
-| **Default Area** > **Jump** | This option is used for automatically generated links. <br/> For more details about area types, refer to [Navigation Areas and Costs](AreasAndCosts). |
+| **Default Area** | Specify the area type to assign to the generated NavMesh. The area types define how difficult it is for agents to move across the NavMesh. The available options include all of the area types defined on the Areas tab of the Navigation window. There are 29 custom area types and 3 built-in area types: <br/>Available built-in options: <ul><li>**Walkable**: Make the NavMesh walkable for the assigned Agent type. (This is the default option.)</li><li>**Not Walkable**: Prevent the specified Agent type from crossing this surface unless there is a GameObject that [overrides the area type](NavMeshModifier).</li><li>**Jump**: This option is used for automatically generated links.</li></ul> For more details about area types, refer to [Navigation Areas and Costs](AreasAndCosts). |
 | **Generate Links** | Automatically generate links between objects that the NavMesh Surface collects when you bake the NavMesh. If you select **Generate Links**, NavMesh Surface attempts to generate links between any collected GameObjects when you bake the NavMesh. If you do not select **Generate Links**, NavMesh Surface doesn't attempt to generate any links between the collected GameObjects when you bake the NavMesh.<br/> Refer to the [Links Generation](BuildingOffMeshLinksAutomatically#links-generation) section for more information. |
-| **Use Geometry** | Select which geometry to use when you bake the NavMesh. |
-| **Use Geometry** > **Render Meshes** | Use geometry from Render Meshes and [Terrains](https://docs.unity3d.com/6000.0/Documentation/Manual/terrain-UsingTerrains.html). |
-| **Use Geometry** > **Physics Colliders** | Use geometry from Colliders and Terrains. Agents can move closer to the edge of the physical bounds of the environment with this option than they can with the **Render Meshes** option. For more information on Colliders, refer to [Introduction to collision](https://docs.unity3d.com/6000.0/Documentation/Manual/CollidersOverview.html). |
+| **Use Geometry** | Select which geometry to use when you bake the NavMesh.<br/>Available options:<ul><li>**Render Meshes**: Use geometry from Render Meshes and [Terrains](https://docs.unity3d.com/6000.0/Documentation/Manual/terrain-UsingTerrains.html).</li><li>**Physics Colliders**: Use geometry from Colliders and Terrains. Agents can move closer to the edge of the physical bounds of the environment with this option than they can with the **Render Meshes** option. For more information on Colliders, refer to [Introduction to collision](https://docs.unity3d.com/6000.0/Documentation/Manual/CollidersOverview.html).</li></ul> |
 | **NavMesh Data** | (Read-only) Locate the asset file where the NavMesh is stored.</br> The text box displays **None** when the NavMesh Surface does not contain NavMesh data.</br> The text box displays **Missing** if you delete the asset file from the Project window and don't use **Clear** first.</br> |
 | **Clear** | Remove the asset file where the NavMesh is stored. </br> Use this button also when you plan to remove the component. |
 | **Bake** | Bake a NavMesh with the current settings. When you bake the NavMesh, it automatically excludes GameObjects that have a **NavMesh Agent** or **NavMesh Obstacle**. They are dynamic users of the NavMesh and don't contribute to the process. </br> Unity stores the NavMesh data in an asset file. The **NavMesh Data** property displays a reference to the asset file. |
@@ -36,12 +31,9 @@ Use the Object Collection settings to define which GameObjects to use when you b
 
 | Property | Description |
 |---|---|
-| **Collect Objects** | Define which GameObjects to use when you bake the NavMesh. |
-| **Collect Objects** > **All Game Objects** | Use all active GameObjects in the scene. (This is the default option.) |
-| **Collect Objects** > **Volume** | Use all active GameObjects that overlap the bounding volume. Geometry that is located outside of the bounding volume but within the agent radius is included when you bake the NavMesh. |
-| **Collect Objects** > **Current Object Hierarchy** | Use the GameObject that the **NavMesh Surface** component is placed on and all active GameObjects which are children of this GameObject. |
-| **Collect Objects** > **NavMeshModifier Component Only** | Use any GameObjects in the scene that have a NavMesh Modifier attached to them and, if their **Apply To Children** option is turned on, use their child objects as well. |
+| **Collect Objects** | Define which GameObjects to use when you bake the NavMesh.<br/>Available options:<ul><li>**All Game Objects**: Use all active GameObjects in the scene. (This is the default option.)</li><li>**Volume**: Use all active GameObjects that overlap the bounding volume. Geometry that is located outside of the bounding volume but within the agent radius is included when you bake the NavMesh.</li><li>**Current Object Hierarchy**: Use the GameObject that the **NavMesh Surface** component is placed on and all active GameObjects which are children of this GameObject.</li><li>**NavMeshModifier Component Only**: Use any GameObjects in the scene that have a NavMesh Modifier attached to them and, if their **Apply To Children** option is turned on, use their child objects as well.</li></ul> |
 | **Include Layers** | Select the layers for which GameObjects are included in the bake process. In addition to **Collect Objects**, this allows for further exclusion of specific GameObjects from the bake process (for example, effects or animated characters). This is set to **Everything** by default, but you can toggle options on (denoted by a check mark) or off, individually. |
+
 Furthermore, you can use the [NavMesh Modifier](./NavMeshModifier.md) component to designate more precisely the objects, and their hierarchies, that the NavMesh Surface can or cannot collect.
 
 ## Advanced Settings

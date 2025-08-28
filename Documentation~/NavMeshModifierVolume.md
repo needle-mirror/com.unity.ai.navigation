@@ -22,12 +22,8 @@ The following table describes the properties available in the NavMesh Modifier V
 | **Edit Volume** | Toggle the ability to edit the size of the volume in the Scene view. To modify the size of the volume as needed, select **Edit Volume**. A wire box with handles, representing the volume, is displayed in the Scene view. Drag the handles to modify the size of the volume. |
 | **Size** | Specify the dimensions of the NavMesh Modifier Volume, defined by XYZ measurements. |
 | **Center** | Specify the center of the NavMesh Modifier Volume relative to the center of the GameObject, defined by XYZ coordinates. |
-| **Area Type** | Select the [area type](AreasAndCosts) that the NavMesh Modifier Volume applies to NavMeshes within the defined region. The available options include all of the area types that have a cost defined in the [Areas tab](NavigationWindow.html#areas-tab) of the Navigation window. |
-| **Area Type** > **Open Area Settings** | Open the Areas tab of the Navigation window to define new area types or modify existing ones. |
-| **Affected Agents** | Select the agent types for which the NavMesh Modifier Volume change applies. For example, you can make the selected NavMesh Modifier Volume a danger zone for specific agent types only. The available options include all of the agent types defined on the [Agents tab](NavigationWindow.html#areas-tab) of the Navigation window. |
-| **Affected Agents** > **All** | Apply the change to all of the defined agent types whether now or in the future. |
-| **Affected Agents** > **None** | Don't apply the change to any of the defined agent types. |
-| **Affected Agents** > **Defined area types** | Apply the change to the selected agent types. You can select more than one agent type. |
+| **Area Type** | Select the [area type](AreasAndCosts) that the NavMesh Modifier Volume applies to NavMeshes within the defined region. The available options include all of the area types that have a cost defined in the [Areas tab](NavigationWindow.html#areas-tab) of the Navigation window. <br/>Select **Open Area Settings** to open the Areas tab of the Navigation window to define new area types or modify existing ones. |
+| **Affected Agents** | Select the agent types for which the NavMesh Modifier Volume change applies. For example, you can make the selected NavMesh Modifier Volume a danger zone for specific agent types only. The available options include all of the agent types defined on the [Agents tab](NavigationWindow.html#areas-tab) of the Navigation window. <br/>Available options: <ul><li>**All**: Apply the change to all of the defined agent types whether now or in the future.</li><li>**None**: Don't apply the change to any of the defined agent types.</li><li>**Defined area types**: Apply the change to the selected agent types. You can select more than one agent type.</li></ul> |
 
 
 ## Additional resources
