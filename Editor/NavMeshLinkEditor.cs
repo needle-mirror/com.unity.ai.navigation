@@ -20,8 +20,11 @@ namespace Unity.AI.Navigation.Editor
         SerializedProperty m_StartTransform;
         SerializedProperty m_Activated;
         SerializedProperty m_Width;
-
+#if UNITY_6000_2_OR_NEWER
+        static EntityId s_SelectedID;
+#else
         static int s_SelectedID;
+#endif
         static int s_SelectedPoint = -1;
 
         static Color s_HandleColor = new Color(255f, 167f, 39f, 210f) / 255;
@@ -42,7 +45,11 @@ namespace Unity.AI.Navigation.Editor
             m_Activated = serializedObject.FindProperty("m_Activated");
             m_Width = serializedObject.FindProperty("m_Width");
 
+#if UNITY_6000_2_OR_NEWER
+            s_SelectedID = EntityId.None;
+#else
             s_SelectedID = 0;
+#endif
             s_SelectedPoint = -1;
         }
 
@@ -51,8 +58,10 @@ namespace Unity.AI.Navigation.Editor
             var toWorld = navLink.LocalToWorldUnscaled();
 
             var allLinksOnGameObject = navLink.gameObject.GetComponents<NavMeshLink>();
-            Span<(Vector3 start, Vector3 end)> serializedEndpointsWorld = stackalloc (Vector3, Vector3)[allLinksOnGameObject.Length];
-            Span<(Vector3 start, Vector3 end)> worldEndpointsBeforeAlign = stackalloc (Vector3, Vector3)[allLinksOnGameObject.Length];
+            Span<(Vector3 start, Vector3 end)> serializedEndpointsWorld =
+                stackalloc (Vector3, Vector3)[allLinksOnGameObject.Length];
+            Span<(Vector3 start, Vector3 end)> worldEndpointsBeforeAlign =
+                stackalloc (Vector3, Vector3)[allLinksOnGameObject.Length];
             var thisLink = -1;
             for (var i = 0; i < allLinksOnGameObject.Length; i++)
             {
@@ -186,7 +195,8 @@ namespace Unity.AI.Navigation.Editor
             }
         }
 
-        internal static Vector3 GetLocalDirectionRight(NavMeshLink navLink, out Vector3 localStartPosition, out Vector3 localEndPosition)
+        internal static Vector3 GetLocalDirectionRight(NavMeshLink navLink, out Vector3 localStartPosition,
+            out Vector3 localEndPosition)
         {
             navLink.GetLocalPositions(out localStartPosition, out localEndPosition);
             var dir = localEndPosition - localStartPosition;
@@ -274,7 +284,11 @@ namespace Unity.AI.Navigation.Editor
             Vector3 newWorldPos;
 
             var startIsLocal = navLink.startTransform == null;
+#if UNITY_6000_2_OR_NEWER
+            if (s_SelectedPoint == 0 && navLink.GetEntityId() == s_SelectedID)
+#else
             if (s_SelectedPoint == 0 && navLink.GetInstanceID() == s_SelectedID)
+#endif
             {
                 EditorGUI.BeginChangeCheck();
                 if (startIsLocal)
@@ -303,12 +317,20 @@ namespace Unity.AI.Navigation.Editor
                         startIsLocal ? Handles.CubeHandleCap : Handles.SphereHandleCap))
                 {
                     s_SelectedPoint = 0;
+#if UNITY_6000_2_OR_NEWER
+                    s_SelectedID = navLink.GetEntityId();
+#else
                     s_SelectedID = navLink.GetInstanceID();
+#endif
                 }
             }
 
             var endIsLocal = navLink.endTransform == null;
+#if UNITY_6000_2_OR_NEWER
+            if (s_SelectedPoint == 1 && navLink.GetEntityId() == s_SelectedID)
+#else
             if (s_SelectedPoint == 1 && navLink.GetInstanceID() == s_SelectedID)
+#endif
             {
                 EditorGUI.BeginChangeCheck();
                 if (endIsLocal)
@@ -337,12 +359,17 @@ namespace Unity.AI.Navigation.Editor
                         endIsLocal ? Handles.CubeHandleCap : Handles.SphereHandleCap))
                 {
                     s_SelectedPoint = 1;
+#if UNITY_6000_2_OR_NEWER
+                    s_SelectedID = navLink.GetEntityId();
+#else
                     s_SelectedID = navLink.GetInstanceID();
+#endif
                 }
             }
 
             EditorGUI.BeginChangeCheck();
-            newWorldPos = Handles.Slider(worldMidPt + 0.5f * navLink.width * right, right, midSize * 0.03f, Handles.DotHandleCap, 0);
+            newWorldPos = Handles.Slider(worldMidPt + 0.5f * navLink.width * right, right, midSize * 0.03f,
+                Handles.DotHandleCap, 0);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(navLink, Content.UndoModifyLinkWidth);
@@ -350,7 +377,8 @@ namespace Unity.AI.Navigation.Editor
             }
 
             EditorGUI.BeginChangeCheck();
-            newWorldPos = Handles.Slider(worldMidPt - 0.5f * navLink.width * right, -right, midSize * 0.03f, Handles.DotHandleCap, 0);
+            newWorldPos = Handles.Slider(worldMidPt - 0.5f * navLink.width * right, -right, midSize * 0.03f,
+                Handles.DotHandleCap, 0);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(navLink, Content.UndoModifyLinkWidth);
@@ -387,21 +415,38 @@ namespace Unity.AI.Navigation.Editor
 
         static class Content
         {
-            public static readonly GUIContent AgentType = EditorGUIUtility.TrTextContent("Agent Type", "Specifies the agent type that can use the link.");
-            public static readonly GUIContent AreaType = EditorGUIUtility.TrTextContent("Area Type", "The area type of the NavMesh Link, which affects pathfinding costs.");
-            public static readonly GUIContent CostOverrideToggle = EditorGUIUtility.TrTextContent("Cost Override", "If enabled, the value below will be used instead of the area cost defined in the Navigation window.");
-            public static readonly GUIContent CostModifier = EditorGUIUtility.TrTextContent(" ", "If Cost Override is enabled, the link uses this cost instead of the area cost defined in the Navigation window.");
-            public static readonly GUIContent Positions = EditorGUIUtility.TrTextContent("Positions", "Configure the ends of the link, each specified either as a Transform's position or as an unscaled offset in the space of this GameObject.");
-            public static readonly GUIContent StartTransform = EditorGUIUtility.TrTextContent("Start Transform", "Transform whose world position specifies the link start point.");
-            public static readonly GUIContent StartPoint = EditorGUIUtility.TrTextContent("Start Point", "A local position where the link starts. Used only if Start Transform does not reference any object.");
-            public static readonly GUIContent EndTransform = EditorGUIUtility.TrTextContent("End Transform", "Transform whose world position specifies the link end point.");
-            public static readonly GUIContent EndPoint = EditorGUIUtility.TrTextContent("End Point", "A local position where the link ends. Used only if End Transform does not reference any object.");
-            public static readonly GUIContent ReverseDirectionButton = EditorGUIUtility.TrTextContent("Swap", "Reverse the direction of the link by swapping the start and end.");
-            public static readonly GUIContent ReCenterButton = EditorGUIUtility.TrTextContent("Re-Center Origin", "Place this GameObject at the middle point between the start and end of this link, and rotate it to point forward from the link start towards the end.");
-            public static readonly GUIContent Width = EditorGUIUtility.TrTextContent("Width", "World-space width of the segments making up the ends of the link.");
-            public static readonly GUIContent AutoUpdatePositions = EditorGUIUtility.TrTextContent("Auto Update Positions", "If enabled, the link will automatically update when the Start Transform, End Transform, or this GameObject's Transform changes.");
-            public static readonly GUIContent Bidirectional = EditorGUIUtility.TrTextContent("Bidirectional", "If enabled, agents can traverse the link in both directions.");
-            public static readonly GUIContent Activated = EditorGUIUtility.TrTextContent("Activated", "If enabled, allows the agents to traverse the link.");
+            public static readonly GUIContent AgentType =
+                EditorGUIUtility.TrTextContent("Agent Type", "Specifies the agent type that can use the link.");
+            public static readonly GUIContent AreaType = EditorGUIUtility.TrTextContent("Area Type",
+                "The area type of the NavMesh Link, which affects pathfinding costs.");
+            public static readonly GUIContent CostOverrideToggle = EditorGUIUtility.TrTextContent("Cost Override",
+                "If enabled, the value below will be used instead of the area cost defined in the Navigation window.");
+            public static readonly GUIContent CostModifier = EditorGUIUtility.TrTextContent(" ",
+                "If Cost Override is enabled, the link uses this cost instead of the area cost defined in the Navigation window.");
+            public static readonly GUIContent Positions = EditorGUIUtility.TrTextContent("Positions",
+                "Configure the ends of the link, each specified either as a Transform's position or as an unscaled offset in the space of this GameObject.");
+            public static readonly GUIContent StartTransform = EditorGUIUtility.TrTextContent("Start Transform",
+                "Transform whose world position specifies the link start point.");
+            public static readonly GUIContent StartPoint = EditorGUIUtility.TrTextContent("Start Point",
+                "A local position where the link starts. Used only if Start Transform does not reference any object.");
+            public static readonly GUIContent EndTransform = EditorGUIUtility.TrTextContent("End Transform",
+                "Transform whose world position specifies the link end point.");
+            public static readonly GUIContent EndPoint = EditorGUIUtility.TrTextContent("End Point",
+                "A local position where the link ends. Used only if End Transform does not reference any object.");
+            public static readonly GUIContent ReverseDirectionButton =
+                EditorGUIUtility.TrTextContent("Swap",
+                    "Reverse the direction of the link by swapping the start and end.");
+            public static readonly GUIContent ReCenterButton = EditorGUIUtility.TrTextContent("Re-Center Origin",
+                "Place this GameObject at the middle point between the start and end of this link, and rotate it to point forward from the link start towards the end.");
+            public static readonly GUIContent Width = EditorGUIUtility.TrTextContent("Width",
+                "World-space width of the segments making up the ends of the link.");
+            public static readonly GUIContent AutoUpdatePositions =
+                EditorGUIUtility.TrTextContent("Auto Update Positions",
+                    "If enabled, the link will automatically update when the Start Transform, End Transform, or this GameObject's Transform changes.");
+            public static readonly GUIContent Bidirectional = EditorGUIUtility.TrTextContent("Bidirectional",
+                "If enabled, agents can traverse the link in both directions.");
+            public static readonly GUIContent Activated =
+                EditorGUIUtility.TrTextContent("Activated", "If enabled, allows the agents to traverse the link.");
             public static readonly string UndoReCenterOrigin = L10n.Tr("Re-Center NavMesh Link origin");
             public static readonly string UndoReverseDirection = L10n.Tr("Swap NavMesh Link start and end");
             public static readonly string UndoMoveLinkStartPoint = L10n.Tr("Move NavMesh Link start point");

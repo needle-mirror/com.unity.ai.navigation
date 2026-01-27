@@ -68,6 +68,7 @@ namespace Unity.AI.Navigation.Updater
                         break;
                     }
                 }
+
                 CloseScene(scene);
             }
 
@@ -109,17 +110,20 @@ namespace Unity.AI.Navigation.Updater
                     failedConversions.Add(new FailedConversion
                     {
                         itemIndex = objectsToConvert.IndexOf(guid),
-                        failureMessage = $"Cannot find the asset at path {pathToObject}. Please make sure the file exists."
+                        failureMessage =
+                            $"Cannot find the asset at path {pathToObject}. Please make sure the file exists."
                     });
                     continue;
                 }
+
                 if (!CanWriteToAsset(pathToObject))
                 {
                     failedToConvert.Add(guid);
                     failedConversions.Add(new FailedConversion
                     {
                         itemIndex = objectsToConvert.IndexOf(guid),
-                        failureMessage = $"Cannot write to the asset at path {pathToObject}. Please make sure the file is not read-only."
+                        failureMessage =
+                            $"Cannot write to the asset at path {pathToObject}. Please make sure the file is not read-only."
                     });
                     continue;
                 }
@@ -179,6 +183,7 @@ namespace Unity.AI.Navigation.Updater
                         foreach (var offMeshLink in offMeshLinks)
                             Object.DestroyImmediate(offMeshLink, true);
                     }
+
                     EditorSceneManager.SaveScene(scene);
                     CloseScene(scene);
                 }
@@ -198,7 +203,8 @@ namespace Unity.AI.Navigation.Updater
                 if (sortedAssetGuids.Contains(assetGuid))
                     continue;
 
-                var prefabGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(assetGuid));
+                var prefabGameObject =
+                    AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(assetGuid));
                 if (prefabGameObject == null)
                     sortedAssetGuids.Add(assetGuid);
                 else
@@ -235,7 +241,8 @@ namespace Unity.AI.Navigation.Updater
             foreach (var removedComponent in removedComponents)
             {
                 if (removedComponent.assetComponent is OffMeshLink)
-                    PrefabUtility.RevertRemovedComponent(prefab, removedComponent.assetComponent, InteractionMode.AutomatedAction);
+                    PrefabUtility.RevertRemovedComponent(prefab, removedComponent.assetComponent,
+                        InteractionMode.AutomatedAction);
             }
         }
 
@@ -253,6 +260,7 @@ namespace Unity.AI.Navigation.Updater
                 scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
                 return true;
             }
+
             scene = default;
             return false;
         }
@@ -267,6 +275,7 @@ namespace Unity.AI.Navigation.Updater
                 if (PrefabUtility.IsAnyPrefabInstanceRoot(gameObject) && gameObject != rootGameObject)
                     offMeshLinks.RemoveAt(i);
             }
+
             return offMeshLinks;
         }
 
@@ -278,6 +287,7 @@ namespace Unity.AI.Navigation.Updater
             {
                 var gameObject = offMeshLink.gameObject;
                 var isPrefabVariant = PrefabUtility.IsPartOfVariantPrefab(gameObject);
+
                 // If the prefab is a variant and the OffMeshLink is not an override,
                 // only store the variant's OffMeshLink and NavMeshLink pair, and skip the rest of the conversion.
                 if (isPrefabVariant && !PrefabUtility.IsAddedComponentOverride(offMeshLink))
@@ -352,7 +362,8 @@ namespace Unity.AI.Navigation.Updater
         /// </summary>
         /// <param name="outerPrefabRoot">The out-most prefab root</param>
         /// <param name="offMeshLinkToNavMeshLink">Dictionary storing the OffMeshLink and NavMeshLink pairs</param>
-        static void ApplyOverrideDataToPrefab(GameObject outerPrefabRoot, Dictionary<OffMeshLink, NavMeshLink> offMeshLinkToNavMeshLink)
+        static void ApplyOverrideDataToPrefab(GameObject outerPrefabRoot,
+            Dictionary<OffMeshLink, NavMeshLink> offMeshLinkToNavMeshLink)
         {
             var didUpdate = false;
             var updatedRoots = new HashSet<GameObject>();
@@ -384,7 +395,8 @@ namespace Unity.AI.Navigation.Updater
         /// <summary>
         /// Removes the NavMeshLink components that correspond to OffMeshLink components that were removed from the variant prefab.
         /// </summary>
-        static void SyncOverriddenRemovalsOfComponents(GameObject prefabRoot, IReadOnlyDictionary<OffMeshLink, NavMeshLink> offMeshLinkToNavMeshLink)
+        static void SyncOverriddenRemovalsOfComponents(GameObject prefabRoot,
+            IReadOnlyDictionary<OffMeshLink, NavMeshLink> offMeshLinkToNavMeshLink)
         {
             var isPrefabVariant = PrefabUtility.IsPartOfVariantPrefab(prefabRoot);
             if (!isPrefabVariant)
@@ -398,7 +410,7 @@ namespace Unity.AI.Navigation.Updater
                     continue;
 
                 var sourceNavMeshLink = offMeshLinkToNavMeshLink[removedOffMeshLink];
-                foreach(var variantComponent in variantNavMeshLinks)
+                foreach (var variantComponent in variantNavMeshLinks)
                 {
                     var correspondingComponent = PrefabUtility.GetCorrespondingObjectFromSource(variantComponent);
                     if (correspondingComponent == sourceNavMeshLink)
@@ -425,9 +437,11 @@ namespace Unity.AI.Navigation.Updater
                     // Non-prefab instances cannot have overrides, so continue.
                     if (!PrefabUtility.IsPartOfAnyPrefab(offMeshLink))
                         continue;
+
                     // Find the prefab root and check if it contains any overrides
                     var prefabRoot = PrefabUtility.GetNearestPrefabInstanceRoot(offMeshLink.gameObject);
-                    if (!PrefabUtility.HasPrefabInstanceAnyOverrides(prefabRoot, false) && !updatedRoots.Contains(prefabRoot))
+                    if (!PrefabUtility.HasPrefabInstanceAnyOverrides(prefabRoot, false) &&
+                        !updatedRoots.Contains(prefabRoot))
                         continue;
 
                     var propertyModifications = PrefabUtility.GetPropertyModifications(prefabRoot);
@@ -441,12 +455,14 @@ namespace Unity.AI.Navigation.Updater
             EditorSceneManager.SaveScene(scene);
         }
 
-        static void UpdatePropertyModifications(ref PropertyModification[] propertyModifications, Dictionary<OffMeshLink, NavMeshLink> offMeshLinkToNavMeshLink)
+        static void UpdatePropertyModifications(ref PropertyModification[] propertyModifications,
+            Dictionary<OffMeshLink, NavMeshLink> offMeshLinkToNavMeshLink)
         {
             var updatedModifications = new List<PropertyModification>(propertyModifications);
             for (var i = 0; i < propertyModifications.Length; ++i)
             {
                 var modification = propertyModifications[i];
+
                 // Skip if the target is not an OffMeshLink
                 if (modification.target is not OffMeshLink oml)
                 {
@@ -481,6 +497,7 @@ namespace Unity.AI.Navigation.Updater
                                 updatedModifications.Add(overrideMod);
                             }
                         }
+
                         break;
                     case "m_BiDirectional":
                         newMod.propertyPath = "m_Bidirectional";
@@ -495,8 +512,10 @@ namespace Unity.AI.Navigation.Updater
                         newMod.propertyPath = modification.propertyPath;
                         break;
                 }
+
                 updatedModifications.Add(newMod);
             }
+
             propertyModifications = updatedModifications.ToArray();
         }
 
@@ -507,7 +526,8 @@ namespace Unity.AI.Navigation.Updater
         /// <param name="variantPrefab">The variant prefab</param>
         /// <typeparam name="TComponent">The type of component to search for</typeparam>
         /// <returns>Returns the corresponding component on the variant of the source prefab component, if found, or null.</returns>
-        static TComponent GetCorrespondingVariantComponent<TComponent>(TComponent component, GameObject variantPrefab) where TComponent : Component
+        static TComponent GetCorrespondingVariantComponent<TComponent>(TComponent component, GameObject variantPrefab)
+            where TComponent : Component
         {
             var variantComponents = variantPrefab.GetComponents(component.GetType());
             foreach (var variantComponent in variantComponents)
@@ -516,6 +536,7 @@ namespace Unity.AI.Navigation.Updater
                 if (correspondingComponent == component)
                     return variantComponent as TComponent;
             }
+
             return null;
         }
     }

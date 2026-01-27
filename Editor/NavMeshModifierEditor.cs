@@ -66,14 +66,25 @@ namespace Unity.AI.Navigation.Editor
 
         static class Content
         {
-            public static readonly GUIContent Mode = EditorGUIUtility.TrTextContent("Mode", "Specifies whether to consider or ignore the affected GameObject(s).");
-            public static readonly string[] ModeChoices = { L10n.Tr("Add or Modify Object"), L10n.Tr("Remove Object") };
-            public static readonly GUIContent AffectedAgents = EditorGUIUtility.TrTextContent("Affected Agents", "Specifies which agents the NavMesh Modifier affects.");
-            public static readonly GUIContent ApplyToChildren = EditorGUIUtility.TrTextContent("Apply To Children", "If enabled, applies the configuration to the child hierarchy of the GameObject until another NavMesh Modifier component is encountered.");
-            public static readonly GUIContent OverrideArea = EditorGUIUtility.TrTextContent("Override Area", "If enabled, the area type of the NavMeshModifier will be overridden by the area type selected below.");
-            public static readonly GUIContent AreaType = EditorGUIUtility.TrTextContent("Area Type", "The area type of the NavMeshModifier.");
-            public static readonly GUIContent OverrideGenerateLinks = EditorGUIUtility.TrTextContent("Override Generate Links", "If enabled, forces the NavMesh bake process to either include or ignore the affected GameObject(s) when you generate links.");
-            public static readonly GUIContent GenerateLinks = EditorGUIUtility.TrTextContent("Generate Links", "If enabled, specifies whether or not to include the affected GameObject(s) when you generate links.");
+            public static readonly GUIContent Mode = EditorGUIUtility.TrTextContent("Mode",
+                "Specifies whether to consider or ignore the affected GameObject(s).");
+            public static readonly string[] ModeChoices =
+            {
+                L10n.Tr("Add or Modify Object"), L10n.Tr("Remove Object")
+            };
+            public static readonly GUIContent AffectedAgents = EditorGUIUtility.TrTextContent("Affected Agents",
+                "Specifies which agents the NavMesh Modifier affects.");
+            public static readonly GUIContent ApplyToChildren = EditorGUIUtility.TrTextContent("Apply To Children",
+                "If enabled, applies the configuration to the child hierarchy of the GameObject until another NavMesh Modifier component is encountered.");
+            public static readonly GUIContent OverrideArea = EditorGUIUtility.TrTextContent("Override Area",
+                "If enabled, the area type of the NavMeshModifier will be overridden by the area type selected below.");
+            public static readonly GUIContent AreaType =
+                EditorGUIUtility.TrTextContent("Area Type", "The area type of the NavMeshModifier.");
+            public static readonly GUIContent OverrideGenerateLinks =
+                EditorGUIUtility.TrTextContent("Override Generate Links",
+                    "If enabled, forces the NavMesh bake process to either include or ignore the affected GameObject(s) when you generate links.");
+            public static readonly GUIContent GenerateLinks = EditorGUIUtility.TrTextContent("Generate Links",
+                "If enabled, specifies whether or not to include the affected GameObject(s) when you generate links.");
         }
     }
 }

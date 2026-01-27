@@ -40,6 +40,7 @@ namespace Unity.AI.Navigation
     public class NavMeshSurface : MonoBehaviour
     {
 #pragma warning disable 0414
+
         // Serialized version is used to upgrade older serialized data to the current format.
         // Version 0: Initial version.
         [SerializeField, HideInInspector]
@@ -129,7 +130,11 @@ namespace Unity.AI.Navigation
 
         /// <summary> Gets or sets whether the process of building the NavMesh ignores the GameObjects containing a <see cref="NavMeshObstacle"/> component. </summary>
         /// <remarks> There is generally no need for the NavMesh to take into consideration the objects that can move.</remarks>
-        public bool ignoreNavMeshObstacle { get { return m_IgnoreNavMeshObstacle; } set { m_IgnoreNavMeshObstacle = value; } }
+        public bool ignoreNavMeshObstacle
+        {
+            get { return m_IgnoreNavMeshObstacle; }
+            set { m_IgnoreNavMeshObstacle = value; }
+        }
 
         /// <summary> Gets or sets whether the NavMesh building process uses the <see cref="tileSize"/> value. </summary>
         public bool overrideTileSize { get { return m_OverrideTileSize; } set { m_OverrideTileSize = value; } }
@@ -244,6 +249,7 @@ namespace Unity.AI.Navigation
                 buildSettings.overrideTileSize = true;
                 buildSettings.tileSize = tileSize;
             }
+
             if (overrideVoxelSize)
             {
                 buildSettings.overrideVoxelSize = true;
@@ -333,6 +339,7 @@ namespace Unity.AI.Navigation
             if (!myStage.IsValid())
                 return;
 #endif
+
             // Modifiers
             List<NavMeshModifierVolume> modifiers;
             if (m_CollectObjects == CollectObjects.Children)
@@ -357,7 +364,8 @@ namespace Unity.AI.Navigation
 #endif
                 var mcenter = m.transform.TransformPoint(m.center);
                 var scale = m.transform.lossyScale;
-                var msize = new Vector3(m.size.x * Mathf.Abs(scale.x), m.size.y * Mathf.Abs(scale.y), m.size.z * Mathf.Abs(scale.z));
+                var msize = new Vector3(m.size.x * Mathf.Abs(scale.x), m.size.y * Mathf.Abs(scale.y),
+                    m.size.z * Mathf.Abs(scale.z));
 
                 var src = new NavMeshBuildSource();
                 src.shape = NavMeshBuildSourceShape.ModifierBox;
@@ -405,28 +413,34 @@ namespace Unity.AI.Navigation
             {
                 default:
                 case CollectObjects.All:
-                    CollectSourcesInHierarchy(null, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups, false, sources);
+                    CollectSourcesInHierarchy(null, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups,
+                        false, sources);
                     break;
                 case CollectObjects.Children:
-                    CollectSourcesInHierarchy(transform, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups, false, sources);
+                    CollectSourcesInHierarchy(transform, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks,
+                        markups, false, sources);
                     break;
                 case CollectObjects.Volume:
                 {
                     var localToWorld = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
                     var worldBounds = GetWorldBounds(localToWorld, GetInflatedBounds());
-                    CollectSourcesInVolume(worldBounds, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups, false, sources);
+                    CollectSourcesInVolume(worldBounds, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks,
+                        markups, false, sources);
                     break;
                 }
                 case CollectObjects.MarkedWithModifier:
-                    CollectSourcesInHierarchy(null, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups, true, sources);
+                    CollectSourcesInHierarchy(null, m_LayerMask, m_UseGeometry, m_DefaultArea, m_GenerateLinks, markups,
+                        true, sources);
                     break;
             }
 
             if (m_IgnoreNavMeshAgent)
-                sources.RemoveAll((x) => (x.component != null && x.component.gameObject.GetComponent<NavMeshAgent>() != null));
+                sources.RemoveAll((x) =>
+                    (x.component != null && x.component.gameObject.GetComponent<NavMeshAgent>() != null));
 
             if (m_IgnoreNavMeshObstacle)
-                sources.RemoveAll((x) => (x.component != null && x.component.gameObject.GetComponent<NavMeshObstacle>() != null));
+                sources.RemoveAll((x) =>
+                    (x.component != null && x.component.gameObject.GetComponent<NavMeshObstacle>() != null));
 
             AppendModifierVolumes(ref sources);
 
@@ -468,9 +482,11 @@ namespace Unity.AI.Navigation
                     case NavMeshBuildSourceShape.Terrain:
                     {
 #if NMC_CAN_ACCESS_TERRAIN
+
                         // Terrain pivot is lower/left corner - shift bounds accordingly
                         var t = src.sourceObject as TerrainData;
-                        result.Encapsulate(GetWorldBounds(worldToLocal * src.transform, new Bounds(0.5f * t.size, t.size)));
+                        result.Encapsulate(GetWorldBounds(worldToLocal * src.transform,
+                            new Bounds(0.5f * t.size, t.size)));
 #else
                         Debug.LogWarning("The NavMesh cannot be properly baked for the terrain because the necessary functionality is missing. Add the com.unity.modules.terrain package through the Package Manager.");
 #endif
@@ -480,10 +496,12 @@ namespace Unity.AI.Navigation
                     case NavMeshBuildSourceShape.Sphere:
                     case NavMeshBuildSourceShape.Capsule:
                     case NavMeshBuildSourceShape.ModifierBox:
-                        result.Encapsulate(GetWorldBounds(worldToLocal * src.transform, new Bounds(Vector3.zero, src.size)));
+                        result.Encapsulate(GetWorldBounds(worldToLocal * src.transform,
+                            new Bounds(Vector3.zero, src.size)));
                         break;
                 }
             }
+
             // Inflate the bounds a bit to avoid clipping co-planar sources
             result.Expand(0.1f);
             return result;
@@ -508,7 +526,8 @@ namespace Unity.AI.Navigation
         }
 
         void CollectSourcesInVolume(
-            Bounds includedWorldBounds, int includedLayerMask, NavMeshCollectGeometry geometry, int areaByDefault, bool generateLinksByDefault,
+            Bounds includedWorldBounds, int includedLayerMask, NavMeshCollectGeometry geometry, int areaByDefault,
+            bool generateLinksByDefault,
             List<NavMeshBuildMarkup> markups, bool includeOnlyMarkedObjects, List<NavMeshBuildSource> results)
         {
 #if UNITY_EDITOR
@@ -534,7 +553,8 @@ namespace Unity.AI.Navigation
         }
 
         void CollectSourcesInHierarchy(
-            Transform root, int includedLayerMask, NavMeshCollectGeometry geometry, int areaByDefault, bool generateLinksByDefault,
+            Transform root, int includedLayerMask, NavMeshCollectGeometry geometry, int areaByDefault,
+            bool generateLinksByDefault,
             List<NavMeshBuildMarkup> markups, bool includeOnlyMarkedObjects, List<NavMeshBuildSource> results)
         {
 #if UNITY_EDITOR
@@ -614,6 +634,7 @@ namespace Unity.AI.Navigation
 
                 if (!m_OverrideTileSize)
                     m_TileSize = kDefaultTileSize;
+
                 // Make sure tilesize is in sane range.
                 if (m_TileSize < kMinTileSize)
                     m_TileSize = kMinTileSize;
@@ -629,6 +650,7 @@ namespace Unity.AI.Navigation
         {
             var isInPreviewScene = EditorSceneManager.IsPreviewSceneObject(navMeshSurface);
             var isPrefab = isInPreviewScene || EditorUtility.IsPersistent(navMeshSurface);
+
             // if (isPrefab)
             //     Debug.Log($"NavMeshData from {navMeshSurface.gameObject.name}.{navMeshSurface.name} will not be added to the NavMesh world because the gameObject is a prefab.");
             return isPrefab;

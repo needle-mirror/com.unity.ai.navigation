@@ -19,13 +19,16 @@ namespace Unity.AI.Navigation.Editor
                 EditorGUIUtility.TrTextContent("Surfaces");
 
             internal static readonly GUIContent SurfacesSelectedOnlyTexts =
-                EditorGUIUtility.TrTextContent("Show Only Selected", "Check this to hide surfaces which are not part of the selection hierarchy");
+                EditorGUIUtility.TrTextContent("Show Only Selected",
+                    "Check this to hide surfaces which are not part of the selection hierarchy");
 
             internal static readonly GUIContent SurfacesNavMeshTexts =
-                EditorGUIUtility.TrTextContent("Show NavMesh", "Display navigation mesh using the associated area's color");
+                EditorGUIUtility.TrTextContent("Show NavMesh",
+                    "Display navigation mesh using the associated area's color");
 
             internal static readonly GUIContent SurfacesHeightMeshTexts =
-                EditorGUIUtility.TrTextContent("Show HeightMesh", "Display height mesh used for accurate vertical placement");
+                EditorGUIUtility.TrTextContent("Show HeightMesh",
+                    "Display height mesh used for accurate vertical placement");
 
             internal static readonly GUIContent AgentsSectionTexts =
                 EditorGUIUtility.TrTextContent("Agents");
@@ -34,28 +37,34 @@ namespace Unity.AI.Navigation.Editor
                 EditorGUIUtility.TrTextContent("Show Path Polygons", "Shows the polygons leading to goal.");
 
             internal static readonly GUIContent AgentsPathNodesTexts =
-                EditorGUIUtility.TrTextContent("Show Path Query Nodes", "Shows the nodes expanded during last path query.");
+                EditorGUIUtility.TrTextContent("Show Path Query Nodes",
+                    "Shows the nodes expanded during last path query.");
 
             internal static readonly GUIContent AgentsNeighboursTexts =
-                EditorGUIUtility.TrTextContent("Show Neighbours", "Show the agent neighbours considered during simulation.");
+                EditorGUIUtility.TrTextContent("Show Neighbours",
+                    "Show the agent neighbours considered during simulation.");
 
             internal static readonly GUIContent AgentsWallsTexts =
                 EditorGUIUtility.TrTextContent("Show Walls", "Shows the wall segments handled during simulation.");
 
             internal static readonly GUIContent AgentsAvoidanceTexts =
-                EditorGUIUtility.TrTextContent("Show Avoidance", "Shows the processed avoidance geometry from simulation.");
+                EditorGUIUtility.TrTextContent("Show Avoidance",
+                    "Shows the processed avoidance geometry from simulation.");
 
             internal static readonly GUIContent AgentsAvoidancePendingDebugRequestTexts =
-                EditorGUIUtility.TrTextContent("Avoidance display is not valid until after next game update.", "Avoidance information will be computed on the next game update");
+                EditorGUIUtility.TrTextContent("Avoidance display is not valid until after next game update.",
+                    "Avoidance information will be computed on the next game update");
 
             internal static readonly GUIContent AgentsAvoidanceDebugRequestsCountExceededTexts =
-                EditorGUIUtility.TrTextContent("", "Avoidance information display is limited to a fixed number of agents"); // This text is dynamic
+                EditorGUIUtility.TrTextContent("",
+                    "Avoidance information display is limited to a fixed number of agents"); // This text is dynamic
 
             internal static readonly GUIContent ObstaclesSectionTexts =
                 EditorGUIUtility.TrTextContent("Obstacles");
 
             internal static readonly GUIContent ObstaclesCarveHullText =
-                EditorGUIUtility.TrTextContent("Show Carve Hull", "Shows the hull used to carve the obstacle from the NavMesh.");
+                EditorGUIUtility.TrTextContent("Show Carve Hull",
+                    "Shows the hull used to carve the obstacle from the NavMesh.");
 
             internal static readonly GUIContent DeveloperModeSectionTexts =
                 EditorGUIUtility.TrTextContent("Developer Mode");
@@ -70,13 +79,14 @@ namespace Unity.AI.Navigation.Editor
                 EditorGUIUtility.TrTextContent("Show HeightMesh BV-Tree");
 
             internal static readonly GUIContent SurfacesHeightMapsTexts =
-                EditorGUIUtility.TrTextContent("Show HeightMaps", "Display terrain height maps used for accurate vertical placement");
+                EditorGUIUtility.TrTextContent("Show HeightMaps",
+                    "Display terrain height maps used for accurate vertical placement");
 
             internal static readonly GUIContent SurfacesProximityGridTexts =
                 EditorGUIUtility.TrTextContent("Show Proximity Grid");
 
             internal static readonly GUIContent NavigationVisualizationDisabledTexts =
-                EditorGUIUtility.TrTextContent("Navigation visualization is not available in prefab edition.", "");
+                EditorGUIUtility.TrTextContent("Navigation visualization is not available in prefab editing mode.", "");
         }
 
         VisualElement m_RootPanel;
@@ -90,7 +100,8 @@ namespace Unity.AI.Navigation.Editor
         {
             base.OnCreated();
 
-            NavMeshEditorHelpers.agentRejectedDebugInfoRequestsCountChanged += OnAgentRejectedDebugInfoRequestsCountChanged;
+            NavMeshEditorHelpers.agentRejectedDebugInfoRequestsCountChanged +=
+                OnAgentRejectedDebugInfoRequestsCountChanged;
             NavMeshEditorHelpers.agentDebugRequestsPending += DisplayAgentPendingRequestWarningBox;
             NavMeshEditorHelpers.agentDebugRequestsProcessed += HideAgentPendingRequestWarningBox;
 
@@ -100,7 +111,8 @@ namespace Unity.AI.Navigation.Editor
 
         public override void OnWillBeDestroyed()
         {
-            NavMeshEditorHelpers.agentRejectedDebugInfoRequestsCountChanged -= OnAgentRejectedDebugInfoRequestsCountChanged;
+            NavMeshEditorHelpers.agentRejectedDebugInfoRequestsCountChanged -=
+                OnAgentRejectedDebugInfoRequestsCountChanged;
             NavMeshEditorHelpers.agentDebugRequestsPending -= DisplayAgentPendingRequestWarningBox;
             NavMeshEditorHelpers.agentDebugRequestsProcessed -= HideAgentPendingRequestWarningBox;
 
@@ -117,13 +129,15 @@ namespace Unity.AI.Navigation.Editor
             m_OptionsPanel = new VisualElement();
             m_RootPanel.Add(m_OptionsPanel);
 
-            m_VisualizationDisabledHelpBox = AddHelpBox(HelpBoxMessageType.Info, Style.NavigationVisualizationDisabledTexts, 200, 10, false);
+            m_VisualizationDisabledHelpBox = AddHelpBox(HelpBoxMessageType.Info,
+                Style.NavigationVisualizationDisabledTexts, 200, 10, false);
             var visualizationEnabled = PrefabStageUtility.GetCurrentPrefabStage() == null;
             SetVisualizationEnabled(visualizationEnabled);
 
             // Surfaces
             var surfacesFoldout = AddFoldout(m_OptionsPanel, Style.SurfacesSectionTexts, 5);
-            AddToggle(surfacesFoldout, Style.SurfacesSelectedOnlyTexts, NavMeshVisualizationSettings.showOnlySelectedSurfaces,
+            AddToggle(surfacesFoldout, Style.SurfacesSelectedOnlyTexts,
+                NavMeshVisualizationSettings.showOnlySelectedSurfaces,
                 (evt => NavMeshVisualizationSettings.showOnlySelectedSurfaces = evt.newValue));
             AddToggle(surfacesFoldout, Style.SurfacesNavMeshTexts, NavMeshVisualizationSettings.showNavMesh,
                 evt => NavMeshVisualizationSettings.showNavMesh = evt.newValue);
@@ -132,17 +146,20 @@ namespace Unity.AI.Navigation.Editor
 
             // Agents
             m_AgentFoldOut = AddFoldout(m_OptionsPanel, Style.AgentsSectionTexts, 5);
-            AddToggle(m_AgentFoldOut, Style.AgentsPathPolysTexts, NavMeshVisualizationSettings.showAgentPath, evt => NavMeshVisualizationSettings.showAgentPath = evt.newValue);
+            AddToggle(m_AgentFoldOut, Style.AgentsPathPolysTexts, NavMeshVisualizationSettings.showAgentPath,
+                evt => NavMeshVisualizationSettings.showAgentPath = evt.newValue);
             AddToggle(m_AgentFoldOut, Style.AgentsPathNodesTexts, NavMeshVisualizationSettings.showAgentPathInfo,
                 evt => NavMeshVisualizationSettings.showAgentPathInfo = evt.newValue);
             AddToggle(m_AgentFoldOut, Style.AgentsNeighboursTexts, NavMeshVisualizationSettings.showAgentNeighbours,
                 evt => NavMeshVisualizationSettings.showAgentNeighbours = evt.newValue);
-            AddToggle(m_AgentFoldOut, Style.AgentsWallsTexts, NavMeshVisualizationSettings.showAgentWalls, evt => NavMeshVisualizationSettings.showAgentWalls = evt.newValue);
+            AddToggle(m_AgentFoldOut, Style.AgentsWallsTexts, NavMeshVisualizationSettings.showAgentWalls,
+                evt => NavMeshVisualizationSettings.showAgentWalls = evt.newValue);
             AddToggle(m_AgentFoldOut, Style.AgentsAvoidanceTexts, NavMeshVisualizationSettings.showAgentAvoidance,
                 evt => NavMeshVisualizationSettings.showAgentAvoidance = evt.newValue);
 
             // Create avoidance requests count warning box and display it if needed
-            m_AgentCountWarning = AddHelpBox(HelpBoxMessageType.Warning, Style.AgentsAvoidanceDebugRequestsCountExceededTexts, 180, 5, false);
+            m_AgentCountWarning = AddHelpBox(HelpBoxMessageType.Warning,
+                Style.AgentsAvoidanceDebugRequestsCountExceededTexts, 180, 5, false);
             NavMeshEditorHelpers.GetAgentsDebugInfoRejectedRequestsCount(out var rejected, out var allowed);
             if (rejected > 0)
             {
@@ -150,7 +167,8 @@ namespace Unity.AI.Navigation.Editor
             }
 
             // Create avoidance pending requests warning box and display it if needed
-            m_AgentPendingRequestWarning = AddHelpBox(HelpBoxMessageType.Warning, Style.AgentsAvoidancePendingDebugRequestTexts, 180, 5, false);
+            m_AgentPendingRequestWarning = AddHelpBox(HelpBoxMessageType.Warning,
+                Style.AgentsAvoidancePendingDebugRequestTexts, 180, 5, false);
             if (NavMeshEditorHelpers.HasPendingAgentDebugInfoRequests())
             {
                 DisplayAgentPendingRequestWarningBox();
@@ -158,22 +176,28 @@ namespace Unity.AI.Navigation.Editor
 
             // Obstacles
             var obstaclesFoldout = AddFoldout(m_OptionsPanel, Style.ObstaclesSectionTexts, 5);
-            AddToggle(obstaclesFoldout, Style.ObstaclesCarveHullText, NavMeshVisualizationSettings.showObstacleCarveHull,
+            AddToggle(obstaclesFoldout, Style.ObstaclesCarveHullText,
+                NavMeshVisualizationSettings.showObstacleCarveHull,
                 evt => NavMeshVisualizationSettings.showObstacleCarveHull = evt.newValue);
 
             // Developer Mode only
             if (Unsupported.IsDeveloperMode())
             {
                 var developerModeFoldout = AddFoldout(m_OptionsPanel, Style.DeveloperModeSectionTexts, 5);
-                AddToggle(developerModeFoldout, Style.SurfacesPortalsTexts, NavMeshVisualizationSettings.showNavMeshPortals,
+                AddToggle(developerModeFoldout, Style.SurfacesPortalsTexts,
+                    NavMeshVisualizationSettings.showNavMeshPortals,
                     evt => NavMeshVisualizationSettings.showNavMeshPortals = evt.newValue);
-                AddToggle(developerModeFoldout, Style.SurfacesTileLinksTexts, NavMeshVisualizationSettings.showNavMeshLinks,
+                AddToggle(developerModeFoldout, Style.SurfacesTileLinksTexts,
+                    NavMeshVisualizationSettings.showNavMeshLinks,
                     evt => NavMeshVisualizationSettings.showNavMeshLinks = evt.newValue);
-                AddToggle(developerModeFoldout, Style.SurfacesHeightMeshBVTreeTexts, NavMeshVisualizationSettings.showHeightMeshBVTree,
+                AddToggle(developerModeFoldout, Style.SurfacesHeightMeshBVTreeTexts,
+                    NavMeshVisualizationSettings.showHeightMeshBVTree,
                     evt => NavMeshVisualizationSettings.showHeightMeshBVTree = evt.newValue);
-                AddToggle(developerModeFoldout, Style.SurfacesHeightMapsTexts, NavMeshVisualizationSettings.showHeightMaps,
+                AddToggle(developerModeFoldout, Style.SurfacesHeightMapsTexts,
+                    NavMeshVisualizationSettings.showHeightMaps,
                     evt => NavMeshVisualizationSettings.showHeightMaps = evt.newValue);
-                AddToggle(developerModeFoldout, Style.SurfacesProximityGridTexts, NavMeshVisualizationSettings.showProximityGrid,
+                AddToggle(developerModeFoldout, Style.SurfacesProximityGridTexts,
+                    NavMeshVisualizationSettings.showProximityGrid,
                     evt => NavMeshVisualizationSettings.showProximityGrid = evt.newValue);
             }
 
@@ -235,7 +259,8 @@ namespace Unity.AI.Navigation.Editor
             return foldout;
         }
 
-        static void AddToggle(VisualElement parent, GUIContent text, bool parameter, EventCallback<ChangeEvent<bool>> callback)
+        static void AddToggle(VisualElement parent, GUIContent text, bool parameter,
+            EventCallback<ChangeEvent<bool>> callback)
         {
             // Create toggle element with the desired text content
             var toggle = new Toggle
@@ -267,7 +292,8 @@ namespace Unity.AI.Navigation.Editor
             parent.Add(toggle);
         }
 
-        static HelpBox AddHelpBox(HelpBoxMessageType messageType, GUIContent text, int maxWidth, int verticalMargin, bool visible)
+        static HelpBox AddHelpBox(HelpBoxMessageType messageType, GUIContent text,
+            int maxWidth, int verticalMargin, bool visible)
         {
             var helpBox = new HelpBox(text.text, messageType)
             {
@@ -287,7 +313,8 @@ namespace Unity.AI.Navigation.Editor
 
         void DisplayAgentCountWarningBox(int rejected, int allowed)
         {
-            m_AgentCountWarning.text = $"Avoidance visualization can be drawn for {allowed} agents ({allowed + rejected} selected).";
+            m_AgentCountWarning.text =
+                $"Avoidance visualization can be drawn for {allowed} agents ({allowed + rejected} selected).";
             if (!m_AgentCountWarning.visible)
             {
                 m_AgentCountWarning.visible = true;

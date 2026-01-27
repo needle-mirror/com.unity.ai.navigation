@@ -188,7 +188,8 @@ namespace Unity.AI.Navigation.Editor
             return CreateAndSelectGameObject(suggestedName, parent, Array.Empty<Type>());
         }
 
-        internal static GameObject CreateAndSelectGameObject(string suggestedName, GameObject parent, params Type[] components)
+        internal static GameObject CreateAndSelectGameObject(string suggestedName, GameObject parent,
+            params Type[] components)
         {
             var child = ObjectFactory.CreateGameObject(suggestedName, components);
             GOCreationCommands.Place(child, parent);

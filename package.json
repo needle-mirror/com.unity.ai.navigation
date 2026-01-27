@@ -1,11 +1,14 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "unity": "6000.0",
   "description": "The AI Navigation package contains high-level components that allow you to use navmeshes to incorporate navigation and pathfinding in your game. With this package installed you can build and use navmeshes at runtime and at edit time, create dynamic obstacles, and use links to allow specific actions (like jumping) as your characters navigate between navmeshes.",
   "dependencies": {
     "com.unity.modules.ai": "1.0.0"
+  },
+  "relatedPackages": {
+    "com.unity.ai.navigation.tests": "0.0.0"
   },
   "keywords": [
     "carving",
@@ -35,15 +38,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n* New sample scene **9_agent_cornering_control** to demonstrate controlling an agent's velocity in order to better navigate tight corners. ([UUM-59747](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-59747))\n\n### Fixed\n* Fixed samples not correctly configuring navigation agent types when imported into a project.\n* Foldouts in **AI Navigation** overlay collapse when toggling settings. ([NAVB-144](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-144))\n* Fixed poor performance when enabling/disabling increasing numbers of NavMeshModifiers. ([NAVB-96](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-96))\n* A small white square was displayed in the scene on top of the gizmo icons for NavMesh Link, NavMesh Modifier Volume and NavMesh Surface. ([NAVB-154](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-154))\n* **Navigation Updater** no longer attempts to process scenes and prefabs from the read-only **Packages** folder. ([NAVB-146](https://issuetracker.unity3d.com/product/unity/issues/guid/NAVB-146))"
+    "changelog": "### Fixed\n* Warning _Object.GetInstanceID()' is obsolete: 'GetInstanceID is deprecated_ was logged to the console in Unity 6.2 and newer.\n\n### Changed\n* The unit test scripts are no longer delivered with the package."
   },
   "upmCi": {
-    "footprint": "836212a7a7c119208b9226e99c9fb0f5820941f6"
+    "footprint": "68f07ed845088a589612967bfc3923029d0ef6d0"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "91b1bd9119720d8e48b9f9de9ad18da1e8c1088e"
+    "revision": "9f4e312ce74b9f52fe0802ee70aefff75ce6edb8"
   }
 }

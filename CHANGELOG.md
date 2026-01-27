@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.10] - 2026-01-27
+### Fixed
+* Warning _Object.GetInstanceID()' is obsolete: 'GetInstanceID is deprecated_ was logged to the console in Unity 6.2 and newer.
+
+### Changed
+* The unit test scripts are no longer delivered with the package.
+
 ## [2.0.9] - 2025-08-28
 ### Added
 * New sample scene **9_agent_cornering_control** to demonstrate controlling an agent's velocity in order to better navigate tight corners. ([UUM-59747](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-59747))

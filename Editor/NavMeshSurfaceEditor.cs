@@ -1,12 +1,12 @@
 #define NAVMESHCOMPONENTS_SHOW_NAVMESHDATA_REF
 
+using System.Linq;
 using UnityEditor;
 using UnityEditor.AI;
 using UnityEditor.IMGUI.Controls;
 using UnityEditorInternal;
-using UnityEngine.AI;
 using UnityEngine;
-using System.Linq;
+using UnityEngine.AI;
 
 namespace Unity.AI.Navigation.Editor
 {
@@ -87,7 +87,8 @@ namespace Unity.AI.Navigation.Editor
                 // Draw image
                 const float diagramHeight = 80.0f;
                 Rect agentDiagramRect = EditorGUILayout.GetControlRect(false, diagramHeight);
-                NavMeshEditorHelpers.DrawAgentDiagram(agentDiagramRect, bs.agentRadius, bs.agentHeight, bs.agentClimb, bs.agentSlope);
+                NavMeshEditorHelpers.DrawAgentDiagram(agentDiagramRect,
+                    bs.agentRadius, bs.agentHeight, bs.agentClimb, bs.agentSlope);
             }
 
             NavMeshComponentsGUIUtility.AgentTypePopup(Content.AgentType, m_AgentTypeID);
@@ -98,7 +99,8 @@ namespace Unity.AI.Navigation.Editor
 
             EditorGUILayout.PropertyField(m_UseGeometry, Content.UseGeometry);
 
-            m_CollectObjects.isExpanded = EditorGUILayout.Foldout(m_CollectObjects.isExpanded, Content.ObjectCollectionHeader, true);
+            m_CollectObjects.isExpanded =
+                EditorGUILayout.Foldout(m_CollectObjects.isExpanded, Content.ObjectCollectionHeader, true);
 
             if (m_CollectObjects.isExpanded)
             {
@@ -129,7 +131,8 @@ namespace Unity.AI.Navigation.Editor
 
             EditorGUILayout.Space();
 
-            m_OverrideVoxelSize.isExpanded = EditorGUILayout.Foldout(m_OverrideVoxelSize.isExpanded, Content.AdvancedHeader, true);
+            m_OverrideVoxelSize.isExpanded =
+                EditorGUILayout.Foldout(m_OverrideVoxelSize.isExpanded, Content.AdvancedHeader, true);
             if (m_OverrideVoxelSize.isExpanded)
             {
                 EditorGUI.indentLevel++;
@@ -137,7 +140,8 @@ namespace Unity.AI.Navigation.Editor
                 // Override voxel size.
                 EditorGUILayout.PropertyField(m_OverrideVoxelSize, Content.OverrideVoxelSize);
 
-                using (new EditorGUI.DisabledScope(!m_OverrideVoxelSize.boolValue || m_OverrideVoxelSize.hasMultipleDifferentValues))
+                using (new EditorGUI.DisabledScope(!m_OverrideVoxelSize.boolValue ||
+                           m_OverrideVoxelSize.hasMultipleDifferentValues))
                 {
                     EditorGUI.indentLevel++;
 
@@ -147,8 +151,11 @@ namespace Unity.AI.Navigation.Editor
                     {
                         if (!m_AgentTypeID.hasMultipleDifferentValues)
                         {
-                            float voxelsPerRadius = m_VoxelSize.floatValue > 0.0f ? (bs.agentRadius / m_VoxelSize.floatValue) : 0.0f;
-                            EditorGUILayout.LabelField(" ", string.Format(Content.VoxelSizeFormatString, voxelsPerRadius), EditorStyles.miniLabel);
+                            float voxelsPerRadius = m_VoxelSize.floatValue > 0.0f
+                                ? (bs.agentRadius / m_VoxelSize.floatValue)
+                                : 0.0f;
+                            EditorGUILayout.LabelField(" ",
+                                string.Format(Content.VoxelSizeFormatString, voxelsPerRadius), EditorStyles.miniLabel);
                         }
 
                         if (m_OverrideVoxelSize.boolValue)
@@ -161,7 +168,8 @@ namespace Unity.AI.Navigation.Editor
                 // Override tile size
                 EditorGUILayout.PropertyField(m_OverrideTileSize, Content.OverrideTileSize);
 
-                using (new EditorGUI.DisabledScope(!m_OverrideTileSize.boolValue || m_OverrideTileSize.hasMultipleDifferentValues))
+                using (new EditorGUI.DisabledScope(!m_OverrideTileSize.boolValue ||
+                           m_OverrideTileSize.hasMultipleDifferentValues))
                 {
                     EditorGUI.indentLevel++;
 
@@ -170,7 +178,8 @@ namespace Unity.AI.Navigation.Editor
                     if (!m_TileSize.hasMultipleDifferentValues && !m_VoxelSize.hasMultipleDifferentValues)
                     {
                         float tileWorldSize = m_TileSize.intValue * m_VoxelSize.floatValue;
-                        EditorGUILayout.LabelField(" ", string.Format(Content.TileWorldSizeFormatString, tileWorldSize), EditorStyles.miniLabel);
+                        EditorGUILayout.LabelField(" ", string.Format(Content.TileWorldSizeFormatString, tileWorldSize),
+                            EditorStyles.miniLabel);
                     }
 
                     if (!m_OverrideTileSize.hasMultipleDifferentValues)
@@ -235,7 +244,8 @@ namespace Unity.AI.Navigation.Editor
             var nmdRect = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight);
 
             EditorGUI.BeginProperty(nmdRect, GUIContent.none, m_NavMeshData);
-            var rectLabel = EditorGUI.PrefixLabel(nmdRect, GUIUtility.GetControlID(FocusType.Passive), Content.NavMeshData);
+            var rectLabel =
+                EditorGUI.PrefixLabel(nmdRect, GUIUtility.GetControlID(FocusType.Passive), Content.NavMeshData);
             EditorGUI.EndProperty();
 
             using (new EditorGUI.DisabledScope(true))
@@ -376,28 +386,50 @@ namespace Unity.AI.Navigation.Editor
 
         static class Content
         {
-            public static readonly GUIContent AgentType = EditorGUIUtility.TrTextContent("Agent Type", "The NavMesh Agent type that uses the NavMesh Surface.");
-            public static readonly GUIContent DefaultArea = EditorGUIUtility.TrTextContent("Default Area", "The area type assumed for all the objects at the moment when Unity generates the NavMesh. Use the NavMesh Modifier component to override the area type of an object and its hierarchy.");
-            public static readonly GUIContent GenerateLinks = EditorGUIUtility.TrTextContent("Generate Links", "If enabled, collected objects will generate unidirectional links according to the drop height and jump distance values in the agent settings. Use the NavMesh Modifier component to override this behavior for an object and its hierarchy.");
-            public static readonly GUIContent UseGeometry = EditorGUIUtility.TrTextContent("Use Geometry", "The type of geometry to create the NavMesh from.");
-            public static readonly GUIContent ObjectCollectionHeader = EditorGUIUtility.TrTextContent("Object Collection", "Parameters that define how to select objects from the scene.");
-            public static readonly GUIContent CollectObjects = EditorGUIUtility.TrTextContent("Collect Objects", "Defines which GameObjects to use for baking.");
-            public static readonly GUIContent IncludeLayers = EditorGUIUtility.TrTextContent("Include Layers", "Define the layers on which GameObjects are included in the bake process.");
-            public static readonly GUIContent AdvancedHeader = EditorGUIUtility.TrTextContent("Advanced", "Parameters that control the level of detail and the structure of the navigation data during its creation.");
-            public static readonly GUIContent OverrideVoxelSize = EditorGUIUtility.TrTextContent("Override Voxel Size", "If enabled, uses the value below to control how accurately Unity processes the scene geometry when it creates the NavMesh.");
-            public static readonly GUIContent VoxelSize = EditorGUIUtility.TrTextContent("Voxel Size", "The width of cells in a grid used to sample the level geometry. The cell height is half of the width.");
+            public static readonly GUIContent AgentType = EditorGUIUtility.TrTextContent("Agent Type",
+                "The NavMesh Agent type that uses the NavMesh Surface.");
+            public static readonly GUIContent DefaultArea = EditorGUIUtility.TrTextContent("Default Area",
+                "The area type assumed for all the objects at the moment when Unity generates the NavMesh. Use the NavMesh Modifier component to override the area type of an object and its hierarchy.");
+            public static readonly GUIContent GenerateLinks = EditorGUIUtility.TrTextContent("Generate Links",
+                "If enabled, collected objects will generate unidirectional links according to the drop height and jump distance values in the agent settings. Use the NavMesh Modifier component to override this behavior for an object and its hierarchy.");
+            public static readonly GUIContent UseGeometry =
+                EditorGUIUtility.TrTextContent("Use Geometry", "The type of geometry to create the NavMesh from.");
+            public static readonly GUIContent ObjectCollectionHeader =
+                EditorGUIUtility.TrTextContent("Object Collection",
+                    "Parameters that define how to select objects from the scene.");
+            public static readonly GUIContent CollectObjects =
+                EditorGUIUtility.TrTextContent("Collect Objects", "Defines which GameObjects to use for baking.");
+            public static readonly GUIContent IncludeLayers = EditorGUIUtility.TrTextContent("Include Layers",
+                "Define the layers on which GameObjects are included in the bake process.");
+            public static readonly GUIContent AdvancedHeader = EditorGUIUtility.TrTextContent("Advanced",
+                "Parameters that control the level of detail and the structure of the navigation data during its creation.");
+            public static readonly GUIContent OverrideVoxelSize = EditorGUIUtility.TrTextContent("Override Voxel Size",
+                "If enabled, uses the value below to control how accurately Unity processes the scene geometry when it creates the NavMesh.");
+            public static readonly GUIContent VoxelSize = EditorGUIUtility.TrTextContent("Voxel Size",
+                "The width of cells in a grid used to sample the level geometry. The cell height is half of the width.");
             public static readonly string VoxelSizeFormatString = L10n.Tr("{0:0.00} voxels per agent radius");
-            public static readonly string VoxelSizeHelpBox = L10n.Tr("Voxel size controls the accuracy with which Unity generates the NavMesh from the scene geometry. A good voxel size fits 2-4 voxels per agent radius. When you reduce the voxel size, both the accuracy and the bake duration increase.");
-            public static readonly GUIContent OverrideTileSize = EditorGUIUtility.TrTextContent("Override Tile Size", "If enabled, the value below overrides the size of the tiles that partition the NavMesh.");
-            public static readonly GUIContent TileSize = EditorGUIUtility.TrTextContent("Tile Size", "The number of voxels that determines the width of a square NavMesh tile. The created NavMesh is subdivided into a grid of tiles in order to make the bake process parallel and memory efficient. A value of 256 is a good balance between memory usage and NavMesh fragmentation.");
+            public static readonly string VoxelSizeHelpBox = L10n.Tr(
+                "Voxel size controls the accuracy with which Unity generates the NavMesh from the scene geometry. A good voxel size fits 2-4 voxels per agent radius. When you reduce the voxel size, both the accuracy and the bake duration increase.");
+            public static readonly GUIContent OverrideTileSize = EditorGUIUtility.TrTextContent("Override Tile Size",
+                "If enabled, the value below overrides the size of the tiles that partition the NavMesh.");
+            public static readonly GUIContent TileSize = EditorGUIUtility.TrTextContent("Tile Size",
+                "The number of voxels that determines the width of a square NavMesh tile. The created NavMesh is subdivided into a grid of tiles in order to make the bake process parallel and memory efficient. A value of 256 is a good balance between memory usage and NavMesh fragmentation.");
             public static readonly string TileWorldSizeFormatString = L10n.Tr("{0:0.00} world units");
-            public static readonly string TileWorldSizeHelpBox = L10n.Tr("Tile size reduces the impact of scene changes to only a section of the NavMesh. Smaller tiles allow carving or rebuilding to produce localized changes but may generate more polygon data overall.");
-            public static readonly GUIContent MinimumRegionArea = EditorGUIUtility.TrTextContent("Minimum Region Area", "Allows you to cull away the small regions disconnected from the larger NavMesh.");
-            public static readonly GUIContent BuildHeightMesh = EditorGUIUtility.TrTextContent("Build Height Mesh", "Enables the creation of additional data used for determining more accurately the height at any position on the NavMesh.");
-            public static readonly GUIContent NavMeshData = EditorGUIUtility.TrTextContent("NavMesh Data", "Locate the asset file where the NavMesh is stored.");
-            public static readonly GUIContent ClearButton = EditorGUIUtility.TrTextContent("Clear", "Clear NavMesh data for this surface.");
-            public static readonly GUIContent BakeButton = EditorGUIUtility.TrTextContent("Bake", "Create the NavMesh with the current settings.");
-            public static readonly GUIContent BakeInProgressButton = EditorGUIUtility.TrTextContent("NavMesh baking is in progress.");
+            public static readonly string TileWorldSizeHelpBox =
+                L10n.Tr(
+                    "Tile size reduces the impact of scene changes to only a section of the NavMesh. Smaller tiles allow carving or rebuilding to produce localized changes but may generate more polygon data overall.");
+            public static readonly GUIContent MinimumRegionArea = EditorGUIUtility.TrTextContent("Minimum Region Area",
+                "Allows you to cull away the small regions disconnected from the larger NavMesh.");
+            public static readonly GUIContent BuildHeightMesh = EditorGUIUtility.TrTextContent("Build Height Mesh",
+                "Enables the creation of additional data used for determining more accurately the height at any position on the NavMesh.");
+            public static readonly GUIContent NavMeshData =
+                EditorGUIUtility.TrTextContent("NavMesh Data", "Locate the asset file where the NavMesh is stored.");
+            public static readonly GUIContent ClearButton =
+                EditorGUIUtility.TrTextContent("Clear", "Clear NavMesh data for this surface.");
+            public static readonly GUIContent BakeButton =
+                EditorGUIUtility.TrTextContent("Bake", "Create the NavMesh with the current settings.");
+            public static readonly GUIContent BakeInProgressButton =
+                EditorGUIUtility.TrTextContent("NavMesh baking is in progress.");
             public static readonly string UndoModifyVolume = L10n.Tr("Modify NavMesh Surface Volume");
         }
     }

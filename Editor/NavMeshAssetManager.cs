@@ -40,7 +40,8 @@ namespace Unity.AI.Navigation.Editor
             var targetPath = "Assets";
             if (!string.IsNullOrEmpty(activeScenePath))
             {
-                targetPath = Path.Combine(Path.GetDirectoryName(activeScenePath), Path.GetFileNameWithoutExtension(activeScenePath));
+                targetPath = Path.Combine(Path.GetDirectoryName(activeScenePath),
+                    Path.GetFileNameWithoutExtension(activeScenePath));
             }
             else if (surface.IsPartOfPrefab())
             {
@@ -123,7 +124,9 @@ namespace Unity.AI.Navigation.Editor
                 oper.bakeData = InitializeBakeData(surf);
                 oper.bakeOperation = surf.UpdateNavMesh(oper.bakeData);
                 oper.surface = surf;
-                oper.progressReportId = Progress.Start(L10n.Tr("Baking a NavMesh"), string.Format(L10n.Tr("Surface held by {0} for agent type {1}"), surf.gameObject.name, NavMesh.GetSettingsNameFromID(surf.agentTypeID)));
+                oper.progressReportId = Progress.Start(L10n.Tr("Baking a NavMesh"),
+                    string.Format(L10n.Tr("Surface held by {0} for agent type {1}"), surf.gameObject.name,
+                        NavMesh.GetSettingsNameFromID(surf.agentTypeID)));
 
                 Progress.RegisterCancelCallback(oper.progressReportId, () =>
                 {
@@ -172,6 +175,7 @@ namespace Unity.AI.Navigation.Editor
 
                 Progress.Report(oper.progressReportId, oper.bakeOperation.progress);
             }
+
             m_BakeOperations.RemoveAll(o => o.bakeOperation == null || o.bakeOperation.isDone);
             if (m_BakeOperations.Count == 0)
                 EditorApplication.update -= UpdateAsyncBuildOperations;
@@ -237,12 +241,19 @@ namespace Unity.AI.Navigation.Editor
             }
 
             var isDataOwner = true;
-            if (PrefabUtility.IsPartOfPrefabInstance(surfaceToStore) && !PrefabUtility.IsPartOfModelPrefab(surfaceToStore))
+            if (PrefabUtility.IsPartOfPrefabInstance(surfaceToStore) &&
+                !PrefabUtility.IsPartOfModelPrefab(surfaceToStore))
             {
-                var basePrefabSurface = PrefabUtility.GetCorrespondingObjectFromSource(surfaceToStore) as NavMeshSurface;
+                var basePrefabSurface =
+                    PrefabUtility.GetCorrespondingObjectFromSource(surfaceToStore) as NavMeshSurface;
                 isDataOwner = basePrefabSurface == null || surfaceToStore.navMeshData != basePrefabSurface.navMeshData;
             }
-            m_PrefabNavMeshDataAssets.Add(new SavedPrefabNavMeshData { surface = surfaceToStore, navMeshData = isDataOwner ? surfaceToStore.navMeshData : null });
+
+            m_PrefabNavMeshDataAssets.Add(new SavedPrefabNavMeshData
+            {
+                surface = surfaceToStore,
+                navMeshData = isDataOwner ? surfaceToStore.navMeshData : null
+            });
         }
 
         bool IsCurrentPrefabNavMeshDataStored(NavMeshSurface surface)
@@ -341,7 +352,8 @@ namespace Unity.AI.Navigation.Editor
                     {
                         //Debug.LogFormat("The surface {0} from the prefab was storing the original NavMesh data and now will be forgotten", surfaceInPrefab);
 
-                        var baseSurface = PrefabUtility.GetCorrespondingObjectFromSource(surfaceInPrefab) as NavMeshSurface;
+                        var baseSurface =
+                            PrefabUtility.GetCorrespondingObjectFromSource(surfaceInPrefab) as NavMeshSurface;
                         if (baseSurface == null || surfaceInPrefab.navMeshData != baseSurface.navMeshData)
                         {
                             var assetPath = AssetDatabase.GetAssetPath(surfaceInPrefab.navMeshData);
@@ -363,7 +375,18 @@ namespace Unity.AI.Navigation.Editor
             }
         }
 
-        private static readonly HashSet<char> forbiddenCharacters = new HashSet<char> { '/', '?', '<', '>', '\\', ':', '*', '|', '"' };
+        private static readonly HashSet<char> forbiddenCharacters = new HashSet<char>
+        {
+            '/',
+            '?',
+            '<',
+            '>',
+            '\\',
+            ':',
+            '*',
+            '|',
+            '"'
+        };
 
         static string SanitizeAssetName(string assetName)
         {

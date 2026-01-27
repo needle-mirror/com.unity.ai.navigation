@@ -34,7 +34,8 @@ namespace Unity.AI.Navigation
         }
 
         /// <summary> Replaces the link with a new one using the current settings. </summary>
-        [Obsolete("UpdatePositions() has been deprecated. Use UpdateLink() instead. (UnityUpgradable) -> UpdateLink(*)")]
+        [Obsolete(
+            "UpdatePositions() has been deprecated. Use UpdateLink() instead. (UnityUpgradable) -> UpdateLink(*)")]
         public void UpdatePositions()
         {
             UpdateLink();

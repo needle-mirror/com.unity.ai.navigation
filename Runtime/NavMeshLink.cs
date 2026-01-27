@@ -5,6 +5,7 @@ using UnityEditor.SceneManagement;
 #endif
 using UnityEngine;
 using UnityEngine.AI;
+
 #pragma warning disable IDE1006 // Unity-specific lower case public property names
 
 namespace Unity.AI.Navigation
@@ -481,6 +482,7 @@ namespace Unity.AI.Navigation
 
             m_LastArea = m_Area;
         }
+
         void Reset()
         {
             UpgradeSerializedVersion();
@@ -515,7 +517,8 @@ namespace Unity.AI.Navigation
                                 "A NavMesh Link component has an outdated format. "
                                 + "To upgrade it, open and save the prefab at: ") + prefabPath
                             + (isInstance
-                                ? L10n.Tr(" . The prefab instance is ") + PrefabUtility.GetNearestPrefabInstanceRoot(gameObject).name
+                                ? L10n.Tr(" . The prefab instance is ") +
+                                PrefabUtility.GetNearestPrefabInstanceRoot(gameObject).name
                                 : ""),
                             prefabToPing);
 
@@ -590,7 +593,9 @@ namespace Unity.AI.Navigation
             {
                 var startGO = new GameObject($"Link Start {gameObject.name}{linkIndexString}");
                 startGO.transform.SetParent(m_StartTransform);
-                startGO.transform.position = localToWorldUnscaled.MultiplyPoint3x4(transform.InverseTransformPoint(m_StartTransform.position + m_StartPoint));
+                startGO.transform.position =
+                    localToWorldUnscaled.MultiplyPoint3x4(
+                        transform.InverseTransformPoint(m_StartTransform.position + m_StartPoint));
                 m_StartTransform = startGO.transform;
             }
 
@@ -600,7 +605,9 @@ namespace Unity.AI.Navigation
             {
                 var endGO = new GameObject($"Link End {gameObject.name}{linkIndexString}");
                 endGO.transform.SetParent(m_EndTransform);
-                endGO.transform.position = localToWorldUnscaled.MultiplyPoint3x4(transform.InverseTransformPoint(m_EndTransform.position + m_EndPoint));
+                endGO.transform.position =
+                    localToWorldUnscaled.MultiplyPoint3x4(
+                        transform.InverseTransformPoint(m_EndTransform.position + m_EndPoint));
                 m_EndTransform = endGO.transform;
             }
 

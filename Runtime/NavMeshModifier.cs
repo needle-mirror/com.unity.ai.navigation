@@ -16,6 +16,7 @@ namespace Unity.AI.Navigation
     public class NavMeshModifier : MonoBehaviour
     {
 #pragma warning disable 0414
+
         // Serialized version is used to upgrade older serialized data to the current format.
         // Version 0: Initial version.
         [SerializeField, HideInInspector]
@@ -43,7 +44,7 @@ namespace Unity.AI.Navigation
         // List of agent types the modifier is applied for.
         // Special values: empty == None, m_AffectedAgents[0] =-1 == All.
         [SerializeField]
-        List<int> m_AffectedAgents = new List<int>(new int[] { -1 });    // Default value is All
+        List<int> m_AffectedAgents = new List<int>(new int[] { -1 }); // Default value is All
 
         /// <summary> Gets or sets whether to assign the <see cref="area"/> type to this object instead of the <see cref="NavMeshSurface.defaultArea"/>. </summary>
         /// <remarks> The area type information is used when baking the NavMesh. </remarks>
@@ -56,7 +57,11 @@ namespace Unity.AI.Navigation
         public int area { get { return m_Area; } set { m_Area = value; } }
 
         /// <summary> Gets or sets whether the default links generation condition for the GameObject and its children should be overridden. </summary>
-        public bool overrideGenerateLinks { get { return m_OverrideGenerateLinks; } set { m_OverrideGenerateLinks = value; } }
+        public bool overrideGenerateLinks
+        {
+            get { return m_OverrideGenerateLinks; }
+            set { m_OverrideGenerateLinks = value; }
+        }
 
         /// <summary> Gets or sets whether this object is included in the link generation process. </summary>
         public bool generateLinks { get { return m_GenerateLinks; } set { m_GenerateLinks = value; } }
@@ -82,6 +87,7 @@ namespace Unity.AI.Navigation
                     s_NavMeshModifiers = s_NavMeshModifiersSet.ToList();
                     s_RebuildNavMeshModifiers = false;
                 }
+
                 return s_NavMeshModifiers;
             }
         }

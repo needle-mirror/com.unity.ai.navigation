@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 using UnityEditor.Search;
 using UnityEditor.UIElements;
-using UnityEngine.UIElements;
+using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UIElements;
 
 namespace Unity.AI.Navigation.Editor.Converter
 {
@@ -89,7 +89,8 @@ namespace Unity.AI.Navigation.Editor.Converter
 
         // This is a list of Converter States which holds a list of which converter items/assets are active.
         // There is one for each Converter.
-        [SerializeField] List<ConverterState> m_ConverterStates = new List<ConverterState>();
+        [SerializeField]
+        List<ConverterState> m_ConverterStates = new List<ConverterState>();
 
         TypeCache.TypeCollection m_ConverterContainers;
 
@@ -105,6 +106,7 @@ namespace Unity.AI.Navigation.Editor.Converter
             var containerWindowType = assembly.GetType("UnityEditor.ContainerWindow");
             var parentViewField = editorWindowType.GetField("m_Parent", BindingFlags.Instance | BindingFlags.NonPublic);
             var parentViewValue = parentViewField.GetValue(wnd);
+
             // Window should not be saved to layout.
             var containerWindowProperty =
                 hostViewType.GetProperty("window", BindingFlags.Instance | BindingFlags.Public);
@@ -186,6 +188,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 // This just creates empty entries in the m_ItemsToConvert.
                 // This list need to have the same amount of entries as the converters.
                 var converterItemInfos = new List<ConverterItemDescriptor>();
+
                 //m_ItemsToConvert.Add(converterItemInfos);
                 m_ItemsToConvert.Add(new ConverterItems { itemDescriptors = converterItemInfos });
             }
@@ -270,6 +273,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                 listView.makeItem = () =>
                 {
                     var convertItem = converterItem.CloneTree();
+
                     // Add the contextual menu for each item.
                     convertItem.AddManipulator(new ContextualMenuManipulator(evt => AddToContextMenu(evt, id)));
                     return convertItem;
@@ -330,6 +334,7 @@ namespace Unity.AI.Navigation.Editor.Converter
 
                 m_ScrollView.Add(item);
             }
+
             rootVisualElement.Bind(m_SerializedObject);
             var button = rootVisualElement.Q<Button>("convertButton");
             button.RegisterCallback<ClickEvent>(Convert);
@@ -360,7 +365,10 @@ namespace Unity.AI.Navigation.Editor.Converter
             void OnConverterCompleteDataCollection()
             {
                 // Set the item infos list to the correct index.
-                m_ItemsToConvert[id] = new ConverterItems { itemDescriptors = converterItemInfos };
+                m_ItemsToConvert[id] = new ConverterItems
+                {
+                    itemDescriptors = converterItemInfos
+                };
                 m_ConverterStates[id].items = new List<ConverterItemState>(converterItemInfos.Count);
 
                 // Default all the entries to true.
@@ -369,6 +377,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                     string message = string.Empty;
                     Status status;
                     bool active = true;
+
                     // If this data hasn't been filled in from the init phase then we can assume that there are no issues / warnings.
                     if (string.IsNullOrEmpty(converterItemInfos[j].warningMessage))
                     {
@@ -402,6 +411,7 @@ namespace Unity.AI.Navigation.Editor.Converter
 
                 CheckAllConvertersCompleted();
                 convertButtonActive = true;
+
                 // Make sure that the Convert Button is turned back on.
                 var button = rootVisualElement.Q<Button>("convertButton");
                 button.SetEnabled(convertButtonActive);
@@ -432,7 +442,8 @@ namespace Unity.AI.Navigation.Editor.Converter
 
                 // Show our progress so far.
                 EditorUtility.ClearProgressBar();
-                EditorUtility.DisplayProgressBar($"Initializing converters", $"Initializing converters ({convertersInitialized}/{sum})...", (float)convertersInitialized / sum);
+                EditorUtility.DisplayProgressBar($"Initializing converters",
+                    $"Initializing converters ({convertersInitialized}/{sum})...", (float)convertersInitialized / sum);
 
                 // If all converters are initialized call the complete callback.
                 if (convertersToInitialize == 0)
@@ -449,6 +460,7 @@ namespace Unity.AI.Navigation.Editor.Converter
             {
                 CreateSearchIndex(m_ConverterIndex);
             }
+
             // Otherwise do everything directly.
             else
             {
@@ -463,11 +475,16 @@ namespace Unity.AI.Navigation.Editor.Converter
 
                 // Private implementation of a file naming function which puts the file at the selected path.
                 Type assetdatabase = typeof(AssetDatabase);
-                var indexPath = (string)assetdatabase.GetMethod("GetUniquePathNameAtSelectedPath", BindingFlags.NonPublic | BindingFlags.Static).Invoke(assetdatabase, new object[] { $"Assets/{name}.index" });
+                var indexPath = (string)assetdatabase
+                    .GetMethod("GetUniquePathNameAtSelectedPath", BindingFlags.NonPublic | BindingFlags.Static).Invoke(
+                        assetdatabase, new object[]
+                        {
+                            $"Assets/{name}.index"
+                        });
 
                 // Write search index manifest.
                 System.IO.File.WriteAllText(indexPath,
-@"{
+                    @"{
                 ""roots"": [""Assets""],
                 ""includes"": [],
                 ""excludes"": [],
@@ -480,10 +497,9 @@ namespace Unity.AI.Navigation.Editor.Converter
                 ""baseScore"": 9999
                 }");
 
-
-
                 // Import the search index.
-                AssetDatabase.ImportAsset(indexPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.DontDownloadFromCacheServer);
+                AssetDatabase.ImportAsset(indexPath,
+                    ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.DontDownloadFromCacheServer);
 
                 EditorApplication.delayCall += () =>
                 {
@@ -528,6 +544,7 @@ namespace Unity.AI.Navigation.Editor.Converter
             void DeleteSearchIndex(SearchContext context, string indexPath)
             {
                 context?.Dispose();
+
                 // Client code has finished with the created index. We can delete it.
                 AssetDatabase.DeleteAsset(indexPath);
                 EditorUtility.ClearProgressBar();
@@ -554,6 +571,7 @@ namespace Unity.AI.Navigation.Editor.Converter
         void AddToContextMenu(ContextualMenuPopulateEvent evt, int coreConverterIndex)
         {
             var ve = (VisualElement)evt.target;
+
             // Check if this context menu should be enabled or not.
             var isActive = m_ConverterStates[coreConverterIndex].items[(int)ve.userData].isActive &&
                 !m_ConverterStates[coreConverterIndex].items[(int)ve.userData].hasConverted;
@@ -566,6 +584,7 @@ namespace Unity.AI.Navigation.Editor.Converter
         void Convert(ClickEvent evt)
         {
             var activeConverterStates = new List<ConverterState>();
+
             // Get the names of the converters.
             // Get the amount of them.
             // Make the string "name x/y".
@@ -592,6 +611,7 @@ namespace Unity.AI.Navigation.Editor.Converter
                         break;
                     }
                 }
+
                 if (!hasItemsToConvert)
                     continue;
 

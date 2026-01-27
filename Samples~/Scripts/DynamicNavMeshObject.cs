@@ -24,7 +24,7 @@ namespace Unity.AI.Navigation.Samples
 
         void Update()
         {
-            bool isMoving = !m_Rigidbody.IsSleeping() && m_Rigidbody.velocity.sqrMagnitude > 0.1f;
+            bool isMoving = !m_Rigidbody.IsSleeping() && m_Rigidbody.linearVelocity.sqrMagnitude > 0.1f;
 
             if ((m_WasMoving && !isMoving) || (!m_WasMoving && isMoving))
             {

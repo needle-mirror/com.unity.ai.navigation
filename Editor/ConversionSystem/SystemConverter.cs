@@ -34,9 +34,7 @@ namespace Unity.AI.Navigation.Editor.Converter
         /// <summary>
         /// This method getting triggered when clicking the listview item in the UI.
         /// </summary>
-        public virtual void OnClicked(int index)
-        {
-        }
+        public virtual void OnClicked(int index) { }
 
         // This is so that we can have different segment in our UI, example Unity converters, your custom converters etc..
         // This is not implemented yet
@@ -55,9 +53,7 @@ namespace Unity.AI.Navigation.Editor.Converter
         /// <summary>
         /// The method that will be run before Run method if needed.
         /// </summary>
-        public virtual void OnPreRun()
-        {
-        }
+        public virtual void OnPreRun() { }
 
         /// <summary>
         /// The method that will be run when converting the assets.
@@ -68,8 +64,6 @@ namespace Unity.AI.Navigation.Editor.Converter
         /// <summary>
         /// The method that will be run after the converters are done if needed.
         /// </summary>
-        public virtual void OnPostRun()
-        {
-        }
+        public virtual void OnPostRun() { }
     }
 }

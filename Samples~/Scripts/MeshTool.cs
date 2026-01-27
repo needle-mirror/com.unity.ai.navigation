@@ -60,13 +60,13 @@ namespace Unity.AI.Navigation.Samples
                 else if (Input.GetMouseButton(1) || (Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift)))
                 {
                     ModifyMesh(-m_Power * displacement, m_HitInfo.point);
-                    if(m_Surface != null)
+                    if (m_Surface != null)
                     {
                         if (m_LastNavMeshUpdate.isDone)
                             m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
                     }
                 }
-                else if(Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Space))
+                else if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Space))
                 {
                     if (m_Surface != null)
                     {

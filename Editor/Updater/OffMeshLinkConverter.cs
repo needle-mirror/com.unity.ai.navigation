@@ -9,14 +9,20 @@ namespace Unity.AI.Navigation.Updater
     internal sealed class OffMeshLinkConverter : SystemConverter
     {
         public override string name => "OffMesh Link Converter";
-        public override string info => "Creates NavMesh Link components that match and replace existing OffMesh Link components. \n" +
+
+        public override string info =>
+            "Creates NavMesh Link components that match and replace existing OffMesh Link components. \n" +
             "Ensure the selected scene or prefab files are writable prior to running the Converter.";
+
         public override Type container => typeof(NavigationConverterContainer);
         public override int priority => 20;
 
         public override void OnInitialize(InitializeConverterContext context, Action callback)
         {
-            var objectsToConvert = OffMeshLinkUpdaterUtility.FindObjectsToConvert(new[] { "Assets" });
+            var objectsToConvert = OffMeshLinkUpdaterUtility.FindObjectsToConvert(new[]
+            {
+                "Assets"
+            });
             foreach (var guid in objectsToConvert)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
@@ -40,6 +46,7 @@ namespace Unity.AI.Navigation.Updater
                 var guid = context.items[i].descriptor.additionalData;
                 convertList.Add(guid);
             }
+
             OffMeshLinkUpdaterUtility.Convert(convertList, out var failedConversions);
 
             foreach (var conversionItem in failedConversions)

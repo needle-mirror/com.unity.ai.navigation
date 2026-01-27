@@ -122,15 +122,20 @@ namespace Unity.AI.Navigation.Editor
         public static void CreateNavMeshModifierVolume(MenuCommand menuCommand)
         {
             var parent = menuCommand.context as GameObject;
-            NavMeshComponentsGUIUtility.CreateAndSelectGameObject("NavMesh Modifier Volume", parent, typeof(NavMeshModifierVolume));
+            NavMeshComponentsGUIUtility.CreateAndSelectGameObject("NavMesh Modifier Volume", parent,
+                typeof(NavMeshModifierVolume));
         }
 
         static class Content
         {
-            public static readonly GUIContent Size = EditorGUIUtility.TrTextContent("Size", "Dimensions of the NavMesh Modifier Volume.");
-            public static readonly GUIContent Center = EditorGUIUtility.TrTextContent("Center", "The center of the NavMesh Modifier Volume relative to the GameObject center.");
-            public static readonly GUIContent Area = EditorGUIUtility.TrTextContent("Area Type", "Describes the area type to which the NavMesh Modifier Volume applies.");
-            public static readonly GUIContent AffectedAgents = EditorGUIUtility.TrTextContent("Affected Agents", "A selection of agent types that the NavMesh Modifier Volume affects.");
+            public static readonly GUIContent Size =
+                EditorGUIUtility.TrTextContent("Size", "Dimensions of the NavMesh Modifier Volume.");
+            public static readonly GUIContent Center = EditorGUIUtility.TrTextContent("Center",
+                "The center of the NavMesh Modifier Volume relative to the GameObject center.");
+            public static readonly GUIContent Area = EditorGUIUtility.TrTextContent("Area Type",
+                "Describes the area type to which the NavMesh Modifier Volume applies.");
+            public static readonly GUIContent AffectedAgents = EditorGUIUtility.TrTextContent("Affected Agents",
+                "A selection of agent types that the NavMesh Modifier Volume affects.");
             public static readonly string UndoModifyVolume = L10n.Tr("Modify NavMesh Modifier Volume");
         }
     }

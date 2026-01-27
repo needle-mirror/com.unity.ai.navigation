@@ -1,8 +1,8 @@
-using UnityEngine;
+using UnityEditor;
 using UnityEditor.AI;
 using UnityEditorInternal;
+using UnityEngine;
 using Object = UnityEngine.Object;
-using UnityEditor;
 
 namespace Unity.AI.Navigation.Editor
 {
@@ -124,12 +124,14 @@ namespace Unity.AI.Navigation.Editor
             {
                 m_Areas = m_NavMeshProjectSettingsObject.FindProperty("areas");
             }
+
             if (m_AreasList == null)
             {
                 m_AreasList = new ReorderableList(m_NavMeshProjectSettingsObject, m_Areas, false, true, false, false);
                 m_AreasList.drawElementCallback = DrawAreaListElement;
                 m_AreasList.drawHeaderCallback = DrawAreaListHeader;
-                m_AreasList.elementHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+                m_AreasList.elementHeight =
+                    EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
         }
 
@@ -140,14 +142,17 @@ namespace Unity.AI.Navigation.Editor
                 m_AgentTypes = m_NavMeshProjectSettingsObject.FindProperty("m_Settings");
                 m_SettingNames = m_NavMeshProjectSettingsObject.FindProperty("m_SettingNames");
             }
+
             if (m_AgentTypeList == null)
             {
-                m_AgentTypeList = new ReorderableList(m_NavMeshProjectSettingsObject, m_AgentTypes, false, true, true, true);
+                m_AgentTypeList =
+                    new ReorderableList(m_NavMeshProjectSettingsObject, m_AgentTypes, false, true, true, true);
                 m_AgentTypeList.drawElementCallback = DrawAgentTypeListElement;
                 m_AgentTypeList.drawHeaderCallback = DrawAgentTypeListHeader;
                 m_AgentTypeList.onAddCallback = AddAgentType;
                 m_AgentTypeList.onRemoveCallback = RemoveAgentType;
-                m_AgentTypeList.elementHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+                m_AgentTypeList.elementHeight =
+                    EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
         }
 
@@ -173,7 +178,6 @@ namespace Unity.AI.Navigation.Editor
             EditorApplication.searchChanged -= Repaint;
         }
 
-
         void OnSelectionChange()
         {
             m_ScrollPos = Vector2.zero;
@@ -183,12 +187,14 @@ namespace Unity.AI.Navigation.Editor
         {
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            m_Mode = (Mode)GUILayout.Toolbar((int)m_Mode, Styles.k_ModeToggles, "LargeButton", GUI.ToolbarButtonSize.FitToContents);
+            m_Mode = (Mode)GUILayout.Toolbar((int)m_Mode, Styles.k_ModeToggles, "LargeButton",
+                GUI.ToolbarButtonSize.FitToContents);
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
         }
 
-        static void GetAreaListRects(Rect rect, out Rect stripeRect, out Rect labelRect, out Rect nameRect, out Rect costRect)
+        static void GetAreaListRects(Rect rect, out Rect stripeRect, out Rect labelRect, out Rect nameRect,
+            out Rect costRect)
         {
             float stripeWidth = EditorGUIUtility.singleLineHeight * 0.8f;
             float labelWidth = EditorGUIUtility.singleLineHeight * 5;
@@ -258,9 +264,11 @@ namespace Unity.AI.Navigation.Editor
             EditorGUI.DrawRect(stripeRect, color);
 
             EditorGUI.DrawRect(new Rect(stripeRect.x, stripeRect.y, 1, stripeRect.height), dimmed);
-            EditorGUI.DrawRect(new Rect(stripeRect.x + stripeRect.width - 1, stripeRect.y, 1, stripeRect.height), dimmed);
+            EditorGUI.DrawRect(new Rect(stripeRect.x + stripeRect.width - 1, stripeRect.y, 1, stripeRect.height),
+                dimmed);
             EditorGUI.DrawRect(new Rect(stripeRect.x + 1, stripeRect.y, stripeRect.width - 2, 1), dimmed);
-            EditorGUI.DrawRect(new Rect(stripeRect.x + 1, stripeRect.y + stripeRect.height - 1, stripeRect.width - 2, 1), dimmed);
+            EditorGUI.DrawRect(
+                new Rect(stripeRect.x + 1, stripeRect.y + stripeRect.height - 1, stripeRect.width - 2, 1), dimmed);
 
             if (builtInLayer)
                 GUI.Label(labelRect, EditorGUIUtility.TrTempContent("Built-in " + index));
@@ -295,6 +303,7 @@ namespace Unity.AI.Navigation.Editor
             SerializedProperty idProp = agentTypeProp.FindPropertyRelative("agentTypeID");
             if (idProp == null)
                 return;
+
             // Cannot delete default.
             if (idProp.intValue == 0)
                 return;
@@ -345,6 +354,7 @@ namespace Unity.AI.Navigation.Editor
                     AgentTypeSettings();
                     break;
             }
+
             EditorGUILayout.EndScrollView();
         }
 
@@ -390,7 +400,8 @@ namespace Unity.AI.Navigation.Editor
 
                 const float kDiagramHeight = 120.0f;
                 Rect agentDiagramRect = EditorGUILayout.GetControlRect(false, kDiagramHeight);
-                NavMeshEditorHelpers.DrawAgentDiagram(agentDiagramRect, radiusProp.floatValue, heightProp.floatValue, stepHeightProp.floatValue, maxSlopeProp.floatValue);
+                NavMeshEditorHelpers.DrawAgentDiagram(agentDiagramRect, radiusProp.floatValue, heightProp.floatValue,
+                    stepHeightProp.floatValue, maxSlopeProp.floatValue);
 
                 EditorGUILayout.PropertyField(nameProp, EditorGUIUtility.TrTempContent("Name"));
                 EditorGUILayout.PropertyField(radiusProp, EditorGUIUtility.TrTempContent("Radius"));
