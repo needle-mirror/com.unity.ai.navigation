@@ -9,7 +9,7 @@
         <ui:VisualElement style="flex-direction: row;">
             <ui:VisualElement style="flex-grow: 1;" />
         </ui:VisualElement>
-        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="convertersScrollView" style="flex-grow: 1; flex-shrink: 1; max-width: none; width: 632px; padding-right: 0; padding-left: 4px;" />
+        <ui:ScrollView scroll-deceleration-rate="0.135" elasticity="0.1" name="convertersScrollView" style="flex-grow: 1; flex-shrink: 1; max-width: none; width: 632px; padding-right: 0; padding-left: 4px;" />
     </ui:VisualElement>
     <ui:VisualElement style="flex-direction: row-reverse; flex-shrink: 0; padding-left: 15px; padding-right: 14px;">
         <ui:Button text=" Convert Assets" name="convertButton" style="flex-direction: column; margin-bottom: 15px;" />

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "unity": "6000.0",
   "description": "The AI Navigation package contains high-level components that allow you to use navmeshes to incorporate navigation and pathfinding in your game. With this package installed you can build and use navmeshes at runtime and at edit time, create dynamic obstacles, and use links to allow specific actions (like jumping) as your characters navigate between navmeshes.",
   "dependencies": {
@@ -38,15 +38,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n* Warning _Object.GetInstanceID()' is obsolete: 'GetInstanceID is deprecated_ was logged to the console in Unity 6.2 and newer.\n\n### Changed\n* The unit test scripts are no longer delivered with the package."
+    "changelog": "### Fixed\n* Small correction in the UI definition of the Navigation Updater window."
   },
   "upmCi": {
-    "footprint": "68f07ed845088a589612967bfc3923029d0ef6d0"
+    "footprint": "efa0b99d2490942469f50efa42926555ca2c9e51"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "9f4e312ce74b9f52fe0802ee70aefff75ce6edb8"
+    "revision": "b6751ff1ceb9a01f5b469d0aec8b249581bb7725"
   }
 }
