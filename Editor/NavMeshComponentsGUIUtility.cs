@@ -54,12 +54,25 @@ namespace Unity.AI.Navigation.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 if (areaIndex >= 0 && areaIndex < areaNames.Length - 2)
+                {
                     areaProperty.intValue = GetNavMeshAreaFromName(areaNames[areaIndex]);
+                    EditorGUI.EndProperty();
+                }
                 else if (areaIndex == areaNames.Length - 1)
+                {
+                    EditorGUI.EndProperty(); 
                     NavMeshEditorHelpers.OpenAreaSettings();
+                }
+                else
+                {
+                    EditorGUI.EndProperty();
+                }
+            }
+            else
+            {
+                EditorGUI.EndProperty();
             }
 
-            EditorGUI.EndProperty();
         }
 
         internal static readonly string k_OpenAgentSettingsText = L10n.Tr("Open Agent Settings...");
@@ -110,14 +123,22 @@ namespace Unity.AI.Navigation.Editor
                 {
                     var id = NavMesh.GetSettingsByIndex(index).agentTypeID;
                     agentTypeID.intValue = id;
+                    EditorGUI.EndProperty();
                 }
                 else if (index == count + 1)
-                {
+                {                    
+                    EditorGUI.EndProperty();
                     NavMeshEditorHelpers.OpenAgentSettings(-1);
                 }
+                else
+                {
+                    EditorGUI.EndProperty();
+                }
             }
-
-            EditorGUI.EndProperty();
+            else
+            {
+                EditorGUI.EndProperty();
+            }
         }
 
         // Agent mask is a set (internally array/list) of agentTypeIDs.
