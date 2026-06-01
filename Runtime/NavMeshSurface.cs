@@ -189,6 +189,7 @@ namespace Unity.AI.Navigation
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void ClearNavMeshSurfaces()
         {
+            NavMesh.onPreUpdate -= UpdateActive;
             s_NavMeshSurfaces.Clear();
         }
 

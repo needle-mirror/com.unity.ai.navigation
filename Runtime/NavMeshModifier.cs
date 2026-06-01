@@ -95,6 +95,7 @@ namespace Unity.AI.Navigation
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void ClearNavMeshModifiers()
         {
+            s_RebuildNavMeshModifiers = true;
             s_NavMeshModifiers.Clear();
             s_NavMeshModifiersSet.Clear();
         }

@@ -264,6 +264,7 @@ namespace Unity.AI.Navigation
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void ClearTrackedList()
         {
+            NavMesh.onPreUpdate -= UpdateTrackedInstances;
             s_Tracked.Clear();
         }
 
