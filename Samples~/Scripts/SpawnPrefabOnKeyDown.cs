@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Unity.AI.Navigation.Samples
 {
@@ -12,7 +12,7 @@ namespace Unity.AI.Navigation.Samples
         GameObject prefab;
 
         [SerializeField]
-        KeyCode keyCode;
+        Key key;
 
         [SerializeField]
         Transform spawnedPrefabsHolder;
@@ -31,7 +31,11 @@ namespace Unity.AI.Navigation.Samples
 
         void Update()
         {
-            if (Input.GetKeyDown(keyCode) && prefab != null)
+            var keyboard = Keyboard.current;
+            if (keyboard == null || key == Key.None)
+                return;
+
+            if (keyboard[key]?.wasPressedThisFrame == true && prefab != null)
                 Instantiate(prefab, m_Transform.position, m_Transform.rotation, spawnedPrefabsHolder);
         }
     }

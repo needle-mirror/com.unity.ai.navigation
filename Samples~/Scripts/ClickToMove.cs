@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 namespace Unity.AI.Navigation.Samples
 {
@@ -19,9 +20,16 @@ namespace Unity.AI.Navigation.Samples
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftShift))
+            var mouse = Mouse.current;
+            if (mouse == null)
+                return;
+
+            var keyboard = Keyboard.current;
+            var shiftPressed = keyboard != null && keyboard.leftShiftKey.isPressed;
+
+            if (mouse.leftButton.wasPressedThisFrame && !shiftPressed)
             {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
                 if (Physics.Raycast(ray.origin, ray.direction, out m_HitInfo))
                     m_Agent.destination = m_HitInfo.point;
             }

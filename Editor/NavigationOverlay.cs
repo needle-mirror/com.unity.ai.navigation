@@ -126,8 +126,21 @@ namespace Unity.AI.Navigation.Editor
         {
             m_RootPanel = new VisualElement();
 
+            var scrollView = new ScrollView
+            {
+                name = "AINavigationOverlayList",
+                mode = ScrollViewMode.Vertical,
+                horizontalScrollerVisibility = ScrollerVisibility.Hidden,
+                verticalScrollerVisibility = ScrollerVisibility.Auto,
+                style =
+                {
+                    flexGrow = 1
+                }
+            };
+            m_RootPanel.Add(scrollView);
+
             m_OptionsPanel = new VisualElement();
-            m_RootPanel.Add(m_OptionsPanel);
+            scrollView.Add(m_OptionsPanel);
 
             m_VisualizationDisabledHelpBox = AddHelpBox(HelpBoxMessageType.Info,
                 Style.NavigationVisualizationDisabledTexts, 200, 10, false);
@@ -333,7 +346,7 @@ namespace Unity.AI.Navigation.Editor
 
         void DisplayAgentPendingRequestWarningBox()
         {
-            if (!m_AgentPendingRequestWarning.visible)
+            if (m_AgentPendingRequestWarning != null && !m_AgentPendingRequestWarning.visible)
             {
                 m_AgentPendingRequestWarning.visible = true;
                 m_AgentFoldOut.Add(m_AgentPendingRequestWarning);
@@ -342,7 +355,7 @@ namespace Unity.AI.Navigation.Editor
 
         void HideAgentPendingRequestWarningBox()
         {
-            if (m_AgentPendingRequestWarning.visible)
+            if (m_AgentPendingRequestWarning != null && m_AgentPendingRequestWarning.visible)
             {
                 m_AgentPendingRequestWarning.visible = false;
                 m_AgentFoldOut.Remove(m_AgentPendingRequestWarning);

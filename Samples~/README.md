@@ -27,6 +27,8 @@ Note that some of these samples require that the `Packages/manifest.json` file o
 
 If the samples are being imported into a project that uses the Built-In Render Pipeline, you’ll also need to install ```com.unity.shadergraph```.
 
+The samples handle player input through the [Input System package](https://docs.unity3d.com/Packages/com.unity.inputsystem@latest). To use them, install `com.unity.inputsystem` and set **Project Settings > Player > Active Input Handling** to **Input System Package (New)** (or **Both**).
+
 # Introduction to NavMesh
 
 The Navigation package allows you to set up pathfinding AI in your Unity project. Two fundamental concepts of pathfinding are (1) agents and (2) world representation.

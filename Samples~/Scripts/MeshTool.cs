@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 namespace Unity.AI.Navigation.Samples
 {
@@ -41,13 +42,24 @@ namespace Unity.AI.Navigation.Samples
 
         void Update()
         {
+            var mouse = Mouse.current;
+            var keyboard = Keyboard.current;
+
+            var leftPressed = mouse != null && mouse.leftButton.isPressed;
+            var rightPressed = mouse != null && mouse.rightButton.isPressed;
+            var spacePressed = keyboard != null && keyboard.spaceKey.isPressed;
+            var shiftPressed = keyboard != null && keyboard.leftShiftKey.isPressed;
+            var leftReleased = mouse != null && mouse.leftButton.wasReleasedThisFrame;
+            var rightReleased = mouse != null && mouse.rightButton.wasReleasedThisFrame;
+            var spaceReleased = keyboard != null && keyboard.spaceKey.wasReleasedThisFrame;
+
             var ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
             if (Physics.Raycast(ray.origin, ray.direction, out m_HitInfo))
             {
                 Debug.DrawRay(m_HitInfo.point, m_HitInfo.normal, Color.red);
                 Vector3 displacement = (m_Method == ExtrudeMethod.Vertical) ? Vector3.up : m_HitInfo.normal;
 
-                if (Input.GetMouseButton(0) || (Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.LeftShift)))
+                if (leftPressed || (spacePressed && !shiftPressed))
                 {
                     ModifyMesh(m_Power * displacement, m_HitInfo.point);
                     if (m_Surface != null)
@@ -57,7 +69,7 @@ namespace Unity.AI.Navigation.Samples
                     }
 
                 }
-                else if (Input.GetMouseButton(1) || (Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift)))
+                else if (rightPressed || (spacePressed && shiftPressed))
                 {
                     ModifyMesh(-m_Power * displacement, m_HitInfo.point);
                     if (m_Surface != null)
@@ -66,7 +78,7 @@ namespace Unity.AI.Navigation.Samples
                             m_LastNavMeshUpdate = m_Surface.UpdateNavMesh(m_Surface.navMeshData);
                     }
                 }
-                else if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Space))
+                else if (leftReleased || rightReleased || spaceReleased)
                 {
                     if (m_Surface != null)
                     {

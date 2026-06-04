@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.14] - 2026-06-04
+### Changed
+* The samples now use the Input System package (`com.unity.inputsystem`) for player input instead of the legacy Input Manager.
+
+### Fixed
+* The **AI Navigation** preferences were not searchable from the Preferences window search field.
+* Errors from NavigationOverlay logged to the console when the NavMeshAgent was selected at the start of playmode.
+* Fixed the options in the **AI Navigation** overlay overlapping each other when the overlay was squished. The options panel is now wrapped in a scroll view. ([UUM-133539](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133539))
+
 ## [2.0.13] - 2026-06-01
 ### Fixed
 * Fixed static data not being cleared correctly when using Fast Enter Playmode.

@@ -9,22 +9,22 @@ namespace Unity.AI.Navigation.Editor
     {
         class Styles
         {
-            internal static readonly GUIContent NavMeshVisualizationSettingsLabel =
+            public static readonly GUIContent NavMeshVisualizationSettingsLabel =
                 EditorGUIUtility.TrTextContent("NavMesh Visualization Settings");
 
-            internal static readonly GUIContent SelectedSurfacesOpacityLabel =
+            public static readonly GUIContent SelectedSurfacesOpacityLabel =
                 EditorGUIUtility.TrTextContent("Selected Surfaces Opacity",
                     "Controls the mesh transparency for surfaces inside the selection hierarchy");
 
-            internal static readonly GUIContent UnselectedSurfacesOpacityLabel =
+            public static readonly GUIContent UnselectedSurfacesOpacityLabel =
                 EditorGUIUtility.TrTextContent("Unselected Surfaces Opacity",
                     "Controls the mesh transparency for surfaces outside the selection hierarchy");
 
-            internal static readonly GUIContent HeightMeshColorLabel =
+            public static readonly GUIContent HeightMeshColorLabel =
                 EditorGUIUtility.TrTextContent("Height Mesh Color",
                     "Color used to display height mesh information in the scene view");
 
-            internal static readonly GUIContent ResetVisualizationSettingsButtonLabel =
+            public static readonly GUIContent ResetVisualizationSettingsButtonLabel =
                 EditorGUIUtility.TrTextContent("Reset to Defaults",
                     "Revert visualization settings to their original values. Customized values will be lost");
         }

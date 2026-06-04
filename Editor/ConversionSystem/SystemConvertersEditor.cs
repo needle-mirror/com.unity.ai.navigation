@@ -221,8 +221,6 @@ namespace Unity.AI.Navigation.Editor.Converter
             rootVisualElement.Q<Label>("conversionName").text = currentContainer.name;
             rootVisualElement.Q<TextElement>("conversionInfo").text = currentContainer.info;
 
-            rootVisualElement.Q<Image>("converterContainerHelpIcon").image = EditorStyles.iconHelp;
-
             // Get the ScrollView where the converters should be added.
             m_ScrollView = rootVisualElement.Q<ScrollView>("convertersScrollView");
             m_ScrollView.Clear();
