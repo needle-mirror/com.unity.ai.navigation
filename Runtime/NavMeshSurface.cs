@@ -377,7 +377,7 @@ namespace Unity.AI.Navigation
             }
         }
 
-        List<NavMeshBuildSource> CollectSources()
+        internal List<NavMeshBuildSource> CollectSources()
         {
             var sources = new List<NavMeshBuildSource>();
             var markups = new List<NavMeshBuildMarkup>();
@@ -463,21 +463,24 @@ namespace Unity.AI.Navigation
             return new Bounds(worldPosition, worldSize);
         }
 
-        Bounds CalculateWorldBounds(List<NavMeshBuildSource> sources)
+        internal Bounds CalculateWorldBounds(List<NavMeshBuildSource> sources)
         {
             // Use the unscaled matrix for the NavMeshSurface
-            Matrix4x4 worldToLocal = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+            var worldToLocal = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             worldToLocal = worldToLocal.inverse;
 
-            var result = new Bounds();
+            // Bounds is a mutable struct, so a Bounds? would only let us mutate a copy obtained through its Value property.
+            // We track the initialization manually instead, to avoid starting from bounds that contain the local origin.
+            Bounds result = default;
+            var initialized = false;
             foreach (var src in sources)
             {
                 switch (src.shape)
                 {
                     case NavMeshBuildSourceShape.Mesh:
                     {
-                        var m = src.sourceObject as Mesh;
-                        result.Encapsulate(GetWorldBounds(worldToLocal * src.transform, m.bounds));
+                        var mesh = src.sourceObject as Mesh;
+                        EncapsulateSafe(GetWorldBounds(worldToLocal * src.transform, mesh.bounds));
                         break;
                     }
                     case NavMeshBuildSourceShape.Terrain:
@@ -485,9 +488,9 @@ namespace Unity.AI.Navigation
 #if NMC_CAN_ACCESS_TERRAIN
 
                         // Terrain pivot is lower/left corner - shift bounds accordingly
-                        var t = src.sourceObject as TerrainData;
-                        result.Encapsulate(GetWorldBounds(worldToLocal * src.transform,
-                            new Bounds(0.5f * t.size, t.size)));
+                        var terrain = src.sourceObject as TerrainData;
+                        EncapsulateSafe(GetWorldBounds(worldToLocal * src.transform,
+                            new Bounds(0.5f * terrain.size, terrain.size)));
 #else
                         Debug.LogWarning("The NavMesh cannot be properly baked for the terrain because the necessary functionality is missing. Add the com.unity.modules.terrain package through the Package Manager.");
 #endif
@@ -497,15 +500,29 @@ namespace Unity.AI.Navigation
                     case NavMeshBuildSourceShape.Sphere:
                     case NavMeshBuildSourceShape.Capsule:
                     case NavMeshBuildSourceShape.ModifierBox:
-                        result.Encapsulate(GetWorldBounds(worldToLocal * src.transform,
+                        EncapsulateSafe(GetWorldBounds(worldToLocal * src.transform,
                             new Bounds(Vector3.zero, src.size)));
                         break;
                 }
             }
 
+            // When no source contributed any bounds the result remains an empty box at the local origin.
             // Inflate the bounds a bit to avoid clipping co-planar sources
             result.Expand(0.1f);
             return result;
+
+            void EncapsulateSafe(Bounds other)
+            {
+                if (initialized)
+                {
+                    result.Encapsulate(other);
+                }
+                else
+                {
+                    result = other;
+                    initialized = true;
+                }
+            }
         }
 
         bool HasTransformChanged()

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "unity": "6000.0",
   "description": "The AI Navigation package contains high-level components that allow you to use navmeshes to incorporate navigation and pathfinding in your game. With this package installed you can build and use navmeshes at runtime and at edit time, create dynamic obstacles, and use links to allow specific actions (like jumping) as your characters navigate between navmeshes.",
   "dependencies": {
@@ -38,15 +38,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Changed\n* The samples now use the Input System package (`com.unity.inputsystem`) for player input instead of the legacy Input Manager.\n\n### Fixed\n* The **AI Navigation** preferences were not searchable from the Preferences window search field.\n* Errors from NavigationOverlay logged to the console when the NavMeshAgent was selected at the start of playmode.\n* Fixed the options in the **AI Navigation** overlay overlapping each other when the overlay was squished. The options panel is now wrapped in a scroll view. ([UUM-133539](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133539))"
+    "changelog": "### Fixed\n* Fixed the **NavMeshSurface** entry of the **Gizmos** menu changing the appearance of the NavMesh visualization. It now only controls the display of the bounding box of the surface. ([UUM-133537](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133537))\n* Fixed a focused input field from the **Agents** tab of the **Navigation** window being drawn in an unrelated row of the **Areas** tab after switching tabs. ([UUM-149872](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-149872))\n* Fixed the bounds computed by a **NavMesh Surface** stretching all the way to the position of its GameObject when all the collected objects were located away from it. This made the NavMesh bake slower and displayed misleading bounds in the Scene view. ([UUM-133538](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133538))"
   },
   "upmCi": {
-    "footprint": "0b9734024239a29c0a3f84333fe0d7a7a8b5036d"
+    "footprint": "4b7599211df87a5c8d5c822cb1bb620715e9949e"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "4ee1d652d94787ec330eb1706d9f63e885c9427f"
+    "revision": "0e0ff1be20adfee96fd144bb171fbff0d6ca5432"
   }
 }

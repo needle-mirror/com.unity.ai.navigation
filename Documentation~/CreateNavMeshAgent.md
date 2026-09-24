@@ -16,21 +16,7 @@ When you start to experiment with a NavMesh Agent, you most likely are going to 
 
 The **NavMesh Agent** component handles both the pathfinding and the movement control of a character. In your [**scripts**][3], navigation can be as simple as setting the desired destination point - the NavMesh Agent can handle everything from there on.
 
-``` C#
-    // MoveTo.cs
-    using UnityEngine;
-    using UnityEngine.AI;
-
-    public class MoveTo : MonoBehaviour {
-
-       public Transform goal;
-
-       void Start () {
-          NavMeshAgent agent = GetComponent<NavMeshAgent>();
-          agent.destination = goal.position;
-       }
-    }
-```
+[!code-cs[CreateNavMeshAgent](CodeExamples/CreateNavMeshAgentExample.cs#MoveTo)]
 
 Next we need to build a simple script which allows you to send your character to the destination specified by another Game Object, and a Sphere which will be the destination to move to:
 

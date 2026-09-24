@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.15] - 2026-09-24
+### Fixed
+* Fixed the **NavMeshSurface** entry of the **Gizmos** menu changing the appearance of the NavMesh visualization. It now only controls the display of the bounding box of the surface. ([UUM-133537](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133537))
+* Fixed a focused input field from the **Agents** tab of the **Navigation** window being drawn in an unrelated row of the **Areas** tab after switching tabs. ([UUM-149872](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-149872))
+* Fixed the bounds computed by a **NavMesh Surface** stretching all the way to the position of its GameObject when all the collected objects were located away from it. This made the NavMesh bake slower and displayed misleading bounds in the Scene view. ([UUM-133538](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133538))
+
 ## [2.0.14] - 2026-06-04
 ### Changed
 * The samples now use the Input System package (`com.unity.inputsystem`) for player input instead of the legacy Input Manager.

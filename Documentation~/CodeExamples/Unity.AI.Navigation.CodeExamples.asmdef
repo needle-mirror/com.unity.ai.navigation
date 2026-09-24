@@ -1,0 +1,20 @@
+{
+    "name": "Unity.AI.Navigation.CodeExamples",
+    "rootNamespace": "",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.ai.navigation",
+            "expression": "",
+            "define": ""
+        }
+    ],
+    "noEngineReferences": false
+}

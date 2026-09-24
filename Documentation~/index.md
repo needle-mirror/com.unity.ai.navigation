@@ -20,14 +20,14 @@ The following table describes the main topics of the AI Navigation package docum
 
 * [!INCLUDE [resources-community-icon.md](includes/resources-community-icon.md)] [A guide on using the new AI Navigation package in Unity 2022 LTS and above](https://discussions.unity.com/t/a-guide-on-using-the-new-ai-navigation-package-in-unity-2022-lts-and-above)
 * [!INCLUDE [resources-video-icon.md](includes/resources-video-icon.md)] [AI Navigation 2.0 tutorials](https://www.youtube.com/playlist?list=PLX2vGYjWbI0SsXFD1Gjo-8kFEpzk5k4Kh)
-* [!INCLUDE [resources-sample-project-icon.md](includes/resources-sample-project-icon.md)] [3D Game Kit](https://assetstore.unity.com/packages/templates/tutorials/unity-learn-3d-game-kit-115747) 
-* [!INCLUDE [resources-sample-project-icon.md](includes/resources-sample-project-icon.md)] [3D Game Kit Lite](https://assetstore.unity.com/packages/templates/tutorials/3d-game-kit-lite-135162) 
+* [!INCLUDE [resources-sample-project-icon.md](includes/resources-sample-project-icon.md)] [3D Game Kit](https://assetstore.unity.com/packages/templates/tutorials/unity-learn-3d-game-kit-115747)
+* [!INCLUDE [resources-sample-project-icon.md](includes/resources-sample-project-icon.md)] [3D Game Kit Lite](https://assetstore.unity.com/packages/templates/tutorials/3d-game-kit-lite-135162)
 * [!INCLUDE [resources-sample-project-icon.md](includes/resources-sample-project-icon.md)] [The Explorer: 3D Game Kit](https://learn.unity.com/project/3d-game-kit?uv=2020.3) - Tutorial about the sample project
-* [!INCLUDE [resources-community-icon.md](includes/resources-community-icon.md)] [Join the Navigation conversation on Unity Discussions](https://discussions.unity.com/tag/navigation) 
+* [!INCLUDE [resources-community-icon.md](includes/resources-community-icon.md)] [Join the Navigation conversation on Unity Discussions](https://discussions.unity.com/tag/navigation)
 * [Unity Knowledge Base](https://support.unity3d.com/hc/en-us)
 
 </div>
 
-<div class="clear"></div>  
+<div class="clear"></div>
 
 [1]: ./Glossary.md#scene "A Scene contains the environments and menus of your game. Think of each unique Scene file as a unique level. In each Scene, you place your environments, obstacles, and decorations, essentially designing and building your game in pieces."

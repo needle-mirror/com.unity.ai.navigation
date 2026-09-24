@@ -60,7 +60,7 @@ namespace Unity.AI.Navigation.Editor
                 }
                 else if (areaIndex == areaNames.Length - 1)
                 {
-                    EditorGUI.EndProperty(); 
+                    EditorGUI.EndProperty();
                     NavMeshEditorHelpers.OpenAreaSettings();
                 }
                 else
@@ -126,7 +126,7 @@ namespace Unity.AI.Navigation.Editor
                     EditorGUI.EndProperty();
                 }
                 else if (index == count + 1)
-                {                    
+                {
                     EditorGUI.EndProperty();
                     NavMeshEditorHelpers.OpenAgentSettings(-1);
                 }

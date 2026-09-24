@@ -46,88 +46,13 @@ Create a [**NavMesh**][5] for the [**Scene**][6] you’ve placed the character i
 
 Next we need to tell the character where to navigate to. This typically is very specific to the application. Here we choose a click to move behavior — the character moved to the point in the world where the user has clicked on the screen.
 
-``` C#
-// ClickToMove.cs
-using UnityEngine;
-using UnityEngine.AI;
-
-[RequireComponent (typeof (NavMeshAgent))]
-public class ClickToMove : MonoBehaviour {
-    RaycastHit hitInfo = new RaycastHit();
-    NavMeshAgent agent;
-
-    void Start () {
-        agent = GetComponent<NavMeshAgent> ();
-    }
-    void Update () {
-        if(Input.GetMouseButtonDown(0)) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray.origin, ray.direction, out hitInfo))
-                agent.destination = hitInfo.point;
-        }
-    }
-}
-```
+[!code-cs[ClickToMove](CodeExamples/CouplingAnimationAndNavigationExample.cs#ClickToMove)]
 
 Pressing play now — and clicking around in the scene — you’ll see the character move around in the scene. However — the animations don’t match the movement at all. We need to communicate the state and velocity of the agent to the animation controller.
 
 To transfer the velocity and state info from the agent to the animation controller we will add another script.
 
-``` C#
-// LocomotionSimpleAgent.cs
-using UnityEngine;
-using UnityEngine.AI;
-
-[RequireComponent (typeof (NavMeshAgent))]
-[RequireComponent (typeof (Animator))]
-public class LocomotionSimpleAgent : MonoBehaviour {
-    Animator anim;
-    NavMeshAgent agent;
-    Vector2 smoothDeltaPosition = Vector2.zero;
-    Vector2 velocity = Vector2.zero;
-
-    void Start ()
-    {
-        anim = GetComponent<Animator> ();
-        agent = GetComponent<NavMeshAgent> ();
-        // Don’t update position automatically
-        agent.updatePosition = false;
-    }
-
-    void Update ()
-    {
-        Vector3 worldDeltaPosition = agent.nextPosition - transform.position;
-
-        // Map 'worldDeltaPosition' to local space
-        float dx = Vector3.Dot (transform.right, worldDeltaPosition);
-        float dy = Vector3.Dot (transform.forward, worldDeltaPosition);
-        Vector2 deltaPosition = new Vector2 (dx, dy);
-
-        // Low-pass filter the deltaMove
-        float smooth = Mathf.Min(1.0f, Time.deltaTime/0.15f);
-        smoothDeltaPosition = Vector2.Lerp (smoothDeltaPosition, deltaPosition, smooth);
-
-        // Update velocity if time advances
-        if (Time.deltaTime > 1e-5f)
-            velocity = smoothDeltaPosition / Time.deltaTime;
-
-        bool shouldMove = velocity.magnitude > 0.5f && agent.remainingDistance > agent.radius;
-
-        // Update animation parameters
-        anim.SetBool("move", shouldMove);
-        anim.SetFloat ("velx", velocity.x);
-        anim.SetFloat ("vely", velocity.y);
-
-        GetComponent<LookAt>().lookAtTargetPosition = agent.steeringTarget + transform.forward;
-    }
-
-    void OnAnimatorMove ()
-    {
-        // Update position to agent position
-        transform.position = agent.nextPosition;
-    }
-}
-```
+[!code-cs[LocomotionSimpleAgent](CodeExamples/LocomotionSimpleAgentExample.cs#LocomotionSimpleAgent)]
 
 This script deserves a little explanation. It’s placed on the character — which has an **Animator** and a **NavMeshAgent** component attached — as well as the click to move script above.
 
@@ -147,62 +72,11 @@ To improve the quality of the animated and navigating character we will explore 
 
 Having the character to look and turn towards points of interest is important to convey attention and anticipation. We’ll use the animation systems `LookAt` API. This calls for another script.
 
-``` C#
-// LookAt.cs
-using UnityEngine;
-using System.Collections;
+[!code-cs[LookAt](CodeExamples/LookAtExample.cs#LookAt)]
 
-[RequireComponent (typeof (Animator))]
-public class LookAt : MonoBehaviour {
-    public Transform head = null;
-    public Vector3 lookAtTargetPosition;
-    public float lookAtCoolTime = 0.2f;
-    public float lookAtHeatTime = 0.2f;
-    public bool looking = true;
+Add the script to the character and assign the head property to the head transform in your characters transform hierarchy. Note that the `LookAt` script relies on `OnAnimatorIK()`, so make sure **IK Pass** is enabled on the character's Animator Controller layer, otherwise the look-at behavior won't have any effect. The LookAt script has no notion of navigation control — so to control where to look we go back to the **LocomotionSimpleAgent.cs** script and add a couple of lines to control the looking. Add the end of `Update()` add:
 
-    private Vector3 lookAtPosition;
-    private Animator animator;
-    private float lookAtWeight = 0.0f;
-
-    void Start ()
-    {
-        if (!head)
-        {
-            Debug.LogError("No head transform - LookAt disabled");
-            enabled = false;
-            return;
-        }
-        animator = GetComponent<Animator> ();
-        lookAtTargetPosition = head.position + transform.forward;
-        lookAtPosition = lookAtTargetPosition;
-    }
-
-    void OnAnimatorIK ()
-    {
-        lookAtTargetPosition.y = head.position.y;
-        float lookAtTargetWeight = looking ? 1.0f : 0.0f;
-
-        Vector3 curDir = lookAtPosition - head.position;
-        Vector3 futDir = lookAtTargetPosition - head.position;
-
-        curDir = Vector3.RotateTowards(curDir, futDir, 6.28f * Time.deltaTime, float.PositiveInfinity);
-        lookAtPosition = head.position + curDir;
-
-        float blendTime = lookAtTargetWeight > lookAtWeight ? lookAtHeatTime : lookAtCoolTime;
-        lookAtWeight = Mathf.MoveTowards (lookAtWeight, lookAtTargetWeight, Time.deltaTime / blendTime);
-        animator.SetLookAtWeight (lookAtWeight, 0.2f, 0.5f, 0.7f, 0.5f);
-        animator.SetLookAtPosition (lookAtPosition);
-    }
-}
-```
-
-Add the script to the character and assign the head property to the head transform in your characters transform hierarchy. The LookAt script has no notion of navigation control — so to control where to look we go back to the **LocomotionSimpleAgent.cs** script and add a couple of lines to control the looking. Add the end of `Update()` add:
-
-``` C#
-        LookAt lookAt = GetComponent<LookAt> ();
-        if (lookAt)
-            lookAt.lookAtTargetPosition = agent.steeringTarget + transform.forward;
-```
+[!code-cs[LookAtExample](CodeExamples/CouplingAnimationAndNavigationExample.cs#LookAtExample)]
 
 This will tell the **LookAt** script to set the point of interest to approximately the next corner along the path or — if no corners — to the end of the path.
 
@@ -214,31 +88,15 @@ The character has so far been controlled completely by the position dictated by 
 
 Replace the `OnAnimatorMove()` callback on the **LocomotionSimpleAgent.cs** script replace the line with the following
 
-``` C#
-    void OnAnimatorMove ()
-    {
-        // Update position based on animation movement using navigation surface height
-        Vector3 position = anim.rootPosition;
-        position.y = agent.nextPosition.y;
-        transform.position = position;
-    }
-```
+[!code-cs[OnAnimatorMove](CodeExamples/CouplingAnimationAndNavigationExample.cs#OnAnimatorMove)]
 
 When trying this out you may notice the that character can now drift away from the agent position (green wireframe cylinder) . You may need to limit that character animation drift. This can be done either by pulling the agent towards the character — or pull the character towards the agent position. Add the following at the end of the `Update()` method on the script **LocomotionSimpleAgent.cs**.
 
-``` C#
-        // Pull character towards agent
-        if (worldDeltaPosition.magnitude > agent.radius)
-            transform.position = agent.nextPosition - 0.9f * worldDeltaPosition;
-```
+[!code-cs[PullCharacterTowardsAgent](CodeExamples/CouplingAnimationAndNavigationExample.cs#PullCharacterTowardsAgent)]
 
 Or — if you want the agent to follow the character.
 
-``` C#
-        // Pull agent towards character
-        if (worldDeltaPosition.magnitude > agent.radius)
-            agent.nextPosition = transform.position + 0.9f * worldDeltaPosition;
-```
+[!code-cs[PullAgentTowardsCharacter](CodeExamples/CouplingAnimationAndNavigationExample.cs#PullAgentTowardsCharacter)]
 
 What works best very much depends on the specific use-case.
 

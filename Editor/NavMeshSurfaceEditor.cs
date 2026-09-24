@@ -301,7 +301,6 @@ namespace Unity.AI.Navigation.Editor
         [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active | GizmoType.Pickable)]
         static void RenderGizmoSelected(NavMeshSurface navSurface, GizmoType gizmoType)
         {
-            navSurface.navMeshDataInstance.FlagAsInSelectionHierarchy();
             DrawBoundingBoxGizmoAndIcon(navSurface, true);
         }
 

@@ -36,6 +36,8 @@ namespace Unity.AI.Navigation.Editor
 
         Mode m_Mode = Mode.AgentTypeSettings;
 
+        Mode m_LastDrawnMode = Mode.AgentTypeSettings;
+
         static class Styles
         {
             internal static readonly GUIContent k_AgentTypesHeader = EditorGUIUtility.TrTextContent("Agent Types");
@@ -193,6 +195,16 @@ namespace Unity.AI.Navigation.Editor
             EditorGUILayout.EndHorizontal();
         }
 
+        void DropFocusOnModeChange()
+        {
+            if (m_Mode == m_LastDrawnMode)
+                return;
+
+            m_LastDrawnMode = m_Mode;
+            GUIUtility.keyboardControl = 0;
+            EditorGUIUtility.editingTextField = false;
+        }
+
         static void GetAreaListRects(Rect rect, out Rect stripeRect, out Rect labelRect, out Rect nameRect,
             out Rect costRect)
         {
@@ -341,6 +353,8 @@ namespace Unity.AI.Navigation.Editor
             EditorGUILayout.Space();
             ModeToggle();
             EditorGUILayout.Space();
+
+            DropFocusOnModeChange();
 
             InitProjectSettings();
 
