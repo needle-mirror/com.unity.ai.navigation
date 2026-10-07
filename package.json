@@ -1,7 +1,7 @@
 {
   "name": "com.unity.ai.navigation",
   "displayName": "AI Navigation",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "unity": "6000.0",
   "description": "The AI Navigation package contains high-level components that allow you to use navmeshes to incorporate navigation and pathfinding in your game. With this package installed you can build and use navmeshes at runtime and at edit time, create dynamic obstacles, and use links to allow specific actions (like jumping) as your characters navigate between navmeshes.",
   "dependencies": {
@@ -38,15 +38,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n* Fixed the **NavMeshSurface** entry of the **Gizmos** menu changing the appearance of the NavMesh visualization. It now only controls the display of the bounding box of the surface. ([UUM-133537](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133537))\n* Fixed a focused input field from the **Agents** tab of the **Navigation** window being drawn in an unrelated row of the **Areas** tab after switching tabs. ([UUM-149872](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-149872))\n* Fixed the bounds computed by a **NavMesh Surface** stretching all the way to the position of its GameObject when all the collected objects were located away from it. This made the NavMesh bake slower and displayed misleading bounds in the Scene view. ([UUM-133538](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133538))"
+    "changelog": "### Changed\n* A NavMesh baked over a terrain now includes the trees painted on that terrain. This is a consequence of the bug fix listed in the **Fixed** section below, where the trees were incorrectly left out of the bake, and not a new design decision. It can change the NavMesh substantially compared to previous versions of the package: agents have to path around trees that previously left no trace in the NavMesh, and a densely forested terrain can lose routes that used to exist. Baking such a terrain also takes longer and produces a larger NavMesh. NavMesh assets that are already baked keep working and only change when you bake them again. To keep a tree out of the NavMesh, add a **NavMesh Modifier** component to the root of the tree prefab and set its **Mode** to **Remove Object**. That setting applies to every instance of that tree prototype, in every terrain, for the agent types listed in the modifier's **Affected Agents**. To keep the trees of every terrain out of the NavMesh across a whole project, add `AI_NAVIGATION_IGNORE_TERRAIN_TREES` to the **Scripting Define Symbols** in **Project Settings** &gt; **Player**. This removes the collection of terrain trees from the package altogether, so it adds nothing to the bake, whereas a **NavMesh Modifier** still inspects each tree prototype and visits each tree instance before discarding it.\n* When a tree prototype has no geometry and no modifier volume that the bake can use, a warning in the Console now names that prefab. For example, this happens when the LOD selected by the prototype's **NavMesh LOD** contains only a billboard renderer, which has no mesh.\n\n### Fixed\n* `NavMeshSurface` now bakes the trees painted on a terrain into the NavMesh, taking either the render meshes or the colliders of each tree prefab according to its **Use Geometry** setting. It collects a terrain's trees only when that terrain's layer is in its **Include Layers** mask, then filters each tree instance by its `CollectObjects` mode, and applies any `NavMeshModifier` component found on the tree prefab, including `ignoreFromBuild`, area overrides and agent-type filtering. ([UUM-133541](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133541))\n* A `NavMeshModifierVolume` component on a tree prefab now applies when that tree is painted onto a terrain. A tree prototype that contains only modifier volumes and no geometry acts as a brush that assigns area types across a terrain, without adding any tree-shaped geometry to the NavMesh."
   },
   "upmCi": {
-    "footprint": "4b7599211df87a5c8d5c822cb1bb620715e9949e"
+    "footprint": "1f6ced2497aba4fdc3eae8ede9504ab120eff691"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git",
     "type": "git",
-    "revision": "0e0ff1be20adfee96fd144bb171fbff0d6ca5432"
+    "revision": "ee6ec378f681f86cfd1dbda6111405e8adeb6445"
   }
 }

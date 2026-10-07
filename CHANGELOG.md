@@ -4,10 +4,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.16] - 2026-10-07
+### Changed
+* A NavMesh baked over a terrain now includes the trees painted on that terrain. This is a consequence of the bug fix listed in the **Fixed** section below, where the trees were incorrectly left out of the bake, and not a new design decision. It can change the NavMesh substantially compared to previous versions of the package: agents have to path around trees that previously left no trace in the NavMesh, and a densely forested terrain can lose routes that used to exist. Baking such a terrain also takes longer and produces a larger NavMesh. NavMesh assets that are already baked keep working and only change when you bake them again. To keep a tree out of the NavMesh, add a **NavMesh Modifier** component to the root of the tree prefab and set its **Mode** to **Remove Object**. That setting applies to every instance of that tree prototype, in every terrain, for the agent types listed in the modifier's **Affected Agents**. To keep the trees of every terrain out of the NavMesh across a whole project, add `AI_NAVIGATION_IGNORE_TERRAIN_TREES` to the **Scripting Define Symbols** in **Project Settings** &gt; **Player**. This removes the collection of terrain trees from the package altogether, so it adds nothing to the bake, whereas a **NavMesh Modifier** still inspects each tree prototype and visits each tree instance before discarding it.
+* When a tree prototype has no geometry and no modifier volume that the bake can use, a warning in the Console now names that prefab. For example, this happens when the LOD selected by the prototype's **NavMesh LOD** contains only a billboard renderer, which has no mesh.
+
+### Fixed
+* `NavMeshSurface` now bakes the trees painted on a terrain into the NavMesh, taking either the render meshes or the colliders of each tree prefab according to its **Use Geometry** setting. It collects a terrain's trees only when that terrain's layer is in its **Include Layers** mask, then filters each tree instance by its `CollectObjects` mode, and applies any `NavMeshModifier` component found on the tree prefab, including `ignoreFromBuild`, area overrides and agent-type filtering. ([UUM-133541](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133541))
+* A `NavMeshModifierVolume` component on a tree prefab now applies when that tree is painted onto a terrain. A tree prototype that contains only modifier volumes and no geometry acts as a brush that assigns area types across a terrain, without adding any tree-shaped geometry to the NavMesh.
+
 ## [2.0.15] - 2026-09-24
 ### Fixed
 * Fixed the **NavMeshSurface** entry of the **Gizmos** menu changing the appearance of the NavMesh visualization. It now only controls the display of the bounding box of the surface. ([UUM-133537](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133537))
-* Fixed a focused input field from the **Agents** tab of the **Navigation** window being drawn in an unrelated row of the **Areas** tab after switching tabs. ([UUM-149872](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-149872))
+* Fixed a focused input field from the **Agents** tab of the **Navigation** window being drawn in an unrelated row of the **Areas** tab after switching tabs. (UUM-149872)
 * Fixed the bounds computed by a **NavMesh Surface** stretching all the way to the position of its GameObject when all the collected objects were located away from it. This made the NavMesh bake slower and displayed misleading bounds in the Scene view. ([UUM-133538](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133538))
 
 ## [2.0.14] - 2026-06-04
