@@ -65,6 +65,6 @@ In the _Update_ function, the script checks how close the agent is to the destin
 
 [2]: ./Glossary.md#gameobject "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more. A GameObject’s functionality is defined by the Components attached to it."
 
-[3]: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Random.Range.html
+[3]: https://docs.unity3d.com/6000.7/Documentation/ScriptReference/Random.Range.html
 
-[4]: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-remainingDistance.html
+[4]: https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-remainingDistance.html

@@ -30,7 +30,9 @@ namespace Unity.AI.Navigation.Editor
 
             Selection.selectionChanged += RebuildSelectionCache;
             SceneView.beforeSceneGui += OnBeforeSceneGui;
+#pragma warning disable CS0618 // Camera.onPreCull is obsolete from Unity 7000.0, but still needed for the Built-In Render Pipeline
             Camera.onPreCull += OnCameraPreCull;
+#pragma warning restore CS0618
             RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
             AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
         }
@@ -39,7 +41,9 @@ namespace Unity.AI.Navigation.Editor
         {
             Selection.selectionChanged -= RebuildSelectionCache;
             SceneView.beforeSceneGui -= OnBeforeSceneGui;
+#pragma warning disable CS0618 // Camera.onPreCull is obsolete from Unity 7000.0, but still needed for the Built-In Render Pipeline
             Camera.onPreCull -= OnCameraPreCull;
+#pragma warning restore CS0618
             RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
             AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
         }

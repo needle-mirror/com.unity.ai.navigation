@@ -19,7 +19,7 @@ Now we have a working crate that is physics controlled, and which the AI knows h
 
 - [Inner Workings of the Navigation System](./NavInnerWorkings.md#two-cases-for-obstacles "Learn more about how obstacles are used as part of navigation.")
 - [NavMesh Obstacle component reference](./NavMeshObstacle.md "Full description of all the NavMesh Obstacle properties.")
-- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshObstacle.html "Full description of the NavMesh Obstacle scripting API.")
+- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshObstacle.html "Full description of the NavMesh Obstacle scripting API.")
 
 [1]: ./Glossary.md#mesh "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
 

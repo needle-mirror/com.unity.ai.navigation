@@ -60,8 +60,8 @@ The area mask is useful when you want only certain types characters to be able t
 - [Create a NavMesh](./CreateNavMesh.md "Workflow to create a NavMesh.")
 - [NavMesh Modifier component reference](./NavMeshModifier.md "Use for affecting the NavMesh generation of NavMesh area types based on the transform hierarchy.")
 - [NavMesh Modifier Volume component reference](./NavMeshModifierVolume.md "Use for affecting the NavMesh generation of NavMesh area types based on volume.")
-- [NavMeshAgent.areaMask scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-areaMask.html "Script API to set which area types an agent can use for movement.")
-- [NavMeshAgent.SetAreaCost() scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.SetAreaCost.html "Script API to set what cost an agent considers for each area type.")
+- [NavMeshAgent.areaMask scripting reference](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-areaMask.html "Script API to set which area types an agent can use for movement.")
+- [NavMeshAgent.SetAreaCost() scripting reference](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent.SetAreaCost.html "Script API to set what cost an agent considers for each area type.")
 
 [1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 

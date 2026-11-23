@@ -358,20 +358,12 @@ namespace Unity.AI.Navigation.Editor
 
         static string[] GetNavMeshAreaNames()
         {
-#if EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED
             return NavMesh.GetAreaNames();
-#else
-            return GameObjectUtility.GetNavMeshAreaNames();
-#endif
         }
 
         static int GetNavMeshAreaFromName(string name)
         {
-#if EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED
             return NavMesh.GetAreaFromName(name);
-#else
-            return GameObjectUtility.GetNavMeshAreaFromName(name);
-#endif
         }
     }
 }

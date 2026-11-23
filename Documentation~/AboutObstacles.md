@@ -39,7 +39,7 @@ To enable this mode, clear the NavMesh Obstacle component’s **Carve Only Stati
 
 - [Create a NavMesh Obstacle](./CreateNavMeshObstacle.md "Guidance on creating NavMesh Obstacles.")
 - [Inner Workings of the Navigation System](./NavInnerWorkings.md#two-cases-for-obstacles "Learn more about how NavMesh Obstacles are used as part of navigation.")
-- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshObstacle.html "Full description of the NavMesh Obstacle scripting API.")
+- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshObstacle.html "Full description of the NavMesh Obstacle scripting API.")
 
 [1]: ./Glossary.md#colliders "An invisible shape that is used to handle physical collisions for an object. A collider doesn’t need to be exactly the same shape as the object’s mesh - a rough approximation is often more efficient and indistinguishable in gameplay."
 

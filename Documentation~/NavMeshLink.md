@@ -29,7 +29,7 @@ To add the NavMesh Link component to an existing GameObject, do the following:
 
 To adjust the ends of the link directly from the scene view you can drag the yellow handler gizmos at each end. A yellow cube represents the **Point** position for that end. In the opposite arrangement where the link references an object, a yellow sphere represents the **Transform** position of the referenced object. If you move the yellow sphere, the referenced object moves along to the same position.
 To adjust the width of the link you can drag the orange dot handler gizmos placed on the sides of the link, at one third of the distance from the start to the end.
-To display the handles, enable the NavMesh Link gizmo and select the GameObject. For more information on gizmos, refer to [Gizmos menu](https://docs.unity3d.com/6000.0/Documentation/Manual/GizmosMenu.html).
+To display the handles, enable the NavMesh Link gizmo and select the GameObject. For more information on gizmos, refer to [Gizmos menu](https://docs.unity3d.com/6000.7/Documentation/Manual/GizmosMenu.html).
 
 ## Additional resources
 

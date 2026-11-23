@@ -11,11 +11,12 @@ You can use [**NavMesh Agent**](./NavMeshAgent.md), [**NavMesh Obstacle**](./Nav
     - Add [**Rigidbody**][2] component
         - Turn on kinematic (Is Kinematic) - this is important!
         - Kinematic means that the rigid body is controlled by something else than the physics simulation
-- If both NavMesh Agent and Rigidbody (non-kinematic) are active at the same time, you have race condition
+        - Set [rigidbody interpolation](https://docs.unity3d.com/Manual/class-Rigidbody.html) to **None** so the agent reaches its configured speed. With **Interpolate** or **Extrapolate**, the agent moves more slowly than its **Speed** value. For more details on interpolation, refer to [Apply interpolation to Rigidbody](https://docs.unity3d.com/Manual/rigidbody-interpolation.html).
+- If both NavMesh Agent and Rigidbody (non-kinematic) are active at the same time, you have a race condition
     - Both components may try to move the agent at the same time which leads to undefined behavior
 - You can use a NavMesh Agent to move e.g. a player character, without physics
     - Set players agent’s avoidance priority to a small number (high priority), to allow the player to brush through crowds
-    - Move the player agent using [NavMeshAgent.velocity](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-velocity.html), so that other agents can predict the player movement to avoid the player.
+    - Move the player agent using [NavMeshAgent.velocity](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-velocity.html), so that other agents can predict the player movement to avoid the player.
 
 ## NavMesh Agent and Animator
 
@@ -27,11 +28,11 @@ You can use [**NavMesh Agent**](./NavMeshAgent.md), [**NavMesh Obstacle**](./Nav
     - Or animation moves the character based on simulated result
     - Otherwise you’ll end up having a hard to debug feedback loop
 - _Animation follows agent_
-    - Use the [NavMeshAgent.velocity](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-velocity.html) as input to the Animator to roughly match the agent’s movement to the animations
+    - Use the [NavMeshAgent.velocity](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-velocity.html) as input to the Animator to roughly match the agent’s movement to the animations
     - Robust and simple to implement, will result in foot sliding where animations cannot match the velocity
 - _Agent follows animation_
-    - Disable [NavMeshAgent.updatePosition](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-updatePosition.html) and [NavMeshAgent.updateRotation](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-updateRotation.html) to detach the simulation from the game objects locations
-    - Use the difference between the simulated agent’s position ([NavMeshAgent.nextPosition](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-nextPosition.html)) and animation root ([Animator.rootPosition](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Animator-rootPosition.html)) to calculate controls for the animations
+    - Disable [NavMeshAgent.updatePosition](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-updatePosition.html) and [NavMeshAgent.updateRotation](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-updateRotation.html) to detach the simulation from the game objects locations
+    - Use the difference between the simulated agent’s position ([NavMeshAgent.nextPosition](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-nextPosition.html)) and animation root ([Animator.rootPosition](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/Animator-rootPosition.html)) to calculate controls for the animations
     - See [Coupling Animation and Navigation](./CouplingAnimationAndNavigation.md) for more details
 
 ## NavMesh Agent and NavMesh Obstacle

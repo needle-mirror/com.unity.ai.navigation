@@ -28,6 +28,6 @@ This script lets you choose the destination point on the [**NavMesh**][1] by cli
 
 [1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 
-[2]: https://docs.unity3d.com/6000.0/Documentation/Manual/CameraRays.html
+[2]: https://docs.unity3d.com/6000.7/Documentation/Manual/CameraRays.html
 
-[3]: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/GameObject.GetComponent.html
+[3]: https://docs.unity3d.com/6000.7/Documentation/ScriptReference/GameObject.GetComponent.html

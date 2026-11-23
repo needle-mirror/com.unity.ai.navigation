@@ -20,7 +20,7 @@ The following table describes the properties available in the NavMesh Surface co
 | **Agent Type** | Select the type of [NavMesh Agent](NavMeshAgent) that can use the NavMesh. |
 | **Default Area** | Specify the area type to assign to the generated NavMesh. The area types define how difficult it is for agents to move across the NavMesh. The available options include all of the area types defined on the Areas tab of the Navigation window. There are 29 custom area types and 3 built-in area types: <br/>Available built-in options: <ul><li>**Walkable**: Make the NavMesh walkable for the assigned Agent type. (This is the default option.)</li><li>**Not Walkable**: Prevent the specified Agent type from crossing this surface unless there is a GameObject that [overrides the area type](NavMeshModifier).</li><li>**Jump**: This option is used for automatically generated links.</li></ul> For more details about area types, refer to [Navigation Areas and Costs](AreasAndCosts). |
 | **Generate Links** | Automatically generate links between objects that the NavMesh Surface collects when you bake the NavMesh. If you select **Generate Links**, NavMesh Surface attempts to generate links between any collected GameObjects when you bake the NavMesh. If you do not select **Generate Links**, NavMesh Surface doesn't attempt to generate any links between the collected GameObjects when you bake the NavMesh.<br/> Refer to the [Links Generation](BuildingOffMeshLinksAutomatically#links-generation) section for more information. |
-| **Use Geometry** | Select which geometry to use when you bake the NavMesh.<br/>Available options:<ul><li>**Render Meshes**: Use geometry from Render Meshes and [Terrains](https://docs.unity3d.com/6000.0/Documentation/Manual/terrain-UsingTerrains.html).</li><li>**Physics Colliders**: Use geometry from Colliders and Terrains. Agents can move closer to the edge of the physical bounds of the environment with this option than they can with the **Render Meshes** option. For more information on Colliders, refer to [Introduction to collision](https://docs.unity3d.com/6000.0/Documentation/Manual/CollidersOverview.html).</li></ul> The trees painted on a collected terrain contribute the render meshes or the colliders of their tree prefabs, based on this property. For more information, refer to [Terrain trees](./NavMeshSurface.md#terrain-trees). |
+| **Use Geometry** | Select which geometry to use when you bake the NavMesh.<br/>Available options:<ul><li>**Render Meshes**: Use geometry from Render Meshes and [Terrains](https://docs.unity3d.com/6000.7/Documentation/Manual/terrain-UsingTerrains.html).</li><li>**Physics Colliders**: Use geometry from Colliders and Terrains. Agents can move closer to the edge of the physical bounds of the environment with this option than they can with the **Render Meshes** option. For more information on Colliders, refer to [Introduction to collision](https://docs.unity3d.com/6000.7/Documentation/Manual/CollidersOverview.html).</li></ul> The trees painted on a collected terrain contribute the render meshes or the colliders of their tree prefabs, based on this property. For more information, refer to [Terrain trees](./NavMeshSurface.md#terrain-trees). |
 | **NavMesh Data** | (Read-only) Locate the asset file where the NavMesh is stored.</br> The text box displays **None** when the NavMesh Surface does not contain NavMesh data.</br> The text box displays **Missing** if you delete the asset file from the Project window and don't use **Clear** first.</br> |
 | **Clear** | Remove the asset file where the NavMesh is stored. </br> Use this button also when you plan to remove the component. |
 | **Bake** | Bake a NavMesh with the current settings. When you bake the NavMesh, it automatically excludes GameObjects that have a **NavMesh Agent** or **NavMesh Obstacle**. They are dynamic users of the NavMesh and don't contribute to the process. </br> Unity stores the NavMesh data in an asset file. The **NavMesh Data** property displays a reference to the asset file. |
@@ -51,7 +51,7 @@ Use the Advanced settings section to customize the following additional properti
 
 ## Terrain trees
 
-When a **NavMesh Surface** component collects a [terrain](https://docs.unity3d.com/6000.0/Documentation/Manual/terrain-UsingTerrains.html), it also collects the trees painted on that terrain. Each tree contributes the geometry of its tree prefab. The **Use Geometry** property determines whether the **NavMesh Surface** uses the render meshes or the colliders of the prefab. As a result, agents move around the trees instead of through them.
+When a **NavMesh Surface** component collects a [terrain](https://docs.unity3d.com/6000.7/Documentation/Manual/terrain-UsingTerrains.html), it also collects the trees painted on that terrain. Each tree contributes the geometry of its tree prefab. The **Use Geometry** property determines whether the **NavMesh Surface** uses the render meshes or the colliders of the prefab. As a result, agents move around the trees instead of through them.
 
 The NavMesh Surface places each tree relative to the position of the terrain's GameObject. A terrain draws itself and its trees along the world axes, at the dimensions that its terrain data defines, and ignores the rotation and scale of its GameObject. The NavMesh Surface bakes the trees the same way, so the obstacles in the NavMesh match the trees you see.
 
@@ -67,16 +67,16 @@ The **NavMesh Surface** then filters each tree of a collected terrain based on t
 
 ### Choose the LOD of a tree prefab
 
-If the root of a tree prefab has an [LOD Group](https://docs.unity3d.com/6000.0/Documentation/Manual/class-LODGroup.html) component, you can choose which level of detail (LOD) of the prefab the NavMesh Surface uses when you set **Use Geometry** to **Render Meshes**. The NavMesh Surface uses the enabled Mesh Renderer components of the selected LOD. For a new tree, **NavMesh LOD Index** defaults to **Last**. If the selected LOD contains only a billboard, the tree adds no geometry to the NavMesh, so choose an LOD that has Mesh Renderer components. When you set **Use Geometry** to **Physics Colliders**, the NavMesh Surface uses the colliders of the prefab and ignores **NavMesh LOD Index**.
+If the root of a tree prefab has an [LOD Group](https://docs.unity3d.com/6000.7/Documentation/Manual/class-LODGroup.html) component, you can choose which level of detail (LOD) of the prefab the NavMesh Surface uses when you set **Use Geometry** to **Render Meshes**. The NavMesh Surface uses the enabled Mesh Renderer components of the selected LOD. For a new tree, **NavMesh LOD Index** defaults to **Last**. If the selected LOD contains only a billboard, the tree adds no geometry to the NavMesh, so choose an LOD that has Mesh Renderer components. When you set **Use Geometry** to **Physics Colliders**, the NavMesh Surface uses the colliders of the prefab and ignores **NavMesh LOD Index**.
 
-For more information, refer to [Add trees to the terrain](https://docs.unity3d.com/6000.0/Documentation/Manual/terrain-Trees.html).
+For more information, refer to [Add trees to the terrain](https://docs.unity3d.com/6000.7/Documentation/Manual/terrain-Trees.html).
 
 To choose the LOD, follow these steps:
 
 1. Select the terrain, and in its **Inspector** window, select the **Paint Trees** tool.
-2. To add a tree prefab to the terrain's **Trees** list, select **Edit Trees** > **Add Tree**, then set **Tree Prefab** to the prefab. 
+2. To add a tree prefab to the terrain's **Trees** list, select **Edit Trees** > **Add Tree**, then set **Tree Prefab** to the prefab.
 3. To change a tree prefab that's already in the list, select it in the **Trees** list, then select **Edit Trees** > **Edit Tree**.
-4. In the window that opens, set **NavMesh LOD Index** to **First**, **Last**, or **Custom**. 
+4. In the window that opens, set **NavMesh LOD Index** to **First**, **Last**, or **Custom**.
 5. If you select **Custom**, set the index of the LOD.
 6. Select **Add** or **Apply**.
 
@@ -106,13 +106,13 @@ To keep the trees of every terrain out of the NavMesh across a whole project, go
 - [Build a HeightMesh for Accurate Character Placement](./HeightMesh.md)
 - [Links Generation](./BuildingOffMeshLinksAutomatically.md#links-generation)
 - [Carving](./AboutObstacles.md#carving)
-- [Hierarchy](https://docs.unity3d.com/6000.0/Documentation/Manual/Hierarchy.html)
+- [Hierarchy](https://docs.unity3d.com/6000.7/Documentation/Manual/Hierarchy.html)
 - [Create a NavMesh agent](./CreateNavMeshAgent.md)
 - [Navigation areas and costs](./AreasAndCosts.md)
 - [Navigation agent configurations](./NavigationWindow.md#agents-tab)
 - [NavMesh Modifier component reference](./NavMeshModifier.md)
 - [NavMesh Modifier Volume component reference](./NavMeshModifierVolume.md)
-- Physics [Colliders](https://docs.unity3d.com/6000.0/Documentation/Manual/CollidersOverview.html)
-- [Terrains](https://docs.unity3d.com/6000.0/Documentation/Manual/terrain-UsingTerrains.html)
+- Physics [Colliders](https://docs.unity3d.com/6000.7/Documentation/Manual/CollidersOverview.html)
+- [Terrains](https://docs.unity3d.com/6000.7/Documentation/Manual/terrain-UsingTerrains.html)
 
 [1]: ./Glossary.md#hierarchy "Unity uses the concept of parent-child hierarchies, or parenting, to group GameObjects. An object can contain other GameObjects that inherit its properties."

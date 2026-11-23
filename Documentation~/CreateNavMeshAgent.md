@@ -36,7 +36,7 @@ To sum it up, in your script, you will need to get a reference to the NavMesh Ag
 - [Inner Workings of the Navigation System](./NavInnerWorkings.md#following-the-path "Learn more about path following.")
 - [Navigation agent configurations](./NavigationWindow.md#agents-tab "Guidance on how to define classes of agents with different attributes.")
 - [NavMesh Agent component reference](./NavMeshAgent.md "Full description of all the NavMeshAgent properties.")
-- [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.html "Full description of the NavMeshAgent scripting API.")
+- [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent.html "Full description of the NavMeshAgent scripting API.")
 
 [1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 
@@ -44,4 +44,4 @@ To sum it up, in your script, you will need to get a reference to the NavMesh Ag
 
 [3]: ./Glossary.md#scripts "A piece of code that allows you to create your own Components, trigger game events, modify Component properties over time and respond to user input in any way you like."
 
-[4]: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-destination.html "Script reference for the NavMeshAgent destination property."
+[4]: https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-destination.html "Script reference for the NavMeshAgent destination property."

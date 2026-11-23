@@ -18,6 +18,6 @@ You can tell an agent to start calculating a path simply by setting the [NavMesh
     }
 ```
 
-[1]: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent-destination.html
+[1]: https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent-destination.html
 
-[2]: https://docs.unity3d.com/6000.0/Documentation/Manual/class-GameObject.html "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more. A GameObject’s functionality is defined by the Components attached to it."
+[2]: https://docs.unity3d.com/6000.7/Documentation/Manual/class-GameObject.html "The fundamental object in Unity scenes, which can represent characters, props, scenery, cameras, waypoints, and more. A GameObject’s functionality is defined by the Components attached to it."

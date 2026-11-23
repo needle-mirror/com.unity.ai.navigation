@@ -34,7 +34,7 @@ Another common cause is that the NavMesh Agent’s _Area Mask_ does not have the
 
 - [Navigation HowTos](./NavHowTos.md "Common use cases for NavMesh Agent, with source code.")
 - [Off-Mesh Link component (deprecated) reference](./OffMeshLink.md "Full description of all the legacy Off-Mesh Link properties.")
-- [Off-Mesh Link (deprecated) scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.OffMeshLink.html "Full description of the legacy Off-Mesh Link scripting API.")
+- [Off-Mesh Link (deprecated) scripting reference](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.OffMeshLink.html "Full description of the legacy Off-Mesh Link scripting API.")
 
 [1]: ./Glossary.md#mesh "The main graphics primitive of Unity. Meshes make up a large part of your 3D worlds. Unity supports triangulated or Quadrangulated polygon meshes. Nurbs, Nurms, Subdiv surfaces must be converted to polygons."
 

@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.17] - 2026-11-23
+### Fixed
+* Fixed NavMesh Surface so that it no longer logs the Console warning that `Camera.onPreCull` is obsolete in Unity 7000.0 and newer. (UUM-160410)
+* Fixed a disabled `NavMeshLink` being tracked for position updates as soon as its `autoUpdate` property was set to `true` from a script. ([UUM-161203](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-161203))
+
 ## [2.0.16] - 2026-10-07
 ### Changed
 * A NavMesh baked over a terrain now includes the trees painted on that terrain. This is a consequence of the bug fix listed in the **Fixed** section below, where the trees were incorrectly left out of the bake, and not a new design decision. It can change the NavMesh substantially compared to previous versions of the package: agents have to path around trees that previously left no trace in the NavMesh, and a densely forested terrain can lose routes that used to exist. Baking such a terrain also takes longer and produces a larger NavMesh. NavMesh assets that are already baked keep working and only change when you bake them again. To keep a tree out of the NavMesh, add a **NavMesh Modifier** component to the root of the tree prefab and set its **Mode** to **Remove Object**. That setting applies to every instance of that tree prototype, in every terrain, for the agent types listed in the modifier's **Affected Agents**. To keep the trees of every terrain out of the NavMesh across a whole project, add `AI_NAVIGATION_IGNORE_TERRAIN_TREES` to the **Scripting Define Symbols** in **Project Settings** &gt; **Player**. This removes the collection of terrain trees from the package altogether, so it adds nothing to the bake, whereas a **NavMesh Modifier** still inspects each tree prototype and visits each tree instance before discarding it.

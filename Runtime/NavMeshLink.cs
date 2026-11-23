@@ -207,7 +207,7 @@ namespace Unity.AI.Navigation
 
                 m_AutoUpdatePosition = value;
 
-                if (m_AutoUpdatePosition)
+                if (m_AutoUpdatePosition && isActiveAndEnabled && NavMesh.IsLinkValid(m_LinkInstance))
                     AddTracking(this);
                 else
                     RemoveTracking(this);

@@ -27,4 +27,4 @@ The following table describes the properties available in the NavMesh Obstacle c
 - [About NavMesh obstacles](./AboutObstacles.md "Details on how to use NavMesh obstacles.")
 - [Create a NavMesh Obstacle](./CreateNavMeshObstacle.md "Guidance on creating NavMesh obstacles.")
 - [Inner Workings of the Navigation System](./NavInnerWorkings.md#two-cases-for-obstacles "Learn more about how NavMesh Obstacles are used as part of navigation.")
-- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshObstacle.html "Full description of the NavMesh Obstacle scripting API.")
+- [NavMesh Obstacle scripting reference](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshObstacle.html "Full description of the NavMesh Obstacle scripting API.")

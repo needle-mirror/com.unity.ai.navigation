@@ -46,7 +46,7 @@ The following tables describe the properties available in the NavMesh agent comp
 - [Create a NavMesh Agent](./CreateNavMeshAgent.md)
 - [About NavMesh agents](./AboutAgents.md)
 - [Inner Workings of the Navigation System](./NavInnerWorkings.md#moving-the-agent)
-- [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.html)
+- [NavMesh Agent scripting reference](https://docs.unity3d.com/6000.7/Documentation/ScriptReference/AI.NavMeshAgent.html)
 
 [1]: ./Glossary.md#navmesh "A mesh that Unity generates to approximate the walkable areas and obstacles in your environment for path finding and AI-controlled navigation."
 

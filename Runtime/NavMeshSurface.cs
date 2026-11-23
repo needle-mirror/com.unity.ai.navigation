@@ -1157,15 +1157,9 @@ namespace Unity.AI.Navigation
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying || IsPartOfPrefab())
             {
-#if EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED
                 UnityEditor.AI.NavMeshEditorHelpers.CollectSourcesInStage(
                     includedWorldBounds, includedLayerMask, geometry, areaByDefault, generateLinksByDefault,
                     markups, includeOnlyMarkedObjects, gameObject.scene, results);
-#else
-                UnityEditor.AI.NavMeshBuilder.CollectSourcesInStage(
-                    includedWorldBounds, includedLayerMask, geometry, areaByDefault, generateLinksByDefault,
-                    markups, includeOnlyMarkedObjects, gameObject.scene, results);
-#endif
             }
             else
 #endif
@@ -1184,15 +1178,9 @@ namespace Unity.AI.Navigation
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying || IsPartOfPrefab())
             {
-#if EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED
                 UnityEditor.AI.NavMeshEditorHelpers.CollectSourcesInStage(
                     root, includedLayerMask, geometry, areaByDefault, generateLinksByDefault,
                     markups, includeOnlyMarkedObjects, gameObject.scene, results);
-#else
-                UnityEditor.AI.NavMeshBuilder.CollectSourcesInStage(
-                    root, includedLayerMask, geometry, areaByDefault, generateLinksByDefault,
-                    markups, includeOnlyMarkedObjects, gameObject.scene, results);
-#endif
             }
             else
 #endif
